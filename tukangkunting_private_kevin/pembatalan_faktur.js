@@ -636,7 +636,13 @@
       }
 
       // ── Step 15: Wait for the signing modal to close ──
-      await waitForAction(2000, 30000);
+      // After clicking Konfirmasi the server may start a second "In Progress" round.
+      // Use waitUntilSigningReady so we properly wait out that round (up to 90s)
+      // before checking whether the modal has actually closed.
+      const afterConfirmResult = await waitUntilSigningReady(90000);
+      if (afterConfirmResult === "timeout") {
+        throw new Error("Signing timeout — Sign status masih In Progress setelah konfirmasi (90s)");
+      }
       const modalClosed = await waitForSigningModalClose(20000);
       if (!modalClosed) {
         throw new Error("Modal Tanda Tangan Dokumen tidak tertutup setelah konfirmasi");
