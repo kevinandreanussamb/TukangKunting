@@ -260,41 +260,28 @@
 
   /**
    * Wait for toast notification to appear then disappear.
-   * Returns an object: { appeared: boolean, isError: boolean }
-   * isError is true when the visible toast has a "p-toast-message-error" or "p-toast-message-warn" class,
-   * which indicates the server returned a failure response.
    */
   function waitForToastAppearAndDisappear(timeoutMs = 30000) {
     return new Promise((resolve) => {
       const start = Date.now();
       let toastAppeared = false;
-      let isError = false;
 
       const interval = setInterval(() => {
         const toastItems = document.querySelectorAll("p-toast p-toastitem");
-        const visibleItems = Array.from(toastItems).filter(
+        const visibleToast = Array.from(toastItems).some(
           item => item.offsetParent !== null
         );
-        const visibleToast = visibleItems.length > 0;
 
-        if (visibleToast) {
-          toastAppeared = true;
-          // Capture whether any visible toast is an error or warning
-          isError = visibleItems.some(
-            item =>
-              item.querySelector(".p-toast-message-error") !== null ||
-              item.querySelector(".p-toast-message-warn") !== null
-          );
-        }
+        if (visibleToast) toastAppeared = true;
 
         if (toastAppeared && !visibleToast) {
           clearInterval(interval);
-          resolve({ appeared: true, isError });
+          resolve(true);
         }
 
         if (Date.now() - start > timeoutMs) {
           clearInterval(interval);
-          resolve({ appeared: toastAppeared, isError });
+          resolve(toastAppeared);
         }
       }, 100);
     });
@@ -318,53 +305,6 @@
           resolve(false);
         }
       }, 300);
-    });
-  }
-
-  /**
-   * After clicking Simpan, the signing modal may show "Sign status is In Progress,
-   * Please wait!" while the server processes the signing request asynchronously.
-   * This function waits until that message disappears (or the modal closes entirely).
-   *
-   * Returns:
-   *   "ready"   – modal still open, In Progress message is gone → safe to click button-close
-   *   "closed"  – modal closed by itself (signing completed automatically)
-   *   "timeout" – In Progress message never resolved within timeoutMs
-   */
-  function waitUntilSigningReady(timeoutMs = 90000) {
-    return new Promise((resolve) => {
-      const start = Date.now();
-      const interval = setInterval(() => {
-        const passwordInput = document.getElementById("SignerPassword-input");
-
-        // Modal closed on its own
-        if (!passwordInput) {
-          clearInterval(interval);
-          resolve("closed");
-          return;
-        }
-
-        // Look for the "In Progress" paragraph anywhere inside the signing dialog
-        const dialog = passwordInput.closest(".p-dialog") ||
-                       document.querySelector(".p-dialog[style*='display']") ||
-                       document.querySelector("p-dialog .p-dialog-content");
-        const searchRoot = dialog || document;
-        const paragraphs = searchRoot.querySelectorAll("p");
-        const inProgress = Array.from(paragraphs).some(
-          p => p.textContent.includes("In Progress") && p.textContent.includes("Please wait")
-        );
-
-        if (!inProgress) {
-          clearInterval(interval);
-          resolve("ready");
-          return;
-        }
-
-        if (Date.now() - start > timeoutMs) {
-          clearInterval(interval);
-          resolve("timeout");
-        }
-      }, 1000);
     });
   }
 
@@ -609,44 +549,22 @@
       // ── Step 13: Wait for spinner after Simpan ──
       await waitForAction(2000, 30000);
 
-      // ── Step 14: Wait for "Sign status is In Progress" to resolve before confirming ──
-      // The server processes the signing request asynchronously. We must not click
-      // button-close while the modal still shows the "In Progress" message, otherwise
-      // the cancellation is not completed but the script would incorrectly count it as success.
-      console.log(`  ⏳ Menunggu proses signing selesai (In Progress)...`);
-      const signProgressResult = await waitUntilSigningReady(90000);
+      // ── Step 14: Wait for toast or for the modal to update, then click "Konfirmasi Tanda Tangan" (button-close) ──
+      await sleep(delay);
 
-      if (signProgressResult === "timeout") {
-        throw new Error("Signing timeout — Sign status masih In Progress setelah 90 detik");
-      }
-
-      if (signProgressResult === "closed") {
-        // Modal closed by itself — signing completed automatically, no further action needed
-        console.log(`  ✓ Signing modal tertutup otomatis setelah In Progress selesai`);
-      } else {
-        // signProgressResult === "ready" — In Progress resolved, modal still open → click Konfirmasi
-        await sleep(300);
-        const confirmSignBtn = document.getElementById("button-close");
-        if (confirmSignBtn && confirmSignBtn.offsetParent !== null) {
-          confirmSignBtn.click();
-          console.log(`  ✓ Konfirmasi Tanda Tangan clicked`);
-        } else {
-          throw new Error("Tombol Konfirmasi Tanda Tangan tidak ditemukan setelah In Progress selesai");
-        }
+      // Click the "Konfirmasi Tanda Tangan" / Close button
+      const confirmSignBtn = document.getElementById("button-close");
+      if (confirmSignBtn && confirmSignBtn.offsetParent !== null) {
+        confirmSignBtn.click();
+        console.log(`  ✓ Konfirmasi Tanda Tangan clicked`);
       }
 
       // ── Step 15: Wait for the signing modal to close ──
       await waitForAction(2000, 30000);
-      const modalClosed = await waitForSigningModalClose(20000);
-      if (!modalClosed) {
-        throw new Error("Modal Tanda Tangan Dokumen tidak tertutup setelah konfirmasi");
-      }
+      await waitForSigningModalClose(15000);
 
       // ── Step 16: Wait for toast notification ──
-      const toastResult = await waitForToastAppearAndDisappear(15000);
-      if (toastResult.isError) {
-        throw new Error("Server mengembalikan notifikasi error saat proses pembatalan");
-      }
+      await waitForToastAppearAndDisappear(15000);
 
       // ── Step 17: Ensure back on grid ──
       const backToGrid = await waitForGridPage(10000);
