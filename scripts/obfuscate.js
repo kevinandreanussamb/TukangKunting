@@ -169,8 +169,12 @@ function buildAutoVersion(baseVersion) {
 
   const major = parts[0] || 0;
   const minor = parts[1] || 0;
-  const patch = parts[2] || 0;
-  const build = Math.floor(Date.now() / 60000) % 65535;
+  const autoEpochUtc = Date.UTC(2024, 0, 1);
+  const now = new Date();
+  const midnightUtc = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const dayIndex = Math.floor((midnightUtc - autoEpochUtc) / 86_400_000);
+  const patch = Math.max(0, Math.min(65535, dayIndex));
+  const build = Math.max(0, Math.min(65535, now.getUTCHours() * 60 + now.getUTCMinutes()));
   return `${major}.${minor}.${patch}.${build}`;
 }
 
