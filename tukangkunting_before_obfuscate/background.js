@@ -849,7 +849,7 @@
           const body = document.createElement("div"); body.className = "tukang-body";
           const selectLabel = document.createElement("div"); selectLabel.className = "tukang-label"; selectLabel.textContent = "Jenis Dokumen";
           // ── ADDED "Pembatalan Faktur" to menu ──
-          const opts = ["Dokumen Saya (Bold Only)","Dokumen Saya","e-Faktur (Non Retur)","e-Faktur (Retur)","BPPU & BPNR","Pengkreditan Faktur","Pembatalan Faktur"];
+          const opts = ["Dokumen Saya (Bold Only)","Dokumen Saya","Faktur Pajak Keluaran","Faktur Pajak Masukan","Faktur Pajak Retur (Keluaran & Masukan)","BPPU & BPNR","Pengkreditan Faktur","Pembatalan Faktur"];
           const select = document.createElement("select"); select.className = "tukang-select";
           opts.forEach(o => { const op = document.createElement("option"); op.value = o; op.textContent = o; select.appendChild(op); });
           const divider = document.createElement("div"); divider.className = "tukang-divider";
@@ -894,8 +894,8 @@
             const modules = [
               { key: "delay_dokumen_bold", label: "Delay Dokumen Bold (ms)" },
               { key: "delay_dokumen_all", label: "Delay Dokumen Saya (ms)" },
-              { key: "delay_ppn", label: "Delay e-Faktur Non Retur (ms)" },
-              { key: "delay_ppn_retur", label: "Delay e-Faktur Retur (ms)" },
+              { key: "delay_ppn", label: "Delay Faktur Pajak (ms)" },
+              { key: "delay_ppn_retur", label: "Delay Faktur Pajak Retur (ms)" },
               { key: "delay_bppu", label: "Delay BPPU & BPNR (ms)" },
               { key: "delay_pengkreditan", label: "Delay Pengkreditan Faktur (ms)" },
               { key: "delay_pembatalan", label: "Delay Pembatalan Faktur (ms)" }
@@ -979,8 +979,9 @@
       let file = null;
       if (sel === "Dokumen Saya (Bold Only)") file = "dokumen_saya_bold.js";
       if (sel === "Dokumen Saya") file = "dokumen_saya_all.js";
-      if (sel === "e-Faktur (Non Retur)") file = "ppn.js";
-      if (sel === "e-Faktur (Retur)") file = "ppn_retur.js";
+      if (sel === "Faktur Pajak Keluaran") file = "faktur_pajak_keluaran.js";
+      if (sel === "Faktur Pajak Masukan") file = "faktur_pajak_masukan.js";
+      if (sel === "Faktur Pajak Retur") file = "faktur_pajak_retur_masukan_keluaran.js";
       if (sel === "BPPU & BPNR") file = "bppu_bpnr.js";
 
       if (file) {

@@ -199,6 +199,7 @@ function buildAutoVersion(baseVersion) {
 function autoVersionManifest(manifestContent) {
   const manifest = JSON.parse(manifestContent);
   const baseVersion = manifest.version || '1.0.0';
+  manifest.name = 'TukangKunting Commerce Edition';
   manifest.version_name = baseVersion;
   manifest.version = buildAutoVersion(baseVersion);
   return {
