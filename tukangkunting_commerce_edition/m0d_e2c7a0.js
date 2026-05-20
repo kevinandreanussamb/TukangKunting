@@ -1,1 +1,702 @@
-function _0x3556(_0x1aa4fa,_0x125038){_0x1aa4fa=_0x1aa4fa-0xb9;const _0x7d87a1=_0x2142();let _0x494405=_0x7d87a1[_0x1aa4fa];if(_0x3556['EsBWiM']===undefined){var _0x24c599=function(_0x506017){const _0x4d6969='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x4e919e='',_0x4436dd='',_0x3fa7fb=_0x4e919e+_0x24c599,_0x2c6630=(''+function(){return 0x0;})['indexOf']('\x0a')!==-0x1;for(let _0x2d0c8e=0x0,_0x5edbf3,_0xb1c625,_0x3da685=0x0;_0xb1c625=_0x506017['charAt'](_0x3da685++);~_0xb1c625&&(_0x5edbf3=_0x2d0c8e%0x4?_0x5edbf3*0x40+_0xb1c625:_0xb1c625,_0x2d0c8e++%0x4)?_0x4e919e+=_0x2c6630||_0x3fa7fb['charCodeAt'](_0x3da685+0xa)-0xa!==0x0?String['fromCharCode'](0xff&_0x5edbf3>>(-0x2*_0x2d0c8e&0x6)):_0x2d0c8e:0x0){_0xb1c625=_0x4d6969['indexOf'](_0xb1c625);}for(let _0x2a514c=0x0,_0x4a1c99=_0x4e919e['length'];_0x2a514c<_0x4a1c99;_0x2a514c++){_0x4436dd+='%'+('00'+_0x4e919e['charCodeAt'](_0x2a514c)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x4436dd);};_0x3556['bCszdK']=_0x24c599,_0x3556['RLzsgu']={},_0x3556['EsBWiM']=!![];}const _0x214217=_0x7d87a1[0x0],_0x355602=_0x1aa4fa+_0x214217,_0x383486=_0x3556['RLzsgu'][_0x355602];if(!_0x383486){const _0x50bce6=function(_0xb64a57){this['dRRcOX']=_0xb64a57,this['zwmBTA']=[0x1,0x0,0x0],this['ZRmuXL']=function(){return'newState';},this['LzIPYj']='\x5cw+\x20*\x5c(\x5c)\x20*{\x5cw+\x20*',this['DXiFvl']='[\x27|\x22].+[\x27|\x22];?\x20*}';};_0x50bce6['prototype']['TEXzJh']=function(){const _0x4d8e85=new RegExp(this['LzIPYj']+this['DXiFvl']),_0x218a2f=_0x4d8e85['test'](this['ZRmuXL']['toString']())?--this['zwmBTA'][0x1]:--this['zwmBTA'][0x0];return this['izsLnV'](_0x218a2f);},_0x50bce6['prototype']['izsLnV']=function(_0x1ef514){if(!Boolean(~_0x1ef514))return _0x1ef514;return this['JQSaXq'](this['dRRcOX']);},_0x50bce6['prototype']['JQSaXq']=function(_0x4b5d09){for(let _0x1544d6=0x0,_0x5b49b1=this['zwmBTA']['length'];_0x1544d6<_0x5b49b1;_0x1544d6++){this['zwmBTA']['push'](Math['round'](Math['random']())),_0x5b49b1=this['zwmBTA']['length'];}return _0x4b5d09(this['zwmBTA'][0x0]);},(''+function(){return 0x0;})['indexOf']('\x0a')===-0x1&&new _0x50bce6(_0x3556)['TEXzJh'](),_0x494405=_0x3556['bCszdK'](_0x494405),_0x3556['RLzsgu'][_0x355602]=_0x494405;}else _0x494405=_0x383486;return _0x494405;}(function(_0x5b65c0,_0xc30aab){const _0x55632f=_0x3556,_0x4a8fca=_0x5b65c0();while(!![]){try{const _0xe40a18=-parseInt(_0x55632f(0x167))/0x1+-parseInt(_0x55632f(0xbe))/0x2*(-parseInt(_0x55632f(0x13d))/0x3)+parseInt(_0x55632f(0x147))/0x4*(-parseInt(_0x55632f(0x11a))/0x5)+-parseInt(_0x55632f(0x184))/0x6*(-parseInt(_0x55632f(0x163))/0x7)+-parseInt(_0x55632f(0x153))/0x8+-parseInt(_0x55632f(0x183))/0x9+parseInt(_0x55632f(0x138))/0xa*(parseInt(_0x55632f(0xdf))/0xb);if(_0xe40a18===_0xc30aab)break;else _0x4a8fca['push'](_0x4a8fca['shift']());}catch(_0xb41a88){_0x4a8fca['push'](_0x4a8fca['shift']());}}}(_0x2142,0x1a68e));function _0x2142(){const _0x316348=['BKP2v24','8j+oIsbet05fiejqufuUifrVDgfSoG','AwqTsuq','uxDPwe0','EgfSrhO','veXhCKy','BM9FCNvUDgLTzq','Cvjhr08','CKnvvKe','EwvHCG','AgvHza','zgL2','BgLZzw5ZAsbZDwrHAcbLEhbPCMvK','CgfNzu51BwjLCG','wfbhAvi','yNv0Dg9Uic5WAs1MAwXLlxbKzG','zgLZCgf0y2HfDMvUDa','CgfNzq','vuzusxi','ChvZAa','Bwf4','rvjst1iG4P2mienLAYbJB25ZB2XLlG','BwfW','AgzjDKO','D3b4DhC','y29UC3rYDwn0B3i','C2LpuLe','yLDMBxe','BgvUz3rO','BgvMDa','wKTdvMS','AuX3sK8','yNv0Dg9U','v2v6tei','uKfuvMu','lNaTzgf0yxrHyMXLlwXVywrPBMCTB3zLCMXHEq','CMvHC29U','uunLuMu','DgLHzeW','zNPWzu0','tgLZzw5ZAsbbBMrHihn1zgfOigv4CgLYzwqUieH1yNvUz2KGB3DUzxiGDw50DwSGCgvYCgfUAMfUz2fUlG','Bg9JywW','ugfAteG','C2vUze1LC3nHz2u','tvPVtge','u3rHCNrPBMCUlI4','A3DxB2G','mti1B3Hfz1zc','yNDMsgm','u1vwvgi','DfffyKy','Aw5Uzxjive1m','CxvLCNLtzwXLy3rVCKfSBa','cIaGicaGidXKAxyGy2XHC3m9iMjWChuTDg9WlwjHCIiGAwq9iMjWChvuB3bcyxiIpJWVzgL2pGOkicaGicaGpgrPDIbJBgfZCZ0IyNbWDs1OzwfKzxiIpGOGicaGicaGidXKAxyGy2XHC3m9iMjWChuTAgvHzgvYlwLJB24IpGOGicaGicaGicaGpgLTzYbZCMm9iG','C3rVCMfNzq','kcGOlISPkYKRksSK','yNbWDurVD25SB2fKq3n2qNrU','yxbWBhK','pc9KAxy+cIaGicaGidXIDxr0B24GAwq9iNr1A2fUzY1SAwnLBNnLlwnSB3nLiIbZDhLSzt0IcIaGicaGicaGD2LKDgG6mtaWjtTWywrKAw5NoJLWEdTIB3jKzxi6mxb4ihnVBgLKihjNyMeOmJu1ldi1nsWYntuSlJa5ktSkicaGicaGicbIywnRz3jVDw5KoNjNyMeOmJu1ldi1nsWYntuSlJa0ktTIB3jKzxiTCMfKAxvZoJHWEdSkicaGicaGicbJB2XVCJOJytbHzwmWo2zVBNqTC2L6ztOXmNb4o2zVBNqTD2vPz2H0oJuWmdTJDxjZB3i6Cg9PBNrLCJSkicaGicaGicbMB250lwzHBwLSEtONre0Gu2fUCYCSC2fUCY1ZzxjPzJT0CMfUC2L0Aw9UoMjHy2TNCM91BMqGlJe1CZSkicaGicaGiJ5uDxr1CdWVyNv0Dg9UpGOGicaG','z0foswK','C3rHDhvZqMfKz2u','DK94EwS','cIaGicaGiebPBxbVCNqGDxjSkcDODhrWCZOVl2zVBNrZlMDVB2DSzwfWAxmUy29Tl2nZCZi/zMfTAwX5purnk1nHBNm6D2DODeaZmda7ndaWoZuWmdS2mdaMzMfTAwX5purnk01VBM86D2DODea0mda7ntaWjMrPC3bSyxK9C3DHCcCPoWOkicaGicaGi2f1Dg9eB3DUBg9HzgvYqLbqvu1VzgfSihSkicaGicaGicbWB3nPDgLVBJOGzML4zwq7cIaGicaGicaGyM90Dg9ToIaYnhb4oWOGicaGicaGihjPz2H0oIaYnhb4oWOGicaGicaGihDPzhrOoIaYodbWEdSkicaGicaGicbIywnRz3jVDw5KoIaJmgyXmte3oWOGicaGicaGigjVCMrLCJOGmxb4ihnVBgLKihjNyMeOmJu1ldi1nsWYntuSmc4WocK7cIaGicaGicaGyM9YzgvYlxjHzgL1CZOGmtzWEdSkicaGicaGicbIB3GTC2HHzg93oGOGicaGicaGicaGmcaWidaGmxb4ihjNyMeOmJu1ldi1nsWYntuSmc4WncKScIaGicaGicaGicaWidi0ChGGndHWEcbYz2jHkdaSmcWWldaUnIKScIaGicaGicaGicaWidaGnJbWEcbYz2jHkdu2ldeZmcWYndySmc4WnYK7cIaGicaGicaGEI1PBMrLEdOGotK5otK5oWOGicaGicaGigzVBNqTzMfTAwX5oIaNre0Gu2fUCYCSihn5C3rLBs11AsWGC2fUCY1ZzxjPzJSkicaGicaGicbVDMvYzMXVDZOGAgLKzgvUoWOGicaGicaGigfUAw1HDgLVBJOGyNbWDs1ZBgLKzuLUidaUm3mGy3vIAwmTyMv6AwvYkdaUmtySideSidaUmYWGmsK7cIaGicaGih0kcIaGicaGiebRzxLMCMfTzxmGyNbWDs1ZBgLKzuLUihSkicaGicaGicbMCM9TihSGB3bHy2L0EtOGmdSGDhjHBNnMB3jToIb0CMfUC2XHDgvzkde2ChGPihnJywXLkdaUotCPoYb9cIaGicaGicaGDg8Gicb7ig9WywnPDhK6ide7ihrYyw5ZzM9YBtOGDhjHBNnSyxrLwsGWksbZy2fSzsGXktSGFqOGicaGicb9cGOGicaGicaUyNbWDs10B3aTyMfYihSkicaGicaGicbOzwLNAhq6idnWEdSkicaGicaGicbIywnRz3jVDw5KoIbSAw5LyxiTz3jHzgLLBNqOotbKzwCSicmZodGYzJySicmYntyZzwiSicm3yZnHzwqSicmZodGYzJyPoWOGicaGicaGigjHy2TNCM91BMqTC2L6ztOGmZaWjsaXmdaLoWOGicaGicaGigfUAw1HDgLVBJOGyNbWDs1ZAgLTBwvYidjZigXPBMvHCIbPBMzPBML0ztSkicaGicaGFqOkicaGicaGlMjWChuTDg9WlwjHCI5KB25LihSkicaGicaGicbIywnRz3jVDw5KoIbSAw5LyxiTz3jHzgLLBNqOotbKzwCSicmXnMeZngeSicmYmMm1nwuSicm0ywrLodaSicmXnMeZngePoWOGicaGicaGigjHy2TNCM91BMqTC2L6ztOGmZaWjsaXmdaLoWOGicaGicaGigfUAw1HDgLVBJOGyNbWDs1ZAgLTBwvYidjZigXPBMvHCIbPBMzPBML0ztSkicaGicaGFqOkicaGicaGqgTLEwzYyw1LCYbIChb1lxnOAw1TzxiGEWOGicaGicaGidaLicaGEYbIywnRz3jVDw5KlxbVC2L0Aw9UoIaXmdaLida7ih0kicaGicaGicaXmdaLihSGyMfJA2DYB3vUzc1WB3nPDgLVBJOGltiWmcuGmdSGFqOGicaGicb9cGOGicaGicaUyNbWDs1OzwfKzxiGEWOGicaGicaGigrPC3bSyxK6igzSzxG7cIaGicaGicaGywXPz24TAxrLBxm6ignLBNrLCJSkicaGicaGicbNyxa6ideWChG7cIaGicaGicaGCgfKzgLUzZOGmtrWEcaXnNb4ideWChG7cIaGicaGicaGyM9YzgvYlwjVDhrVBtOGmxb4ihnVBgLKihjNyMeOmJu1ldi1nsWYntuSmc4WnIK7cIaGicaGih0kcIaGicaGic5IChb1lwHLywrLCI1Py29UihSkicaGicaGicb3Awr0AdOGmZbWEdSkicaGicaGicbOzwLNAhq6idmWChG7cIaGicaGicaGyMfJA2DYB3vUzdOGBgLUzwfYlwDYywrPzw50kdeZnwrLzYWGi2y2zwnLmsWGi2y2zwnLmsK7cIaGicaGicaGyM9YzgvYlxjHzgL1CZOGohb4oWOGicaGicaGigrPC3bSyxK6igzSzxG7cIaGicaGicaGywXPz24TAxrLBxm6ignLBNrLCJSkicaGicaGicbQDxn0Awz5lwnVBNrLBNq6ignLBNrLCJSkicaGicaGicbMBgv4lxnOCMLUAZOGmdSkicaGicaGicbIB3GTC2HHzg93oIaWidnWEcaXmhb4ihjNyMeOntySmtmWldi0nIWWlJmPoWOGicaGicb9cGOGicaGicaUyNbWDs1OzwfKzxiTAwnVBIbPBwCGEWOGicaGicaGihDPzhrOoIaXohb4oWOGicaGicaGigHLAwDODdOGmtHWEdSkicaGicaGicbVyMPLy3qTzML0oIbJB250ywLUoWOGicaGicb9cGOGicaGicaUyNbWDs1OzwfKzxiTDgv4Dcb7cIaGicaGicaGzMXLEdOGmtSkicaGicaGicbTAw4TD2LKDgG6ida7cIaGicaGih0kcIaGicaGic5IChb1lwHLywrLCI10AxrSzsb7cIaGicaGicaGzM9UDc1ZAxPLoIaXm3b4oWOGicaGicaGigzVBNqTD2vPz2H0oIa2mda7cIaGicaGicaGy29SB3i6icnMmgyYzJG7cIaGicaGicaGBgv0DgvYlxnWywnPBMC6ic0WlJaXzw07cIaGicaGicaGD2HPDguTC3bHy2u6ig5VD3jHCdSkicaGicaGicbVDMvYzMXVDZOGAgLKzgvUoWOGicaGicaGihrLEhqTB3zLCMzSB3C6igvSBgLWC2LZoWOGicaGicb9cGOGicaGicaUyNbWDs1OzwfKzxiTC3vIDgL0BguGEWOGicaGicaGigzVBNqTC2L6ztOGmtaUnxb4oWOGicaGicaGignVBg9YoIaJngu1nJy4oWOGicaGicaGig1HCMDPBI10B3a6idfWEdSkicaGicaGicbSzxr0zxiTC3bHy2LUzZOGmc4WmMvToWOGicaGicb9cGOGicaGicaJyNbWDunSB3nLqNrUihSkicaGicaGicb3Awr0AdOGmJzWEdSkicaGicaGicbOzwLNAhq6idi2ChG7cIaGicaGicaGyM9YzgvYoIbUB25LoWOGicaGicaGigjHy2TNCM91BMq6ihrYyw5ZCgfYzw50oWOGicaGicaGign1CNnVCJOGCg9PBNrLCJSkicaGicaGicbIB3jKzxiTCMfKAxvZoIa3ChG7cIaGicaGicaGzgLZCgXHEtOGBM9UztSkicaGicaGicbHBgLNBI1PDgvTCZOGy2vUDgvYoWOGicaGicaGigP1C3rPzNKTy29UDgvUDdOGy2vUDgvYoWOGicaGicaGignVBg9YoIaJngu1nJy4oWOGicaGicaGigzSzxGTC2HYAw5RoIaWoWOGicaGicaGihrYyw5ZAxrPB246igjHy2TNCM91BMqGmc4XnxmSignVBg9YidaUmtvZoWOGicaGicaGihbHzgrPBMC6ida7cIaGicaGih0kcIaGicaGicnIChb1q2XVC2vcDg4UDMLZAwjSzsb7cIaGicaGicaGzgLZCgXHEtOGzMXLEdSkicaGicaGFqOkicaGicaGi2jWChvdBg9Zzuj0BJPOB3zLCIb7cIaGicaGicaGyMfJA2DYB3vUzdOGCMDIysGYmZKSidy4lca2ocWGmc4XmIK7cIaGicaGicaGy29SB3i6icnModCXnZe7cIaGicaGih0kcIaGicaGic5IChb1lxn0yxr1CY1IywrNzsb7cIaGicaGicaGzgLZCgXHEtOGAw5SAw5LlwzSzxG7cIaGicaGicaGywXPz24TAxrLBxm6ignLBNrLCJSkicaGicaGicbNyxa6idvWEdSkicaGicaGicbIywnRz3jVDw5KoIbYz2jHkdu2ldeZmcWYndySmc4XktSkicaGicaGicbIB3jKzxi6idfWEcbZB2XPzcbYz2jHkdu2ldeZmcWYndySmc4YktSkicaGicaGicbIB3jKzxiTCMfKAxvZoIaYmhb4oWOGicaGicaGihbHzgrPBMC6idrWEcaXmhb4oWOGicaGicaGigzVBNqTC2L6ztOGmteUnxb4oWOGicaGicaGignVBg9YoIaJn2fHogy1oWOGicaGicaGigzVBNqTD2vPz2H0oIa1mda7cIaGicaGicaGBwfYz2LUoIaXmNb4ide2ChGGmdSkicaGicaGicbTyxGTD2LKDgG6ignHBgmOmtaWjsaTidmYChGPoWOGicaGicaGigjVEc1ZAxPPBMC6igjVCMrLCI1IB3G7cIaGicaGicaGBwLUlwHLAwDODdOGmJzWEdSkicaGicaGicb0CMfUC2L0Aw9UoIbIywnRz3jVDw5KidaUnhmSigjVCMrLCI1JB2XVCIaWlJrZlcbJB2XVCIaWlJrZoWOGicaGicb9cGOGicaGicaUyNbWDs1ZDgf0DxmTzg90ihSkicaGicaGicb3Awr0AdOGnNb4oWOGicaGicaGigHLAwDODdOGnNb4oWOGicaGicaGigjVCMrLCI1YywrPDxm6iduWjtSkicaGicaGicbIywnRz3jVDw5KoIaJmZG4mMy2oWOGicaGicaGigzSzxGTC2HYAw5RoIaWoWOGicaGicaGigfUAw1HDgLVBJOGyNbWDs1WDwXZzsaXlJzZigvHC2uTAw4TB3v0igLUzMLUAxrLoWOGicaGicb9cGOGicaGicaUyNbWDs1ZDgf0DxmTyMfKz2uUzg9UzsaUyNbWDs1ZDgf0DxmTzg90ihSkicaGicaGicbIywnRz3jVDw5KoIaJmJjJntvLoWOGicaGicaGigjVEc1ZAgfKB3C6idaGmca2ChGGCMDIysGZncWXotCSotqSmc41ktSkicaGicaGicbHBMLTyxrPB246ig5VBMu7cIaGicaGih0kcIaGicaGic5IChb1lxn0yxr1CY1IywrNzs5KB25LihSkicaGicaGicbIywnRz3jVDw5KoIbYz2jHkdm0lde5nYW5ncWWlJa4ktSkicaGicaGicbIB3jKzxiTy29SB3i6ihjNyMeOmZqSmtK3ldK0ldaUmIK7cIaGicaGicaGy29SB3i6icm0ywrLoda7cIaGicaGih0kcIaGicaGic5IChb1lxn0yxr1CY1IywrNzs5LCNjVCIb7cIaGicaGicaGyMfJA2DYB3vUzdOGCMDIysGYmZKSnJGSnJGSmc4WocK7cIaGicaGicaGyM9YzgvYlwnVBg9YoIbYz2jHkdiZosW2ocW2ocWWlJiPoWOGicaGicaGignVBg9YoIaJzJG3mtCXoWOGicaGicb9cGOGicaGicaUyNbWDs1ZDgf0DxmTyMfKz2uUzxjYB3iGlMjWChuTC3rHDhvZlwrVDcb7cIaGicaGicaGyMfJA2DYB3vUzdOGi2vMndq0ndSkicaGicaGicbIB3GTC2HHzg93oIaWidaGnNb4ihjNyMeOmJm5ldy4ldy4ldaUnsK7cIaGicaGicaGyw5PBwf0Aw9UoIbUB25LoWOGicaGicb9cGOGicaGicbaA2v5zNjHBwvZigjWChuTChvSC2uGEWOGicaGicaGidaLlcaXmdaLihSGB3bHy2L0EtOGmtSGDhjHBNnMB3jToIbZy2fSzsGXktSGFqOGicaGicaGiduWjsaGicaGicb7ig9WywnPDhK6idaUndSGDhjHBNnMB3jToIbZy2fSzsGWlJG1ktSGFqOGicaGicb9cGOGicaGicaJyxv0B1n0yxr1CYb7cIaGicaGicaGD2HPDguTC3bHy2u6ig5VD3jHCdSkicaGicaGicbVDMvYzMXVDZOGAgLKzgvUoWOGicaGicaGihrLEhqTB3zLCMzSB3C6igvSBgLWC2LZoWOGicaGicaGig1HEc13Awr0AdOGmtaWjtSkicaGicaGFqOkicaGicaGlMjWChuTBwv0CMLJCYb7cIaGicaGicaGzgLZCgXHEtOGz3jPzdSkicaGicaGicbNCMLKlxrLBxbSyxrLlwnVBhvTBNm6idfMCIaXzNi7cIaGicaGicaGz2fWoIa4ChG7cIaGicaGicaGCgfKzgLUzZOGmtjWEcaXnNb4oWOGicaGicb9cGOGicaGicaUyNbWDs1TzxrYAwmGEWOGicaGicaGigjHy2TNCM91BMq6ihjNyMeOmJu1ldi1nsWYntuSmc4WmYK7cIaGicaGicaGyM9YzgvYoIaXChGGC29SAwqGCMDIysGYntuSmJu1ldi1nsWWlJa2ktSkicaGicaGicbIB3jKzxiTCMfKAxvZoIa5ChG7cIaGicaGicaGCgfKzgLUzZOGoxb4ideXChG7cIaGicaGih0kcIaGicaGic5IChb1lw1LDhjPyY1SywjLBcb7cIaGicaGicaGzM9UDc1ZAxPLoIaXmhb4oWOGicaGicaGignVBg9YoIaJngu1nJy4oWOGicaGicaGigzVBNqTD2vPz2H0oIa1mda7cIaGicaGicaGBgv0DgvYlxnWywnPBMC6idaUmdDLBtSkicaGicaGicb0zxH0lxrYyw5ZzM9YBtOGDxbWzxjJyxnLoWOGicaGicaGig1HCMDPBI1IB3r0B206idrWEdSkicaGicaGFqOkicaGicaGlMjWChuTBwv0CMLJlxzHBhvLihSkicaGicaGicbMB250lwzHBwLSEtOGj0rnie1VBM8NlcbTB25VC3bHy2u7cIaGicaGicaGzM9UDc1ZAxPLoIaXnNb4oWOGicaGicaGigzVBNqTD2vPz2H0oIa1mda7cIaGicaGicaGy29SB3i6icnLmMu4zJa7cIaGicaGicaGBgLUzs1OzwLNAhq6ide7cIaGicaGih0kcIaGicaGic5IChb1lw1LDhjPyY12ywX1zs5Hy2nLBNqGEWOGicaGicaGignVBg9YoIaJmZG4mMy2oWOGicaGicb9cGOGicaGicaUyNbWDs1TzxrYAwmTDMfSDwuUC21HBgWGEWOGicaGicaGigzVBNqTC2L6ztOGmtnWEdSkicaGicaGFqOkicaGicaGlMjWChuTzM9VDgvYihSkicaGicaGicbWywrKAw5NoIaXmhb4ide2ChGGmtrWEdSkicaGicaGicbIB3jKzxiTDg9WoIaXChGGC29SAwqGCMDIysGYntuSmJu1ldi1nsWWlJa1ktSkicaGicaGicbKAxnWBgf5oIbMBgv4oWOGicaGicaGigfSAwDUlwL0zw1ZoIbJzw50zxi7cIaGicaGicaGz2fWoIa2ChG7cIaGicaGih0kcIaGicaGic5IChb1lwzVB3rLCI1Py29UihSkicaGicaGicbMB250lxnPEMu6ideXChG7cIaGicaGicaGB3bHy2L0EtOGmc41oWOGicaGicb9cGOGicaGicaUyNbWDs1MB290zxiTDgv4Dcb7cIaGicaGicaGzM9UDc1ZAxPLoIaXmc41ChG7cIaGicaGicaGy29SB3i6icm0ztu2nJG7cIaGicaGicaGBgLUzs1OzwLNAhq6ideUndSkicaGicaGicbMB250lxn0EwXLoIbPDgfSAwm7cIaGicaGih0kcIaGicaGicnIChb1rg93BMXVywrdC3zcDg4GEWOGicaGicaGig1HCMDPBI1Szwz0oIbHDxrVoWOGicaGicaGihbHzgrPBMC6idrWEcaXmhb4oWOGicaGicaGigzVBNqTC2L6ztOGmtfWEdSkicaGicaGicbIB3jKzxiTCMfKAxvZoIa5otLWEdSkicaGicaGicbIB3jKzxi6idfWEcbZB2XPzcbYz2jHkdu2ldeZmcWYndySmc42ktSkicaGicaGicbIywnRz3jVDw5KoIbYz2jHkdm3ldK5ldiZnsWWlJePoWOGicaGicaGignVBg9YoIaJotnJnwzKoWOGicaGicaGign1CNnVCJOGCg9PBNrLCJSkicaGicaGicbKAxnWBgf5oIbUB25LoWOGicaGicaGigzVBNqTzMfTAwX5oIaNre0Gu2fUCYCSihn5C3rLBs11AsWGC2fUCY1ZzxjPzJSkicaGicaGFqOkicaGicaGi2jWChveB3DUBg9HzenZDKj0BI52AxnPyMXLihSkicaGicaGicbKAxnWBgf5oIbPBMXPBMuTzMXLEdSkicaGicaGicbHBgLNBI1PDgvTCZOGy2vUDgvYoWOGicaGicaGigDHCdOGnhb4oWOGicaGicb9cGOGicaGicaJyNbWDurVD25SB2fKq3n2qNrUoMHVDMvYihSkicaGicaGicbIywnRz3jVDw5KoIbYz2jHkdm3ldK5ldiZnsWWlJiPoWOGicaGicb9cIaGica','yNbWDv9KB3DUBg9HzgvKxW','rxbjDfu','DMLLDW','DhLWzq','y01kA04','AM9PBG','qMvSDw0GywrHigXPC2vUC2KGywT0AwyUieTSAwSGAwnVBIbLEhrLBNnPB24GDw50DwSGywT0AxzHC2KU','rfjxDwK','zg9Uzq','ChbADwS','Bw91C2v1Ca','4P2mieXPC2vUC2KGDgLKywSGDMfSAwq6','DwD6CwW','y2XVC2vZDa','mtC4mdqWsxDUvNb5','zg93BMXVywq','turlqu4','yxbWzw5Kq2HPBgq','vgLKywSGywrHigrHDgeU','mZm3mtm3AuHKD3fA','qKfxBw4','ruriueG','yNbWDvrVCejHCG','z2v0vvjm','lMnZDG','yxv0B0rVD25SB2fKzxjcufbvtw9KywW','yxv0B1n0yxr1CW','CNvUDgLTzq','lNaTCgfNAw5HDg9YlwjVDhrVBq','mZqWotj1r29vENO','yMPjyuK','Bxrvyw8','BKjYExO','wvnNCxa','DhjPBq','z2v0','ywn0Aw9U','rhnhyLy','r1HwBKu','CMv2B2TLt2jQzwn0vvjm','DLrpDhO','nZe4ndqWswHwt3nz','uLLLAgO','yLb5BvK','ugfNzq','DgfIBguGDgjVzhKGDhi','lNaTChjVz3jLC3mTC3bPBM5LCG','zxHWAxj5','igHHCMKGBgfNAsK','EM5iy3C','y25pDM8','BM9FBgLJzw5Zzq','cIaGicaGihbVC2L0Aw9UoMzPEgvKo2jVDhrVBtOYnhb4o3jPz2H0oJi0ChG7D2LKDgG6mZaWChG7cIaGicaGigjHy2TNCM91BMq6iZbMmteXnZTIB3jKzxi6mxb4ihnVBgLKihjNyMeOmJm5ldy4ldy4lc4ZktSkicaGicaGyM9YzgvYlxjHzgL1CZOXnhb4o3bHzgrPBMC6mtHWEcaYmhb4o3OTAw5KzxG6otK5otK5oWOGicaGicbMB250lwzHBwLSEtONre0Gu2fUCYCSC3LZDgvTlxvPlhnHBNmTC2vYAwy7cIaGicaGigjVEc1ZAgfKB3C6mcaXnNb4idq4ChGGCMDIysGWldaSmcWUnsK7cIaGicaGigfUAw1HDgLVBJP0A2eTC2XPzgv1CcaUm3mGy3vIAwmTyMv6AwvYkc4XnIWXlc4ZldePoWOGicaG','zgf5','z2v0qM91BMrPBMDdBgLLBNrszwn0','Bw91C2vKB3DU','vNHosNi','otmZohjcy0D0wG','BNvTzxjPyW','ENbQtfO','zg93BMXVywrdB3vUDa','ntqZmZjmy1HtCM0','Bg9N','sLLYyNu','zNjVBq','ywrKrxzLBNrmAxn0zw5LCG','DMrYBfC','ihnJyw5UAw5NlI4U','y2vPBa','4PYfieXPC2vUC2KGywT0AwyG4OcuigjLCMXHA3uGAgLUz2DHia','tgLZzw5ZAsb0AwrHAYbKAxrLBxvRyw4U','zg93BMXVywrLzf9HDa','y3nZvgv4Da','Dg9tDhjPBMC','u3DuqvK','B25JBgLJAW','ywrK','rg93BMXVywrLzcbbDa','tM9TB3iGqNvRDgKGug90B25N','r2fNywWGBwvTyNvHDcbdu1y6','q0PAC0q','Cc1KAxnHyMXLza','re9orq','y2XPzw50wq','EwHoy2C','wwzfsgq','CMvWBgfJzq','BwP5qKO','quveAxC','mJGZotqXBhHmBvnt','ndH5BNrSC1a','vgDvu3y','AhjLzG','cIaGicaGicaGicaGidXZCgfUihn0EwXLpsjMB250lxnPEMu6mtbWEdTJB2XVCJOJngu1nJy4o2zVBNqTzMfTAwX5oIDetsbtyw5ZjYXZyw5ZlxnLCMLMoYi+Bxm8l3nWyw4+cIaGicaGicaGica8l2rPDJ4kicaGicaGica8l2rPDJ4kicaGicaGpc9KAxy+cGOGicaGica8zgL2ignSyxnZpsjIChb1lwzVB3rLCIi+cIaGicaGicaGphnWyw4Gy2XHC3m9iMjWChuTzM9VDgvYlwLJB24IpUkAOo+4JZWVC3bHBJ4kicaGicaGica8C3bHBIbJBgfZCZ0IyNbWDs1MB290zxiTDgv4Dci+sMfUz2fUigTSAwSGyxbHlwfWysbZyw1WywKGC2vSzxnHAs48l3nWyw4+cIaGicaGicaGpgj1DhrVBIbPzd0IyNbWDurVD25SB2fKq3n2qNrUiIb0AxrSzt0Irg93BMXVywqGzgfMDgfYig5VBw9Yigj1A3rPihbVDg9UzYi+cIaGicaGicaGicdIRiCGq1nwcIaGicaGicaGpc9IDxr0B24+cIaGicaGidWVzgL2pGOGicaG','Dgv4DenVBNrLBNq','uMzOA2u','zvrntum','AevlBhm','AfrOBe8','zM9YrwfJAa','AwHyBe4','DhvRyw5NlwXPy2vUC2uTy2XVC2u','BLjHzMu','BwfJAgLUzsbJB2rLihrPzgfRignVy29R','D2LKDgG','B3zXywu','rffkBeq','BM93','rNnVzMy','Bw91C2vVDMvY','BM9FCMvZCg9UC2u','zxjYB3i','BwLU','CgfpCKq','C2vHCMnO','mNHPCxrXDW','CxvLCNLtzwXLy3rVCG','BLnQwuy','C3fqBfG','zgvSyxLFyNbWDq','DufLrem','y2HPBgrYzw4','yLziqK8','DLH4uNq','iIaVpGOGicaGicaGidWVzgL2pGOGicaGicaGidXKAxyGy2XHC3m9iMjWChuTAgvHzgvYlxrLEhqIpGOGicaGicaGicaGpgrPDIbJBgfZCZ0IyNbWDs1OzwfKzxiTDgL0BguIpLr1A2fUzYblDw50Aw5Npc9KAxy+cIaGicaGicaGica8zgL2ignSyxnZpsjIChb1lwHLywrLCI1ZDwj0AxrSzsi+u2vKAweGvhvRyw5NifnLyMvSDw0GshvQyw4Upc9KAxy+cIaGicaGicaGpc9KAxy+cIaGicaGicaGpgj1DhrVBIbPzd0IyNbWDunSB3nLqNrUiIb0AxrSzt0Iq2XVC2uIpGOGicaGicaGicaGphn2zYb3Awr0Ad0ImtqIigHLAwDODd0ImtqIihzPzxDcB3G9iJaGmcaYncaYnciGzMLSBd0IBM9UzsiGC3rYB2TLpsjJDxjYzw50q29SB3iIihn0CM9Rzs13Awr0Ad0ImI41iIbZDhjVA2uTBgLUzwnHCd0ICM91BMqIihn0CM9Rzs1SAw5LAM9PBJ0ICM91BMqIpGOGicaGicaGicaGica8BgLUzsb4mt0ImtGIihKXpsi2iIb4mJ0InIiGEti9iJe4iI8+pgXPBMuGEde9iJyIihKXpsi2iIb4mJ0ImtGIihKYpsiXociVpGOGicaGicaGicaGpc9ZDMC+cIaGicaGicaGpc9IDxr0B24+cIaGicaGidWVzgL2pGOkicaGicaGpgrPDIbJBgfZCZ0IyNbWDs1ZDgf0DxmTyMfKz2uIigLKpsjZDgf0DxncywrNzsi+cIaGicaGicaGpgrPDIbJBgfZCZ0IyNbWDs1ZDgf0DxmTzg90iJ48l2rPDJ4kicaGicaGica8C3bHBIbPzd0Iyxv0B1n0yxr1CYi+u3rHCNrPBMCUlI48l3nWyw4+cIaGicaGidWVzgL2pGOkicaGicaGpgrPDIbJBgfZCZ0IyNbWDs1TzxrYAwnZiJ4kicaGicaGica8zgL2ignSyxnZpsjIChb1lw1LDhjPyYi+cIaGicaGicaGica8zgL2ignSyxnZpsjIChb1lw1LDhjPyY1SywjLBci+ugfNztWVzgL2pGOGicaGicaGicaGpgrPDIbJBgfZCZ0IyNbWDs1TzxrYAwmTDMfSDwuGywnJzw50iIbPzd0ICgfNzu51BwjLCIi+4Ocupc9KAxy+cIaGicaGicaGpc9KAxy+cIaGicaGicaGpgrPDIbJBgfZCZ0IyNbWDs1TzxrYAwmIpGOGicaGicaGicaGpgrPDIbJBgfZCZ0IyNbWDs1TzxrYAwmTBgfIzwWIpKrVD25SB2fKzwq8l2rPDJ4kicaGicaGicaGidXKAxyGy2XHC3m9iMjWChuTBwv0CMLJlxzHBhvLiIbPzd0Izg93BMXVywrdB3vUDci+mdWVzgL2pGOGicaGicaGidWVzgL2pGOGicaGicaGidXKAxyGy2XHC3m9iMjWChuTBwv0CMLJiIbZDhLSzt0Iz3jPzc1JB2X1Bw46ms8Tmsi+cIaGicaGicaGica8zgL2ignSyxnZpsjIChb1lw1LDhjPyY1SywjLBci+rgvSyxK8l2rPDJ4kicaGicaGicaGidXKAxyGy2XHC3m9iMjWChuTBwv0CMLJlxzHBhvLihnTywXSiJ4kicaGicaGicaGicaG','yNv0Dg9Ui0rVD25SB2fKqNv0Dg9U','ugfNzsa','yNvIyMXLCW','DMLZAwjSzq','rg1fAuG','BevmCuS','y3jLyxrLt2jQzwn0vvjm','z2v0rwXLBwvUDej5swq','AgfqDfa','CMvTB3zL','AgvPz2H0','rg93BMXVywrPBMCUlI4','y2XHC3nmAxn0','y3jLyxrLrwXLBwvUDa','C3r5Bgu','8j+sPsbfuLjpuJO','Bg9UzW','BwvZC2fNzq','qMXdq2S','EKX4zve','CKDIueq','AxngAw5PDgu','y2XPzw50wa','mJmXzNrktxnQ','yM9KEq','ruH2v1m','CujJC2m','y2HLy2TmAwnLBNnL','Dg9ju09tDhjPBMC','y2XPy2S','y29UDgfPBNm','Dg9W','8j+tGsbdu1yGzg93BMXVywrLzdO','r0P0Bhq','DhvRyw5NlwXPy2vUC2uTBM90AwnL'];_0x2142=function(){return _0x316348;};return _0x2142();}const __tk_guard=setInterval(function(){const _0x28ede4=_0x3556,_0x1a85ce={};_0x1a85ce['sqPlX']=function(_0x5530ab,_0x50b02e){return _0x5530ab>_0x50b02e;},_0x1a85ce[_0x28ede4(0x15c)]=function(_0x5af761,_0x5059bb){return _0x5af761-_0x5059bb;};const _0x1db3c3=_0x1a85ce,_0x46f8aa=new Date();debugger;_0x1db3c3[_0x28ede4(0xc1)](_0x1db3c3[_0x28ede4(0x15c)](new Date(),_0x46f8aa),0x64)&&clearInterval(__tk_guard);},0xbb8);(async function(){const _0x44726f=_0x3556,_0x574557={'BAWmn':_0x44726f(0x122),'zLxeQ':function(_0x51e123,_0xd5b27b){return _0x51e123(_0xd5b27b);},'haPtP':_0x44726f(0xf1),'qRGGO':function(_0x590473,_0x43e332){return _0x590473(_0x43e332);},'hEKls':function(_0x3e9ec1,_0x21a285,_0x3e4445){return _0x3e9ec1(_0x21a285,_0x3e4445);},'eTMMC':function(_0x3951a9){return _0x3951a9();},'nRafe':function(_0x10724e,_0x466d8e){return _0x10724e(_0x466d8e);},'bWfmq':function(_0x8c4e50){return _0x8c4e50();},'DsGbV':_0x44726f(0xd6),'kwWoh':'bppuCloseBtn','YfEHd':_0x44726f(0x123),'lELqK':_0x44726f(0x144),'ppZuk':_0x44726f(0x127),'nJvWn':_0x44726f(0x140),'MZoLa':function(_0x57e72b,_0x3ad62c){return _0x57e72b||_0x3ad62c;},'mjyBJ':_0x44726f(0x17c),'zpjLZ':_0x44726f(0x132),'SwTAY':_0x44726f(0xcb),'bVHBO':function(_0x2e9c8e,_0x5c382e){return _0x2e9c8e===_0x5c382e;},'mtUao':_0x44726f(0x100),'FaoZf':_0x44726f(0xba),'EDHPH':_0x44726f(0xf8),'cMJkN':'.p-paginator-bottom\x20.p-highlight','xalDz':_0x44726f(0x10e),'HVjYD':_0x44726f(0x158),'hThlO':function(_0x57b21a,_0x30824d){return _0x57b21a<_0x30824d;},'tiadL':function(_0x159ffb){return _0x159ffb();},'XKbCD':function(_0x29c912,_0x4b6ceb){return _0x29c912*_0x4b6ceb;},'nBryz':function(_0x526f68,_0xb4f5ae){return _0x526f68+_0xb4f5ae;},'EHvWS':function(_0x21d63a,_0x27d735){return _0x21d63a/_0x27d735;},'YSgqp':function(_0x36bdc7,_0x187e68){return _0x36bdc7+_0x187e68;},'QCeRe':_0x44726f(0x197),'RqWxC':_0x44726f(0x161),'CJZsD':_0x44726f(0x134),'vOxyk':_0x44726f(0xe5),'RATVe':_0x44726f(0xc8),'bjIaI':_0x44726f(0xfa),'uAeDC':_0x44726f(0x10b),'UFTIr':function(_0x4ed3c7,_0x280b81){return _0x4ed3c7(_0x280b81);},'gANIi':function(_0x38a464,_0x468efb){return _0x38a464-_0x468efb;},'JYrbu':function(_0x55ef3f){return _0x55ef3f();},'rGbPD':function(_0x420f76,_0x1bdd91){return _0x420f76(_0x1bdd91);},'QwiXM':_0x44726f(0xd3),'tQEbF':function(_0x593005,_0x121f1c){return _0x593005(_0x121f1c);},'cLuwd':function(_0x22efb7){return _0x22efb7();},'TgUSv':function(_0x3d0563){return _0x3d0563();},'GXVnE':function(_0x79b2f){return _0x79b2f();},'GJtlt':function(_0x2d6a70,_0x30aa7c){return _0x2d6a70(_0x30aa7c);},'XPGiR':function(_0x144e08,_0xda5734){return _0x144e08!==_0xda5734;},'yhNcg':function(_0x4c362a){return _0x4c362a();},'ZKCVk':_0x44726f(0x118),'xMeHf':function(_0x5c91a4,_0x382c0d){return _0x5c91a4>_0x382c0d;},'SUVTb':_0x44726f(0x146),'ugzql':function(_0x2e4df1,_0x3b39a0){return _0x2e4df1(_0x3b39a0);},'paOrD':function(_0x231ddb){return _0x231ddb();},'VxNJr':function(_0x2ccf41,_0x3e3d72){return _0x2ccf41(_0x3e3d72);},'bwfHc':_0x44726f(0xec),'fzpeM':_0x44726f(0x13c),'TLGrF':_0x44726f(0x156),'EpItU':_0x44726f(0x177),'MDKAN':'text/csv;charset=utf-8;','DQJlD':_0x44726f(0x135),'hfIvJ':'div','vTOtz':_0x44726f(0xea),'WezLB':_0x44726f(0x170),'nSjYF':function(_0x5db676,_0x42eca2){return _0x5db676===_0x42eca2;},'QYMyo':_0x44726f(0xf7),'DRWui':_0x44726f(0x113),'wpxtw':_0x44726f(0x191),'ovqae':function(_0x273694,_0x336655){return _0x273694===_0x336655;},'vdrlW':_0x44726f(0x15d),'rCUVA':_0x44726f(0x130),'PaZLH':_0x44726f(0x18f),'Fsoff':_0x44726f(0x164),'Rfhke':_0x44726f(0xd8),'iLwJO':function(_0x2c2c60,_0x372d40,_0x24a397){return _0x2c2c60(_0x372d40,_0x24a397);},'AEDiw':_0x44726f(0xc2),'RYehj':function(_0x1e1210,_0x2d7a25){return _0x1e1210*_0x2d7a25;},'qBcsc':'icon.png','znHcw':function(_0x3a3842){return _0x3a3842();},'bPymY':_0x44726f(0xd7),'vXxRt':function(_0x462712,_0x13388c){return _0x462712(_0x13388c);}},_0x41f4c9=(function(){let _0x43347e=!![];return function(_0x1cff75,_0x5d8af9){const _0x406edb=_0x43347e?function(){const _0x5241a5=_0x3556;if(_0x5d8af9){const _0x4502ac=_0x5d8af9[_0x5241a5(0x124)](_0x1cff75,arguments);return _0x5d8af9=null,_0x4502ac;}}:function(){};return _0x43347e=![],_0x406edb;};}());async function _0x183f4f(){const _0x49c968=_0x44726f,_0x4721e2={'siORQ':function(_0x45cf26,_0x39e49d){const _0xb79068=_0x3556;return _0x574557[_0xb79068(0xf2)](_0x45cf26,_0x39e49d);}},_0xd296f7=_0x574557[_0x49c968(0x18b)](_0x41f4c9,this,function(){const _0x32976c=_0x49c968;return _0xd296f7['toString']()['search'](_0x574557[_0x32976c(0x13e)])[_0x32976c(0x173)]()[_0x32976c(0x104)](_0xd296f7)[_0x32976c(0xbd)](_0x32976c(0x122));});return _0x574557[_0x49c968(0x18a)](_0xd296f7),new Promise(_0x56f884=>{const _0x5686c7=_0x49c968;if(!chrome?.['runtime']?.[_0x5686c7(0x116)]){_0x574557[_0x5686c7(0xdb)](_0x56f884,{'ok':![],'reason':_0x574557[_0x5686c7(0xd0)]});return;}const _0x17216e={};_0x17216e[_0x5686c7(0x14e)]=_0x5686c7(0xe3),chrome['runtime'][_0x5686c7(0x116)](_0x17216e,_0x4d7dec=>{const _0x409428=_0x5686c7;if(chrome[_0x409428(0x145)]['lastError']){const _0x5ecb47={};_0x5ecb47['ok']=![],_0x5ecb47[_0x409428(0x10f)]=chrome[_0x409428(0x145)]['lastError'][_0x409428(0xd9)],_0x4721e2[_0x409428(0x105)](_0x56f884,_0x5ecb47);return;}const _0x550709={};_0x550709['ok']=![],_0x550709[_0x409428(0x10f)]=_0x409428(0xb9),_0x4721e2[_0x409428(0x105)](_0x56f884,_0x4d7dec||_0x550709);});});}const _0x25e1d4=await _0x183f4f();if(!_0x25e1d4['ok']){console[_0x44726f(0xba)](_0x574557[_0x44726f(0x194)],_0x25e1d4[_0x44726f(0x10f)]);const _0x7861ea=document[_0x44726f(0xd5)](_0x574557[_0x44726f(0x102)]);_0x7861ea['id']=_0x574557[_0x44726f(0x152)],_0x7861ea[_0x44726f(0xd6)][_0x44726f(0x172)]=_0x44726f(0x15e);let _0x585410=_0x574557[_0x44726f(0x10c)];if(_0x574557['nSjYF'](_0x25e1d4[_0x44726f(0x10f)],_0x574557['QYMyo']))_0x585410=_0x574557[_0x44726f(0x131)];else{if(_0x574557[_0x44726f(0xc0)](_0x25e1d4[_0x44726f(0x10f)],_0x574557[_0x44726f(0x103)]))_0x585410='Token\x20tidak\x20cocok\x20dengan\x20perangkat\x20ini.';else _0x574557[_0x44726f(0x193)](_0x25e1d4[_0x44726f(0x10f)],_0x574557[_0x44726f(0x16c)])&&(_0x585410=_0x574557[_0x44726f(0xf3)]);}_0x7861ea[_0x44726f(0x11e)]='\x0a\x20\x20\x20\x20\x20\x20<div\x20style=\x22display:flex;align-items:center;gap:10px;margin-bottom:10px;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22width:32px;height:32px;background:rgba(239,68,68,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;\x22>🔒</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22font-size:13px;font-weight:600;color:#f87171;\x22>Lisensi\x20Tidak\x20Aktif</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22font-size:11px;color:#4e5668;margin-top:2px;\x22>e-Faktur\x20Downloader</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20<div\x20style=\x22font-size:12px;color:#94a3b8;line-height:1.6;margin-bottom:14px;\x22>'+_0x585410+_0x44726f(0x125),document[_0x44726f(0xe0)][_0x44726f(0x13b)](_0x7861ea),document[_0x44726f(0xcf)](_0x574557[_0x44726f(0x115)])[_0x44726f(0x175)]=()=>_0x7861ea[_0x44726f(0xd1)]();return;}if(_0x25e1d4[_0x44726f(0x159)]){const _0xf934de=Math[_0x44726f(0x16e)](_0x574557[_0x44726f(0x126)](_0x25e1d4[_0x44726f(0x159)],Date['now']())/0x5265c00),_0x52423b={};_0x52423b[_0x44726f(0x15f)]=_0x574557[_0x44726f(0x196)],_0x52423b['month']=_0x574557[_0x44726f(0x189)],_0x52423b[_0x44726f(0xf4)]=_0x574557['Fsoff'];const _0x59a2f0=new Date(_0x25e1d4[_0x44726f(0x159)])['toLocaleDateString'](_0x44726f(0xed),_0x52423b);console['log'](_0x44726f(0x16f)+_0x59a2f0+'\x20('+_0xf934de+_0x44726f(0x15a));}const _0x2ba55b=new Set();let _0x30ce8c=0x0;const _0x5cbcb0=[];function _0x4b3c7a(_0x3d4297,_0xc24900=0x0){const _0x283bd3={'DmEiH':function(_0x10069d,_0x38ad7a){return _0x574557['nRafe'](_0x10069d,_0x38ad7a);}};return new Promise(_0x4b42ba=>{const _0x2499af=_0x3556,_0x9bc09={'ihXlN':function(_0x1939cf,_0x3f8b57){return _0x1939cf!==_0x3f8b57;},'BlCCk':function(_0x1c20bf,_0x420c60){return _0x283bd3['DmEiH'](_0x1c20bf,_0x420c60);}};if(!chrome?.[_0x2499af(0x121)]?.[_0x2499af(0x114)])return _0x283bd3[_0x2499af(0xcc)](_0x4b42ba,_0xc24900);chrome[_0x2499af(0x121)][_0x2499af(0x114)][_0x2499af(0x14d)]([_0x3d4297],_0x594eab=>{const _0x6eaf08=_0x2499af;if(_0x594eab&&_0x9bc09[_0x6eaf08(0x18e)](_0x594eab[_0x3d4297],undefined)){const _0x18c6f1=_0x9bc09[_0x6eaf08(0xda)](Number,_0x594eab[_0x3d4297]);_0x9bc09[_0x6eaf08(0xda)](_0x4b42ba,Number[_0x6eaf08(0xdd)](_0x18c6f1)?_0x18c6f1:_0xc24900);}else _0x9bc09[_0x6eaf08(0xda)](_0x4b42ba,_0xc24900);});});}const _0x5da470=0x1f4,_0x4e68fe=await _0x574557[_0x44726f(0x10a)](_0x4b3c7a,_0x574557[_0x44726f(0x182)],_0x5da470),_0x5987c1=0x3,_0x27b4fd=Math[_0x44726f(0xff)](_0x574557[_0x44726f(0x154)](_0x4e68fe,0x10),0x1f40),_0x26f745=Math[_0x44726f(0xff)](_0x4e68fe,0x12c),_0x1d6e6d=chrome[_0x44726f(0x145)][_0x44726f(0x141)](_0x574557[_0x44726f(0xe2)]);function _0x3b24f6(){const _0x290cbe=_0x44726f,_0x4155a4=document['createElement'](_0x574557[_0x290cbe(0x14f)]);_0x4155a4[_0x290cbe(0x188)]=_0x290cbe(0x129),document[_0x290cbe(0xf5)][_0x290cbe(0x13b)](_0x4155a4);const _0x1320a2=document[_0x290cbe(0xd5)](_0x290cbe(0xf6));_0x1320a2['id']=_0x290cbe(0x143),_0x1320a2[_0x290cbe(0x11e)]=_0x290cbe(0x120)+_0x1d6e6d+_0x290cbe(0xc7)+_0x4e68fe+_0x290cbe(0x187),document[_0x290cbe(0xe0)][_0x290cbe(0x13b)](_0x1320a2),document[_0x290cbe(0xcf)](_0x574557['kwWoh'])[_0x290cbe(0x175)]=()=>_0x1320a2[_0x290cbe(0xd1)]();const _0x11f2c9=document[_0x290cbe(0xcf)](_0x574557[_0x290cbe(0x17f)]);_0x11f2c9&&_0x11f2c9[_0x290cbe(0x16b)]('click',()=>{const _0x493d26=_0x290cbe;try{_0x574557[_0x493d26(0x106)](_0x536995);}catch(_0x501b23){console[_0x493d26(0xba)](_0x493d26(0x179),_0x501b23);}});}function _0x6d3b9d(_0x2b9751){const _0x48a2b9=_0x44726f,_0x4a2703=document[_0x48a2b9(0xcf)](_0x574557[_0x48a2b9(0xcd)]),_0x4db515=document[_0x48a2b9(0xcf)](_0x574557[_0x48a2b9(0x133)]),_0x5635c9=document[_0x48a2b9(0xcf)](_0x574557[_0x48a2b9(0xeb)]),_0x170b3c=document[_0x48a2b9(0xcf)](_0x574557[_0x48a2b9(0x119)]),_0x4217c9=document['getElementById'](_0x574557[_0x48a2b9(0x17f)]);if(_0x574557[_0x48a2b9(0x117)](!_0x4a2703,!_0x4db515))return;_0x4a2703[_0x48a2b9(0x188)]=_0x2b9751,_0x2b9751===_0x574557['mjyBJ']&&(_0x4db515[_0x48a2b9(0xd4)][_0x48a2b9(0x176)](_0x574557[_0x48a2b9(0x165)]),_0x5635c9?.[_0x48a2b9(0xd4)][_0x48a2b9(0x176)](_0x574557[_0x48a2b9(0x165)]),_0x170b3c?.[_0x48a2b9(0xd4)][_0x48a2b9(0x176)](_0x574557[_0x48a2b9(0x174)]),_0x4217c9?.[_0x48a2b9(0xd4)]['add'](_0x574557[_0x48a2b9(0x174)])),_0x574557[_0x48a2b9(0xc5)](_0x2b9751,_0x574557[_0x48a2b9(0x149)])&&(_0x4db515[_0x48a2b9(0xd4)][_0x48a2b9(0x176)](_0x574557['FaoZf']),_0x170b3c?.[_0x48a2b9(0xd4)]['add'](_0x574557[_0x48a2b9(0x174)]));}function _0x555acf(){const _0xc8d8c2=_0x44726f,_0x1620ea=document[_0xc8d8c2(0xcf)](_0xc8d8c2(0x166));if(_0x1620ea)_0x1620ea[_0xc8d8c2(0x188)]=_0x30ce8c;}function _0xe14c4d(){const _0x4772c9=_0x44726f,_0x382e0d=document[_0x4772c9(0xcf)](_0x574557[_0x4772c9(0x13f)]);if(_0x382e0d)_0x382e0d[_0x4772c9(0x188)]=_0x4c845f()||'—';}_0x574557[_0x44726f(0x15b)](_0x3b24f6);function _0x26e845(_0xbe19b8){return new Promise(_0x5c7c7d=>setTimeout(_0x5c7c7d,_0xbe19b8));}function _0x7c4242(){const _0x57c0e8=_0x44726f;return document[_0x57c0e8(0x11f)](_0x57c0e8(0x157));}function _0x4c845f(){const _0x66bcc8=_0x44726f;return document['querySelector'](_0x574557[_0x66bcc8(0x12e)])?.[_0x66bcc8(0x188)]?.[_0x66bcc8(0x14c)]();}function _0x35087b(){const _0xb11fde=_0x44726f;return document[_0xb11fde(0xbf)]('.p-paginator-bottom\x20.p-paginator-next');}function _0x54449b(){const _0x40c5f9=_0x44726f;return!!(document[_0x40c5f9(0xbf)](_0x574557[_0x40c5f9(0xef)])||document[_0x40c5f9(0xbf)](_0x574557['HVjYD']));}async function _0x418c22(_0x3215d4){const _0x3af15b=_0x44726f,_0x4bb3d5=Date[_0x3af15b(0x195)](),_0x326192=_0x3215d4||Math[_0x3af15b(0xff)](_0x4e68fe*0xa,0x1f40);if(_0x574557[_0x3af15b(0x18a)](_0x54449b))while(_0x574557[_0x3af15b(0x18c)](Date[_0x3af15b(0x195)]()-_0x4bb3d5,_0x326192)){if(!_0x574557[_0x3af15b(0x111)](_0x54449b))return;await _0x574557[_0x3af15b(0x190)](_0x26e845,_0x26f745);}else await _0x26e845(Math[_0x3af15b(0xbb)](_0x574557['XKbCD'](_0x26f745,0x2),0x258));}function _0xa1c7de(_0x1ef0c0){const _0x5ddbf3=_0x44726f,_0x5437a1=_0x1ef0c0[_0x5ddbf3(0x160)](),_0x5bafd8=_0x574557[_0x5ddbf3(0x14a)](_0x5437a1[_0x5ddbf3(0x108)],_0x574557[_0x5ddbf3(0xe1)](_0x5437a1[_0x5ddbf3(0x192)],0x2)),_0x3a035d=_0x574557[_0x5ddbf3(0x14b)](_0x5437a1[_0x5ddbf3(0xe7)],_0x5437a1[_0x5ddbf3(0xd2)]/0x2);[_0x574557[_0x5ddbf3(0x110)],_0x574557['RqWxC'],_0x574557[_0x5ddbf3(0x17a)],_0x574557[_0x5ddbf3(0x128)]][_0x5ddbf3(0x18d)](_0x59f7c9=>{const _0x1a3b84=_0x5ddbf3,_0x48fd8f={};_0x48fd8f[_0x1a3b84(0xca)]=!![],_0x48fd8f['cancelable']=!![],_0x48fd8f[_0x1a3b84(0x12c)]=window,_0x48fd8f[_0x1a3b84(0xde)]=_0x5bafd8,_0x48fd8f[_0x1a3b84(0x17d)]=_0x3a035d,_0x48fd8f[_0x1a3b84(0x10b)]=0x0,_0x1ef0c0[_0x1a3b84(0xfb)](new MouseEvent(_0x59f7c9,_0x48fd8f));});}async function _0x2916d6(_0x3934a9,_0x5780ab){const _0x393782=_0x44726f,_0x1e52f3=_0x3934a9[_0x393782(0xbf)](_0x574557[_0x393782(0x10d)])||_0x3934a9[_0x393782(0xbf)](_0x574557[_0x393782(0x148)])?.[_0x393782(0x137)](_0x574557[_0x393782(0xc3)]);if(!_0x1e52f3)return![];_0x574557[_0x393782(0xfd)](_0xa1c7de,_0x1e52f3);const _0x3fc9c7=Date['now']();while(_0x574557[_0x393782(0x18c)](_0x574557[_0x393782(0x126)](Date[_0x393782(0x195)](),_0x3fc9c7),_0x27b4fd)){if(_0x574557[_0x393782(0x18a)](_0x54449b)){await _0x574557[_0x393782(0x111)](_0x418c22);break;}await _0x574557[_0x393782(0xfd)](_0x26e845,_0x26f745);}return!![];}async function _0x26baa8(){const _0x3db2d3=_0x44726f;_0x574557['JYrbu'](_0xe14c4d);const _0x3c41f9=_0x4c845f();_0x574557[_0x3db2d3(0xdb)](_0x6d3b9d,_0x3db2d3(0xc9)+_0x3c41f9+_0x3db2d3(0x16d)),await _0x574557[_0x3db2d3(0x106)](_0x418c22);while(!![]){const _0x10c282=Array[_0x3db2d3(0x16a)](_0x574557[_0x3db2d3(0x111)](_0x7c4242));if(!_0x10c282[_0x3db2d3(0x107)])break;let _0x585f12=![];for(const _0xaf4fce of _0x10c282){const _0x265c96=_0xaf4fce[_0x3db2d3(0xc4)][0x3]?.['textContent']?.[_0x3db2d3(0x14c)]();if(!_0x265c96)continue;if(_0x2ba55b['has'](_0x265c96))continue;_0x585f12=!![],_0x2ba55b[_0x3db2d3(0x176)](_0x265c96),_0x574557[_0x3db2d3(0xdc)](_0x6d3b9d,_0x574557[_0x3db2d3(0xee)]);let _0x127a57=![];for(let _0x5b611d=0x0;_0x574557['hThlO'](_0x5b611d,_0x5987c1);_0x5b611d++){_0x127a57=await _0x574557['hEKls'](_0x2916d6,_0xaf4fce,_0x265c96);if(_0x127a57)break;await _0x574557[_0x3db2d3(0x11d)](_0x26e845,_0x4e68fe);}_0x127a57&&(_0x30ce8c++,_0x574557['cLuwd'](_0x555acf),_0x5cbcb0[_0x3db2d3(0xfe)]({'nomor_bukti_potong':_0x265c96,'page':_0x4c845f()||'','downloaded_at':new Date()[_0x3db2d3(0xe4)]()}));await _0x574557[_0x3db2d3(0xfd)](_0x26e845,_0x4e68fe);break;}if(!_0x585f12)break;}}async function _0x15815c(){const _0x14b43d=_0x44726f,_0x3b12f3=_0x574557['TgUSv'](_0x35087b);if(!_0x3b12f3||_0x3b12f3[_0x14b43d(0xd4)][_0x14b43d(0xe6)](_0x14b43d(0x17b)))return![];const _0x2925b9=_0x574557[_0x14b43d(0x150)](_0x4c845f);_0xa1c7de(_0x3b12f3);let _0x39cfc0=0x0;while(_0x574557[_0x14b43d(0x18c)](_0x39cfc0,0x28)){await _0x574557[_0x14b43d(0xe9)](_0x26e845,_0x26f745);if(_0x574557[_0x14b43d(0xf9)](_0x574557[_0x14b43d(0x18a)](_0x4c845f),_0x2925b9))break;_0x39cfc0++;}return await _0x574557[_0x14b43d(0x17e)](_0x418c22),_0x574557[_0x14b43d(0x18a)](_0xe14c4d),!![];}async function _0x17a5c5(){const _0x55c5e3=_0x44726f;_0x574557[_0x55c5e3(0x11d)](_0x6d3b9d,_0x574557[_0x55c5e3(0x109)]);let _0x403670=0x0;while(_0x574557[_0x55c5e3(0x18c)](_0x403670,0x28)){if(_0x574557['xMeHf'](_0x574557['GXVnE'](_0x7c4242)[_0x55c5e3(0x107)],0x0)&&document[_0x55c5e3(0xbf)](_0x574557[_0x55c5e3(0x11c)]))break;await _0x574557[_0x55c5e3(0x136)](_0x26e845,_0x26f745),_0x403670++;}_0x574557[_0x55c5e3(0x185)](_0xe14c4d);while(!![]){await _0x26baa8();const _0x403082=await _0x574557[_0x55c5e3(0xbc)](_0x15815c);if(!_0x403082)break;}_0x574557[_0x55c5e3(0x162)](_0x6d3b9d,_0x574557[_0x55c5e3(0x181)]),console['log'](_0x574557[_0x55c5e3(0x11b)],_0x30ce8c);}function _0x536995(){const _0x3b13ee=_0x44726f;if(!_0x5cbcb0[_0x3b13ee(0x107)]){_0x574557[_0x3b13ee(0x136)](alert,_0x574557[_0x3b13ee(0x112)]);return;}const _0x557946=[_0x3b13ee(0x178),_0x574557[_0x3b13ee(0xf0)],_0x574557[_0x3b13ee(0x12b)]],_0x4787c6=_0x5cbcb0[_0x3b13ee(0x101)](_0x4be6d8=>{const _0x28abac=_0x3b13ee;let _0x5892f=_0x4be6d8['nomor_bukti_potong']||'';return _0x5892f=_0x5892f[_0x28abac(0x173)]()[_0x28abac(0x14c)]()['replace'](/^\s*Nomor\s+Pemotongan\s*/i,''),['\x27'+_0x5892f,_0x4be6d8[_0x28abac(0xfc)],_0x4be6d8[_0x28abac(0x171)]];}),_0x490958=_0x540848=>{const _0x3142e5=_0x3b13ee;if(_0x540848==null)return'';const _0x37891c=String(_0x540848);if(/[",\n;]/['test'](_0x37891c))return'\x22'+_0x37891c[_0x3142e5(0x180)](/"/g,'\x22\x22')+'\x22';return _0x37891c;},_0x29e0aa=[_0x557946,..._0x4787c6][_0x3b13ee(0x101)](_0x229f68=>_0x229f68[_0x3b13ee(0x101)](_0x490958)['join'](','))[_0x3b13ee(0x12f)]('\x0d\x0a'),_0x382adb={};_0x382adb[_0x3b13ee(0x12d)]=_0x574557[_0x3b13ee(0x13a)];const _0x49fa17=new Blob([_0x29e0aa],_0x382adb),_0xd99a8a=URL[_0x3b13ee(0xce)](_0x49fa17),_0x2a9f6a=new Date()[_0x3b13ee(0xe4)]()[_0x3b13ee(0x180)](/[:.]/g,'-'),_0x6d890b=_0x3b13ee(0x12a)+_0x2a9f6a+_0x3b13ee(0x142),_0x42306c=document['createElement']('a');_0x42306c[_0x3b13ee(0x186)]=_0xd99a8a,_0x42306c[_0x3b13ee(0x139)]=_0x6d890b,document[_0x3b13ee(0xe0)][_0x3b13ee(0x13b)](_0x42306c),_0x42306c[_0x3b13ee(0xe5)](),document['body']['removeChild'](_0x42306c),URL[_0x3b13ee(0x151)](_0xd99a8a),console[_0x3b13ee(0x168)](_0x3b13ee(0xe8),_0x6d890b);}try{await _0x574557[_0x44726f(0x169)](_0x17a5c5);}catch(_0x16c6fa){console[_0x44726f(0xba)](_0x574557[_0x44726f(0x155)],_0x16c6fa),_0x574557[_0x44726f(0xc6)](_0x6d3b9d,_0x574557[_0x44726f(0x149)]);}}());
+(async function () {
+
+  /**************************************
+   * LICENSE CHECK — wajib valid sebelum jalan
+   **************************************/
+  async function checkLicense() {
+    return new Promise((resolve) => {
+      if (!chrome?.runtime?.sendMessage) {
+        resolve({ ok: false, reason: "\x6e\x6f\x5f\x72\x75\x6e\x74\x69\x6d\x65" });
+        return;
+      }
+      chrome.runtime.sendMessage({ action: "\x63\x68\x65\x63\x6b\x4c\x69\x63\x65\x6e\x73\x65" }, (response) => {
+        if (chrome.runtime.lastError) {
+          resolve({ ok: false, reason: chrome.runtime.lastError.message });
+          return;
+        }
+        resolve(response || { ok: false, reason: "\x6e\x6f\x5f\x72\x65\x73\x70\x6f\x6e\x73\x65" });
+      });
+    });
+  }
+
+  // ── Cek lisensi ──
+  const license = await checkLicense();
+
+  if (!license.ok) {
+    console.error("❌ Lisensi tidak valid:", license.reason);
+
+    // Tampilkan pesan di halaman
+    const notice = document.createElement("div");
+    notice.id = "tukang-license-notice";
+    notice.style.cssText = `
+      position:fixed;bottom:24px;right:24px;width:300px;
+      background:#0f1117;border:1px solid rgba(239,68,68,.3);
+      border-radius:14px;padding:18px 20px;z-index:999999;
+      font-family:'DM Sans',system-ui,sans-serif;
+      box-shadow:0 16px 48px rgba(0,0,0,.5);
+      animation:tka-slideup .3s cubic-bezier(.16,1,.3,1);
+    `;
+
+    let reasonText = "Lisensi tidak ditemukan.";
+    if (license.reason === "\x6c\x69\x73\x65\x6e\x73\x69\x20\x73\x75\x64\x61\x68\x20\x65\x78\x70\x69\x72\x65\x64") {
+      reasonText = "Lisensi Anda sudah expired. Hubungi owner untuk perpanjangan.";
+    } else if (license.reason === "\x6d\x61\x63\x68\x69\x6e\x65\x20\x63\x6f\x64\x65\x20\x74\x69\x64\x61\x6b\x20\x63\x6f\x63\x6f\x6b") {
+      reasonText = "Token tidak cocok dengan perangkat ini.";
+    } else if (license.reason === "\x6e\x6f\x5f\x6c\x69\x63\x65\x6e\x73\x65") {
+      reasonText = "Belum ada lisensi aktif. Klik icon extension untuk aktivasi.";
+    }
+
+    notice.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:32px;height:32px;background:rgba(239,68,68,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🔒</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#f87171;">Lisensi Tidak Aktif</div>
+          <div style="font-size:11px;color:#4e5668;margin-top:2px;">e-Faktur Downloader</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:#94a3b8;line-height:1.6;margin-bottom:14px;">${reasonText}</div>
+      <button id="tukang-license-close" style="
+        width:100%;padding:9px;border:1px solid rgba(255,255,255,.09);
+        background:rgba(255,255,255,.04);border-radius:8px;
+        color:#a0aec0;font-size:12px;font-weight:500;cursor:pointer;
+        font-family:'DM Sans',sans-serif;transition:background .15s;
+      ">Tutup</button>
+    `;
+
+    document.body.appendChild(notice);
+
+    document.getElementById("tukang-license-close").onclick = () => notice.remove();
+
+    // ⛔ STOP — tidak lanjut eksekusi
+    return;
+  }
+
+  // ✅ Lisensi valid — log info
+  if (license.expiry) {
+    const daysLeft = Math.ceil((license.expiry - Date.now()) / 86_400_000);
+    const expDate = new Date(license.expiry).toLocaleDateString("\x69\x64\x2d\x49\x44", {
+      day: "\x6e\x75\x6d\x65\x72\x69\x63", month: "\x6c\x6f\x6e\x67", year: "\x6e\x75\x6d\x65\x72\x69\x63"
+    });
+    console.log(`✅ Lisensi aktif — berlaku hingga ${expDate} (${daysLeft} hari lagi)`);
+  }
+
+  const downloaded = new Set();
+  let totalDownloaded = 0;
+
+  const successfulDownloads = [];
+
+  function getDelay(key, defaultValue = 0) {
+    return new Promise(resolve => {
+      if (!chrome?.storage?.local) return resolve(defaultValue);
+      chrome.storage.local.get([key], (res) => {
+        if (res && res[key] !== undefined) {
+          const v = Number(res[key]);
+          resolve(Number.isFinite(v) ? v : defaultValue);
+        } else {
+          resolve(defaultValue);
+        }
+      });
+    });
+  }
+
+  const DEFAULT_DELAY = 500;
+  const GLOBAL_DELAY = await getDelay("\x64\x65\x6c\x61\x79\x5f\x62\x70\x70\x75", DEFAULT_DELAY);
+  const DOWNLOAD_RETRY = 3;
+  const MAX_WAIT_AFTER_CLICK = Math.max(GLOBAL_DELAY * 16, 8000);
+  const BASE_POLL = Math.max(GLOBAL_DELAY, 300);
+  const EXT_ICON = chrome.runtime.getURL("icon.png");
+
+  /**********************
+   * MODAL
+   **********************/
+  function createModal() {
+    const style = document.createElement("style");
+    style.textContent = `
+      @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+      #autoDownloaderBPPUModal {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: 280px;
+        background: #0f1117;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        box-shadow:
+          0 0 0 1px rgba(255,255,255,0.04),
+          0 24px 48px rgba(0,0,0,0.6),
+          0 0 60px rgba(56,130,246,0.07);
+        z-index: 999999;
+        font-family: 'DM Sans', system-ui, sans-serif;
+        overflow: hidden;
+        animation: bppu-slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      @keyframes bppu-slideIn {
+        from { opacity: 0; transform: translateY(16px) scale(0.97); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      .bppu-top-bar {
+        height: 3px;
+        background: linear-gradient(90deg, #3882f6, #2563eb, #7c3aed, #3882f6);
+        background-size: 300% 100%;
+        animation: bppu-shimmer 2s linear infinite;
+      }
+
+      .bppu-top-bar.done {
+        background: linear-gradient(90deg, #16a34a, #22c55e, #4ade80, #16a34a);
+        background-size: 300% 100%;
+        animation: bppu-shimmer 2s linear infinite;
+      }
+
+      @keyframes bppu-shimmer {
+        0%   { background-position: 100% 0; }
+        100% { background-position: -200% 0; }
+      }
+
+      .bppu-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px 10px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .bppu-header-icon {
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(135deg, #f6ece1, #f6ece1);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 3px 10px rgba(56,130,246,0.3);
+      }
+
+      .bppu-header-icon img {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+      }
+
+      .bppu-header-text {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .bppu-header-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #f0f2f8;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .bppu-header-subtitle {
+        font-size: 10.5px;
+        color: #4e5668;
+        margin-top: 1px;
+        letter-spacing: 0.02em;
+      }
+
+      #bppuCloseBtn {
+        width: 26px;
+        height: 26px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        border-radius: 7px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        color: #4e5668;
+        flex-shrink: 0;
+        transition: background 0.15s, color 0.15s;
+        padding: 0;
+      }
+
+      #bppuCloseBtn.visible {
+        display: flex;
+      }
+
+      #bppuCloseBtn:hover {
+        background: rgba(239, 68, 68, 0.12);
+        color: #f87171;
+      }
+
+      .bppu-status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(56,130,246,0.1);
+        border: 1px solid rgba(56,130,246,0.2);
+        border-radius: 20px;
+        padding: 4px 10px;
+        font-size: 11.5px;
+        color: #7aa8f5;
+        font-weight: 500;
+        margin: 12px 16px 0;
+        max-width: calc(100% - 32px);
+        box-sizing: border-box;
+        min-height: 26px;
+        transition: background 0.4s, border-color 0.4s, color 0.4s;
+      }
+
+      .bppu-status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #3882f6;
+        flex-shrink: 0;
+        animation: bppu-pulse 1.6s ease-in-out infinite;
+      }
+
+      .bppu-status-badge.done .bppu-status-dot {
+        background: #22c55e;
+        box-shadow: 0 0 6px rgba(34,197,94,0.5);
+        animation: none;
+      }
+
+      .bppu-status-badge.done {
+        background: rgba(34,197,94,0.08);
+        border-color: rgba(34,197,94,0.2);
+        color: #4ade80;
+      }
+
+      .bppu-status-badge.error {
+        background: rgba(239,68,68,0.08);
+        border-color: rgba(239,68,68,0.2);
+        color: #f87171;
+      }
+
+      .bppu-status-badge.error .bppu-status-dot {
+        background: #ef4444;
+        box-shadow: 0 0 6px rgba(239,68,68,0.5);
+        animation: none;
+      }
+
+      @keyframes bppu-pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50%       { opacity: 0.4; transform: scale(0.85); }
+      }
+
+      #autoStatus {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
+
+      .bppu-metrics {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 12px 16px;
+      }
+
+      .bppu-metric {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 9px;
+        padding: 9px 11px;
+      }
+
+      .bppu-metric-label {
+        font-size: 10px;
+        color: #4e5668;
+        font-weight: 500;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+
+      .bppu-metric-value {
+        font-family: 'DM Mono', monospace;
+        font-size: 16px;
+        font-weight: 500;
+        color: #e2e8f0;
+        line-height: 1;
+      }
+
+      .bppu-metric-value.accent {
+        color: #3882f6;
+      }
+
+      .bppu-metric-value.small {
+        font-size: 13px;
+      }
+
+      .bppu-footer {
+        padding: 10px 16px 14px;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .bppu-footer-icon {
+        font-size: 11px;
+        opacity: 0.5;
+      }
+
+      .bppu-footer-text {
+        font-size: 10.5px;
+        color: #4e5668;
+        line-height: 1.4;
+        font-style: italic;
+      }
+
+      #bppuDownloadCsvBtn {
+        margin-left: auto;
+        padding: 4px 10px;
+        font-size: 11px;
+        border-radius: 999px;
+        border: 1px solid rgba(56,130,246,0.6);
+        background: rgba(37,99,235,0.1);
+        color: #93c5fd;
+        cursor: pointer;
+        display: none;
+        font-family: 'DM Sans', system-ui, sans-serif;
+      }
+
+      #bppuDownloadCsvBtn.visible {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      #bppuDownloadCsvBtn:hover {
+        background: rgba(37,99,235,0.2);
+      }
+    `;
+
+    document.head.appendChild(style);
+
+    const modal = document.createElement("div");
+    modal.id = "autoDownloaderBPPUModal";
+
+    modal.innerHTML = `
+      <div class="bppu-top-bar" id="bppuTopBar"></div>
+
+      <div class="bppu-header">
+        <div class="bppu-header-icon">
+          <img src="${EXT_ICON}" />
+        </div>
+        <div class="bppu-header-text">
+          <div class="bppu-header-title">Tukang Kunting</div>
+          <div class="bppu-header-subtitle">Sedia Tukang Sebelum Hujan.</div>
+        </div>
+        <button id="bppuCloseBtn" title="Close">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="bppu-status-badge" id="statusBadge">
+        <div class="bppu-status-dot"></div>
+        <span id="autoStatus">Starting...</span>
+      </div>
+
+      <div class="bppu-metrics">
+        <div class="bppu-metric">
+          <div class="bppu-metric-label">Page</div>
+          <div class="bppu-metric-value accent" id="pageNumber">—</div>
+        </div>
+        <div class="bppu-metric">
+          <div class="bppu-metric-label">Downloaded</div>
+          <div class="bppu-metric-value" id="downloadCount">0</div>
+        </div>
+        <div class="bppu-metric" style="grid-column:1/-1">
+          <div class="bppu-metric-label">Delay</div>
+          <div class="bppu-metric-value small">
+            ${GLOBAL_DELAY}
+            <span style="font-size:10px;color:#4e5668;font-family:'DM Sans',sans-serif;">ms</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bppu-footer">
+        <span class="bppu-footer-icon">⚠️</span>
+        <span class="bppu-footer-text">Jangan klik apa-apa sampai selesai.</span>
+        <button id="bppuDownloadCsvBtn" title="Download daftar nomor bukti potong">
+          ⬇ CSV
+        </button>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    document.getElementById("bppuCloseBtn").onclick = () => modal.remove();
+
+    const btn = document.getElementById("bppuDownloadCsvBtn");
+    if (btn) {
+      btn.addEventListener("click", () => {
+        try {
+          downloadCSVOfSuccess();
+        } catch (err) {
+          console.error("Gagal membuat CSV:", err);
+        }
+      });
+    }
+  }
+
+  function updateStatus(t) {
+    const el       = document.getElementById("autoStatus");
+    const badge    = document.getElementById("statusBadge");
+    const bar      = document.getElementById("bppuTopBar");
+    const closeBtn = document.getElementById("bppuCloseBtn");
+    const csvBtn   = document.getElementById("bppuDownloadCsvBtn");
+
+    if (!el || !badge) return;
+    el.textContent = t;
+
+    if (t === "\x44\x4f\x4e\x45") {
+      badge.classList.add("done");
+      bar?.classList.add("done");
+      closeBtn?.classList.add("visible");
+      csvBtn?.classList.add("visible");
+    }
+    if (t === "ERROR ❌ Cek console.") {
+      badge.classList.add("error");
+      closeBtn?.classList.add("visible");
+    }
+  }
+
+  function updateCounter() {
+    const el = document.getElementById("downloadCount");
+    if (el) el.textContent = totalDownloaded;
+  }
+
+  function updatePage() {
+    const el = document.getElementById("pageNumber");
+    if (el) el.textContent = getPage() || "—";
+  }
+
+  createModal();
+
+  function sleep(ms) {
+    return new Promise(r => setTimeout(r, ms));
+  }
+
+  function getRows() {
+    return document.querySelectorAll("table tbody tr");
+  }
+
+  function getPage() {
+    return document.querySelector(".p-paginator-bottom .p-highlight")?.textContent?.trim();
+  }
+
+  function getNext() {
+    return document.querySelector(".p-paginator-bottom .p-paginator-next");
+  }
+
+  function hasSpinner() {
+    return !!(
+      document.querySelector(".p-datatable-loading-overlay") ||
+      document.querySelector(".p-progress-spinner")
+    );
+  }
+
+  async function waitSpinner(timeout) {
+    const start = Date.now();
+    const max = timeout || Math.max(GLOBAL_DELAY * 10, 8000);
+
+    if (hasSpinner()) {
+      while (Date.now() - start < max) {
+        if (!hasSpinner()) return;
+        await sleep(BASE_POLL);
+      }
+    } else {
+      await sleep(Math.min(BASE_POLL * 2, 600));
+    }
+  }
+
+  function humanClick(el) {
+    const r = el.getBoundingClientRect();
+    const x = r.left + r.width / 2;
+    const y = r.top + r.height / 2;
+
+    ["mouseover", "mousedown", "mouseup", "click"].forEach(t => {
+      el.dispatchEvent(new MouseEvent(t, {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        clientX: x,
+        clientY: y,
+        button: 0
+      }));
+    });
+  }
+
+  async function clickDownload(row, nomor) {
+    const btn = row.querySelector("button#DownloadButton")
+      || row.querySelector("button .pi-file-pdf")?.closest("button");
+
+    if (!btn) return false;
+
+    humanClick(btn);
+
+    const start = Date.now();
+    while (Date.now() - start < MAX_WAIT_AFTER_CLICK) {
+      if (hasSpinner()) {
+        await waitSpinner();
+        break;
+      }
+      await sleep(BASE_POLL);
+    }
+
+    return true;
+  }
+
+  async function processPage() {
+    updatePage();
+    const page = getPage();
+    updateStatus(`Page ${page} scanning...`);
+
+    await waitSpinner();
+
+    while (true) {
+      const rows = Array.from(getRows());
+      if (!rows.length) break;
+
+      let found = false;
+
+      for (const row of rows) {
+        const nomor = row.children[3]?.textContent?.trim();
+        if (!nomor) continue;
+        if (downloaded.has(nomor)) continue;
+
+        found = true;
+        downloaded.add(nomor);
+
+        updateStatus("Downloading...");
+
+        let ok = false;
+        for (let i = 0; i < DOWNLOAD_RETRY; i++) {
+          ok = await clickDownload(row, nomor);
+          if (ok) break;
+          await sleep(GLOBAL_DELAY);
+        }
+
+        if (ok) {
+          totalDownloaded++;
+          updateCounter();
+          successfulDownloads.push({
+            nomor_bukti_potong: nomor,
+            page: getPage() || "",
+            downloaded_at: new Date().toISOString()
+          });
+        }
+
+        await sleep(GLOBAL_DELAY);
+        break;
+      }
+
+      if (!found) break;
+    }
+  }
+
+  async function nextPage() {
+    const next = getNext();
+    if (!next || next.classList.contains("\x70\x2d\x64\x69\x73\x61\x62\x6c\x65\x64")) return false;
+
+    const old = getPage();
+    humanClick(next);
+
+    let tries = 0;
+    while (tries < 40) {
+      await sleep(BASE_POLL);
+      if (getPage() !== old) break;
+      tries++;
+    }
+
+    await waitSpinner();
+    updatePage();
+    return true;
+  }
+
+  async function run() {
+    updateStatus("Starting...");
+
+    let tries = 0;
+    while (tries < 40) {
+      if (getRows().length > 0 && document.querySelector(".p-paginator-bottom")) break;
+      await sleep(BASE_POLL);
+      tries++;
+    }
+
+    updatePage();
+
+    while (true) {
+      await processPage();
+      const moved = await nextPage();
+      if (!moved) break;
+    }
+
+    updateStatus("\x44\x4f\x4e\x45");
+    console.log("🎉 DONE BPPU. Total:", totalDownloaded);
+  }
+
+  function downloadCSVOfSuccess() {
+    if (!successfulDownloads.length) {
+      alert("Tidak ada data.");
+      return;
+    }
+
+    const headers = ["Nomor Bukti Potong", "Page", "Downloaded At"];
+    const rows = successfulDownloads.map(i => {
+      let nomorBersih = i.nomor_bukti_potong || "";
+      nomorBersih = nomorBersih
+        .toString()
+        .trim()
+        .replace(/^\s*Nomor\s+Pemotongan\s*/i, "");
+      return [
+        `'${nomorBersih}`,
+        i.page,
+        i.downloaded_at
+      ];
+    });
+
+    const escapeCSV = (value) => {
+      if (value == null) return "";
+      const str = String(value);
+      if (/[",\n;]/.test(str)) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
+    const csv = [headers, ...rows]
+      .map(r => r.map(escapeCSV).join(","))
+      .join("\r\n");
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const filename = `bppu_downloaded_${timestamp}.csv`;
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    console.log("📁 CSV downloaded:", filename);
+  }
+
+  try {
+    await run();
+  } catch (e) {
+    console.error("💥 ERROR:", e);
+    updateStatus("ERROR ❌ Cek console.");
+  }
+
+})();

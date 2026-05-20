@@ -117,10 +117,12 @@ Untuk generate ulang folder `tukangkunting_commerce_edition` dari source `tukang
    - `npm run obfuscate`
 
 Script akan:
-- Obfuscate semua file JS (kecuali `libs/*.js`)
+- Obfuscate custom-safe semua file JS (kecuali `libs/*.js`) tanpa library obfuscator eksternal
 - Rename file modul ke format `m0d_*.js` (mengikuti mapping commerce edition yang ada)
 - Update referensi modul di `background.js`
 - Generate `file_obfuscated_guide.MD` otomatis
+
+Mode custom-safe menjaga perilaku runtime agar extension tetap jalan, dengan teknik ringan (hex-escaped literal sensitif + normalisasi output + rename modul).
 
 Opsional custom path via environment variable:
 - `OBFUSCATE_SOURCE=/path/source OBFUSCATE_OUTPUT=/path/output npm run obfuscate`

@@ -3,7 +3,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
-const JavaScriptObfuscator = require('javascript-obfuscator');
 
 const rootDir = process.cwd();
 const sourceDir = path.resolve(rootDir, process.env.OBFUSCATE_SOURCE || 'tukangkunting_before_obfuscate');
@@ -32,6 +31,31 @@ const fixedModuleNames = {
 
 const NON_COPIED_BASENAMES = new Set(['file_obfuscated_guide.MD', 'obfuscated_rule.MD']);
 const NON_COPIED_SUFFIXES = ['Zone.Identifier'];
+
+const SENSITIVE_LITERALS = [
+  'checkLicense',
+  'no_runtime',
+  'no_response',
+  'no_license',
+  'lisensi sudah expired',
+  'machine code tidak cocok',
+  'delay_ppn_retur',
+  'delay_ppn',
+  'delay_dokumen_all',
+  'delay_dokumen_bold',
+  'delay_bppu',
+  'delay_pengkreditan',
+  'delay_pembatalan',
+  'p-disabled',
+  'aria-disabled',
+  'true',
+  'id-ID',
+  'numeric',
+  'long',
+  'ERROR',
+  'DONE',
+  'libs/jquery-3.7.0.min.js'
+];
 
 function rmrf(targetPath) {
   if (!fs.existsSync(targetPath)) return;
@@ -108,30 +132,30 @@ function rewriteBackgroundReferences(code, mapping) {
   return rewrittenCode;
 }
 
+function toHexEscapedContent(value) {
+  return [...value]
+    .map((ch) => `\\x${ch.charCodeAt(0).toString(16).padStart(2, '0')}`)
+    .join('');
+}
+
+function obfuscateSafeLiterals(code) {
+  let out = code;
+  for (const literal of SENSITIVE_LITERALS) {
+    const quotedPattern = new RegExp(`(["'])${escapeRegExp(literal)}\\1`, 'g');
+    out = out.replace(quotedPattern, (_full, quote) => `${quote}${toHexEscapedContent(literal)}${quote}`);
+  }
+  return out;
+}
+
 function obfuscateJavaScript(code) {
   if (!code.trim()) return code;
 
-  const antiDebugSnippet = "const __tk_guard=setInterval(function(){const __startTime=new Date();debugger;if(new Date()-__startTime>100){clearInterval(__tk_guard);}},3000);\n";
-  const source = antiDebugSnippet + code;
+  const normalized = code
+    .replace(/\r\n/g, '\n')
+    .replace(/[ \t]+$/gm, '')
+    .replace(/\n{3,}/g, '\n\n');
 
-  const result = JavaScriptObfuscator.obfuscate(source, {
-    compact: true,
-    controlFlowFlattening: true,
-    deadCodeInjection: false,
-    identifierNamesGenerator: 'hexadecimal',
-    renameGlobals: false,
-    rotateStringArray: true,
-    selfDefending: true,
-    simplify: true,
-    splitStrings: false,
-    stringArray: true,
-    stringArrayEncoding: ['base64'],
-    stringArrayThreshold: 0.85,
-    transformObjectKeys: true,
-    unicodeEscapeSequence: false
-  });
-
-  return result.getObfuscatedCode();
+  return obfuscateSafeLiterals(normalized);
 }
 
 function main() {
@@ -192,7 +216,8 @@ function main() {
   const guideContent = mappingLines.join('\n') + '\n';
   fs.writeFileSync(path.join(outputDir, 'file_obfuscated_guide.MD'), guideContent, 'utf8');
 
-  console.log(`Obfuscation complete.`);
+  console.log('Obfuscation complete.');
+  console.log(`Mode   : custom-safe-obfuscation`);
   console.log(`Source : ${sourceDir}`);
   console.log(`Output : ${outputDir}`);
   console.log(`Modules: ${Object.keys(moduleMapping).length}`);
