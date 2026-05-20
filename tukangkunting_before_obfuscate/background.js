@@ -851,7 +851,7 @@
           styleEl.textContent = `
             @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
             #tukang-overlay{position:fixed;inset:0;background:rgba(8,10,18,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:9998;animation:tukang-fadeIn .2s ease}
-            #doc-select-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);width:380px;background:#0f1117;border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 24px 64px rgba(0,0,0,.6),0 0 80px rgba(56,130,246,.06);z-index:9999;font-family:'DM Sans',sans-serif;overflow:hidden;animation:tukang-slideUp .25s cubic-bezier(.16,1,.3,1)}
+            #doc-select-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);width:min(380px,calc(100vw - 24px));max-height:calc(100vh - 24px);background:#0f1117;border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 24px 64px rgba(0,0,0,.6),0 0 80px rgba(56,130,246,.06);z-index:9999;font-family:'DM Sans',sans-serif;overflow:hidden;animation:tukang-slideUp .25s cubic-bezier(.16,1,.3,1)}
             .tukang-header{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 16px;border-bottom:1px solid rgba(255,255,255,.06)}
             .tukang-brand{display:flex;align-items:center;gap:10px}
             .tukang-icon{width:32px;height:32px;background:linear-gradient(135deg,#3882f6,#2563eb);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 4px 12px rgba(56,130,246,.35)}
@@ -902,7 +902,7 @@
             .settings-log-counts{font-family:'DM Mono',monospace;font-size:11px;text-align:right}
             #tukang-log-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:10002;animation:tukang-fadeIn .15s ease}
             #tukang-log-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#0f1117;border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.6);z-index:10003;width:400px;max-height:80vh;font-family:'DM Sans',sans-serif;overflow:hidden;display:flex;flex-direction:column;animation:tukang-slideUp .2s cubic-bezier(.16,1,.3,1)}
-            #tukang-onboarding{position:absolute;inset:0;background:#0f1117;z-index:10010;display:flex;flex-direction:column;justify-content:space-between;padding:24px 22px 20px;animation:tukang-fadeIn .2s ease}
+            #tukang-onboarding{position:absolute;inset:0;background:#0f1117;z-index:10010;display:flex;flex-direction:column;justify-content:space-between;padding:24px 22px 20px;animation:tukang-fadeIn .2s ease;overflow-y:auto}
             .onboarding-step{display:none}.onboarding-step.active{display:flex;flex-direction:column;gap:8px;flex:1}
             .onboarding-icon{font-size:28px;margin-bottom:4px}
             .onboarding-title{font-size:15px;font-weight:600;color:#f0f2f8}
