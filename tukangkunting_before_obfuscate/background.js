@@ -932,7 +932,7 @@
           document.head.appendChild(styleEl);
 
           const overlay = document.createElement("div"); overlay.id = "tukang-overlay";
-          const container = document.createElement("div"); container.id = "doc-select-modal"; container.style.position = "relative";
+          const container = document.createElement("div"); container.id = "doc-select-modal";
 
           // Header
           const header = document.createElement("div"); header.className = "tukang-header";
