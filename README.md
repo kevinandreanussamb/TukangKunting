@@ -118,9 +118,12 @@ Script akan:
 - Obfuscate custom-safe semua file JS (kecuali `libs/*.js`) tanpa library obfuscator eksternal
 - Rename file modul ke format `m0d_*.js` (mengikuti mapping commerce edition yang ada)
 - Update referensi modul di `background.js`
+- Hapus komentar JS (`//` dan `/* */`) pada seluruh file JS output non-libs
 - Auto-versioning `manifest.json` di folder output setiap kali proses obfuscate
 
-Mode custom-safe menjaga perilaku runtime agar extension tetap jalan, dengan teknik ringan yang kompatibel (hex-escaped literal sensitif + normalisasi output + rename modul).
+Catatan: nama file `background.js` dan `content.js` memang dipertahankan (tidak di-rename) demi kompatibilitas manifest, tetapi isi kodenya tetap diproses obfuscation.
+
+Mode custom-safe menjaga perilaku runtime agar extension tetap jalan, dengan teknik ringan yang kompatibel (hex-escaped literal sensitif + hapus komentar + normalisasi output + rename modul).
 
 Opsional custom path via environment variable:
 - `OBFUSCATE_SOURCE=/path/source OBFUSCATE_OUTPUT=/path/output npm run obfuscate`

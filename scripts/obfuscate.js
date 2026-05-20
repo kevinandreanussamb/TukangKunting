@@ -3,6 +3,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const terser = require('terser');
 
 const rootDir = process.cwd();
 const sourceDir = path.resolve(rootDir, process.env.OBFUSCATE_SOURCE || 'tukangkunting_before_obfuscate');
@@ -154,6 +155,19 @@ function obfuscateSafeLiterals(code) {
   return out;
 }
 
+async function stripJsComments(code) {
+  const result = await terser.minify(code, {
+    compress: false,
+    mangle: false,
+    format: {
+      comments: false,
+      beautify: true
+    }
+  });
+
+  return result.code || code;
+}
+
 function buildAutoVersion(baseVersion) {
   const parts = String(baseVersion || '1.0.0')
     .split('.')
@@ -189,10 +203,11 @@ function autoVersionManifest(manifestContent) {
   };
 }
 
-function obfuscateJavaScript(code) {
+async function obfuscateJavaScript(code) {
   if (!code.trim()) return code;
 
-  const normalized = code
+  const withoutComments = await stripJsComments(code);
+  const normalized = withoutComments
     .replace(/\r\n/g, '\n')
     .replace(/[ \t]+$/gm, '')
     .replace(/\n{3,}/g, '\n\n');
@@ -200,7 +215,7 @@ function obfuscateJavaScript(code) {
   return obfuscateSafeLiterals(normalized);
 }
 
-function main() {
+async function main() {
   rmrf(outputDir);
   ensureDir(outputDir);
 
@@ -256,7 +271,7 @@ function main() {
       sourceCode = rewriteBackgroundReferences(sourceCode, moduleMapping);
     }
 
-    const obfuscatedCode = obfuscateJavaScript(sourceCode);
+    const obfuscatedCode = await obfuscateJavaScript(sourceCode);
     fs.writeFileSync(destinationAbsPath, obfuscatedCode, 'utf8');
   }
 
@@ -270,4 +285,7 @@ function main() {
   }
 }
 
-main();
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
