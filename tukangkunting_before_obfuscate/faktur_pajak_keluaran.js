@@ -586,6 +586,21 @@
     return true;
   }
 
+  function getNomorFaktur(row) {
+    for (const td of row.querySelectorAll("td")) {
+      const title = td.querySelector(".p-column-title")?.textContent?.trim();
+      if (title === "Nomor Faktur Pajak") {
+        return td.textContent
+          .replace("Nomor Faktur Pajak", "")
+          .trim();
+      }
+    }
+    // fallback: children[5] bersihkan label
+    return row.children[5]?.textContent
+      ?.replace("Nomor Faktur Pajak", "")
+      ?.trim() || null;
+  }
+
   /**************************************
    * PROCESS CURRENT PAGE
    **************************************/
@@ -607,7 +622,7 @@
       let found = false;
 
       for (const row of rows) {
-        const nomorFaktur = row.children[5]?.textContent?.trim();
+        const nomorFaktur = getNomorFaktur(row);
         if (!nomorFaktur) continue;
 
         if (downloaded.has(nomorFaktur)) continue;

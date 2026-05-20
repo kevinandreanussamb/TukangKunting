@@ -981,7 +981,7 @@
       if (sel === "Dokumen Saya") file = "dokumen_saya_all.js";
       if (sel === "Faktur Pajak Keluaran") file = "faktur_pajak_keluaran.js";
       if (sel === "Faktur Pajak Masukan") file = "faktur_pajak_masukan.js";
-      if (sel === "Faktur Pajak Retur") file = "faktur_pajak_retur_masukan_keluaran.js";
+      if (sel === "Faktur Pajak Retur (Keluaran & Masukan)") file = "faktur_pajak_retur_masukan_keluaran.js";
       if (sel === "BPPU & BPNR") file = "bppu_bpnr.js";
 
       if (file) {
