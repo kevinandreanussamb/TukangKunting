@@ -6,15 +6,15 @@
   async function checkLicense() {
     return new Promise((resolve) => {
       if (!chrome?.runtime?.sendMessage) {
-        resolve({ ok: false, reason: "\x6e\x6f\x5f\x72\x75\x6e\x74\x69\x6d\x65" });
+        resolve({ ok: false, reason: "\x\x36\x65\x\x36\x66\x\x35\x66\x\x37\x32\x\x37\x35\x\x36\x65\x\x37\x34\x\x36\x39\x\x36\x64\x\x36\x35" });
         return;
       }
-      chrome.runtime.sendMessage({ action: "\x63\x68\x65\x63\x6b\x4c\x69\x63\x65\x6e\x73\x65" }, (response) => {
+      chrome.runtime.sendMessage({ action: "\x\x36\x33\x\x36\x38\x\x36\x35\x\x36\x33\x\x36\x62\x\x34\x63\x\x36\x39\x\x36\x33\x\x36\x35\x\x36\x65\x\x37\x33\x\x36\x35" }, (response) => {
         if (chrome.runtime.lastError) {
           resolve({ ok: false, reason: chrome.runtime.lastError.message });
           return;
         }
-        resolve(response || { ok: false, reason: "\x6e\x6f\x5f\x72\x65\x73\x70\x6f\x6e\x73\x65" });
+        resolve(response || { ok: false, reason: "\x\x36\x65\x\x36\x66\x\x35\x66\x\x37\x32\x\x36\x35\x\x37\x33\x\x37\x30\x\x36\x66\x\x36\x65\x\x37\x33\x\x36\x35" });
       });
     });
   }
@@ -23,11 +23,11 @@
   const license = await checkLicense();
 
   if (!license.ok) {
-    console.error("❌ Lisensi tidak valid:", license.reason);
+    console.error("\u274c\x20\x4c\x69\x73\x65\x6e\x73\x69\x20\x74\x69\x64\x61\x6b\x20\x76\x61\x6c\x69\x64\x3a", license.reason);
 
     // Tampilkan pesan di halaman
-    const notice = document.createElement("div");
-    notice.id = "tukang-license-notice";
+    const notice = document.createElement("\x64\x69\x76");
+    notice.id = "\x74\x75\x6b\x61\x6e\x67\x2d\x6c\x69\x63\x65\x6e\x73\x65\x2d\x6e\x6f\x74\x69\x63\x65";
     notice.style.cssText = `
       position:fixed;bottom:24px;right:24px;width:300px;
       background:#0f1117;border:1px solid rgba(239,68,68,.3);
@@ -37,13 +37,13 @@
       animation:tka-slideup .3s cubic-bezier(.16,1,.3,1);
     `;
 
-    let reasonText = "Lisensi tidak ditemukan.";
-    if (license.reason === "\x6c\x69\x73\x65\x6e\x73\x69\x20\x73\x75\x64\x61\x68\x20\x65\x78\x70\x69\x72\x65\x64") {
-      reasonText = "Lisensi Anda sudah expired. Hubungi owner untuk perpanjangan.";
-    } else if (license.reason === "\x6d\x61\x63\x68\x69\x6e\x65\x20\x63\x6f\x64\x65\x20\x74\x69\x64\x61\x6b\x20\x63\x6f\x63\x6f\x6b") {
-      reasonText = "Token tidak cocok dengan perangkat ini.";
-    } else if (license.reason === "\x6e\x6f\x5f\x6c\x69\x63\x65\x6e\x73\x65") {
-      reasonText = "Belum ada lisensi aktif. Klik icon extension untuk aktivasi.";
+    let reasonText = "\x4c\x69\x73\x65\x6e\x73\x69\x20\x74\x69\x64\x61\x6b\x20\x64\x69\x74\x65\x6d\x75\x6b\x61\x6e\x2e";
+    if (license.reason === "\x\x36\x63\x\x36\x39\x\x37\x33\x\x36\x35\x\x36\x65\x\x37\x33\x\x36\x39\x\x32\x30\x\x37\x33\x\x37\x35\x\x36\x34\x\x36\x31\x\x36\x38\x\x32\x30\x\x36\x35\x\x37\x38\x\x37\x30\x\x36\x39\x\x37\x32\x\x36\x35\x\x36\x34") {
+      reasonText = "\x4c\x69\x73\x65\x6e\x73\x69\x20\x41\x6e\x64\x61\x20\x73\x75\x64\x61\x68\x20\x65\x78\x70\x69\x72\x65\x64\x2e\x20\x48\x75\x62\x75\x6e\x67\x69\x20\x6f\x77\x6e\x65\x72\x20\x75\x6e\x74\x75\x6b\x20\x70\x65\x72\x70\x61\x6e\x6a\x61\x6e\x67\x61\x6e\x2e";
+    } else if (license.reason === "\x\x36\x64\x\x36\x31\x\x36\x33\x\x36\x38\x\x36\x39\x\x36\x65\x\x36\x35\x\x32\x30\x\x36\x33\x\x36\x66\x\x36\x34\x\x36\x35\x\x32\x30\x\x37\x34\x\x36\x39\x\x36\x34\x\x36\x31\x\x36\x62\x\x32\x30\x\x36\x33\x\x36\x66\x\x36\x33\x\x36\x66\x\x36\x62") {
+      reasonText = "\x54\x6f\x6b\x65\x6e\x20\x74\x69\x64\x61\x6b\x20\x63\x6f\x63\x6f\x6b\x20\x64\x65\x6e\x67\x61\x6e\x20\x70\x65\x72\x61\x6e\x67\x6b\x61\x74\x20\x69\x6e\x69\x2e";
+    } else if (license.reason === "\x\x36\x65\x\x36\x66\x\x35\x66\x\x36\x63\x\x36\x39\x\x36\x33\x\x36\x35\x\x36\x65\x\x37\x33\x\x36\x35") {
+      reasonText = "\x42\x65\x6c\x75\x6d\x20\x61\x64\x61\x20\x6c\x69\x73\x65\x6e\x73\x69\x20\x61\x6b\x74\x69\x66\x2e\x20\x4b\x6c\x69\x6b\x20\x69\x63\x6f\x6e\x20\x65\x78\x74\x65\x6e\x73\x69\x6f\x6e\x20\x75\x6e\x74\x75\x6b\x20\x61\x6b\x74\x69\x76\x61\x73\x69\x2e";
     }
 
     notice.innerHTML = `
@@ -65,7 +65,7 @@
 
     document.body.appendChild(notice);
 
-    document.getElementById("tukang-license-close").onclick = () => notice.remove();
+    document.getElementById("\x74\x75\x6b\x61\x6e\x67\x2d\x6c\x69\x63\x65\x6e\x73\x65\x2d\x63\x6c\x6f\x73\x65").onclick = () => notice.remove();
 
     // ⛔ STOP — tidak lanjut eksekusi
     return;
@@ -74,8 +74,8 @@
   // ✅ Lisensi valid — log info
   if (license.expiry) {
     const daysLeft = Math.ceil((license.expiry - Date.now()) / 86_400_000);
-    const expDate = new Date(license.expiry).toLocaleDateString("\x69\x64\x2d\x49\x44", {
-      day: "\x6e\x75\x6d\x65\x72\x69\x63", month: "\x6c\x6f\x6e\x67", year: "\x6e\x75\x6d\x65\x72\x69\x63"
+    const expDate = new Date(license.expiry).toLocaleDateString("\x\x36\x39\x\x36\x34\x\x32\x64\x\x34\x39\x\x34\x34", {
+      day: "\x\x36\x65\x\x37\x35\x\x36\x64\x\x36\x35\x\x37\x32\x\x36\x39\x\x36\x33", month: "\x\x36\x63\x\x36\x66\x\x36\x65\x\x36\x37", year: "\x\x36\x65\x\x37\x35\x\x36\x64\x\x36\x35\x\x37\x32\x\x36\x39\x\x36\x33"
     });
     console.log(`✅ Lisensi aktif — berlaku hingga ${expDate} (${daysLeft} hari lagi)`);
   }
@@ -105,19 +105,19 @@
   }
 
   const DEFAULT_DELAY = 500;
-  const GLOBAL_DELAY = await getDelay("\x64\x65\x6c\x61\x79\x5f\x70\x70\x6e\x5f\x72\x65\x74\x75\x72", DEFAULT_DELAY);
+  const GLOBAL_DELAY = await getDelay("\x\x36\x34\x\x36\x35\x\x36\x63\x\x36\x31\x\x37\x39\x\x35\x66\x\x37\x30\x\x37\x30\x\x36\x65\x\x35\x66\x\x37\x32\x\x36\x35\x\x37\x34\x\x37\x35\x\x37\x32", DEFAULT_DELAY);
   const DOWNLOAD_RETRY = 3;
   const MAX_WAIT_AFTER_CLICK = Math.max(GLOBAL_DELAY * 16, 8000);
   const BASE_POLL = Math.max(GLOBAL_DELAY, 300);
-  const EXT_ICON = chrome.runtime.getURL("icon.png");
+  const EXT_ICON = chrome.runtime.getURL("\x69\x63\x6f\x6e\x2e\x70\x6e\x67");
 
-  console.log("⏳ PPN RETUR DELAY:", GLOBAL_DELAY);
+  console.log("\u23f3\x20\x50\x50\x4e\x20\x52\x45\x54\x55\x52\x20\x44\x45\x4c\x41\x59\x3a", GLOBAL_DELAY);
 
   /**************************************
    * MODAL
    **************************************/
   function createModal() {
-    const style = document.createElement("style");
+    const style = document.createElement("\x73\x74\x79\x6c\x65");
     style.textContent = `
       @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
 
@@ -383,8 +383,8 @@
     `;
     document.head.appendChild(style);
 
-    const modal = document.createElement("div");
-    modal.id = "autoDownloaderReturModal";
+    const modal = document.createElement("\x64\x69\x76");
+    modal.id = "\x61\x75\x74\x6f\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x65\x72\x52\x65\x74\x75\x72\x4d\x6f\x64\x61\x6c";
 
     modal.innerHTML = `
       <div class="retur-top-bar" id="returTopBar"></div>
@@ -438,52 +438,52 @@
 
     document.body.appendChild(modal);
 
-    document.getElementById("returCloseBtn").onclick = () => modal.remove();
+    document.getElementById("\x72\x65\x74\x75\x72\x43\x6c\x6f\x73\x65\x42\x74\x6e").onclick = () => modal.remove();
 
     // 🔹 Event tombol Download CSV
-    const downloadBtn = document.getElementById("returDownloadCsvBtn");
+    const downloadBtn = document.getElementById("\x72\x65\x74\x75\x72\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x43\x73\x76\x42\x74\x6e");
     if (downloadBtn) {
-      downloadBtn.addEventListener("click", () => {
+      downloadBtn.addEventListener("\x63\x6c\x69\x63\x6b", () => {
         try {
           downloadCSVOfSuccess();
         } catch (err) {
-          console.error("Gagal membuat CSV:", err);
+          console.error("\x47\x61\x67\x61\x6c\x20\x6d\x65\x6d\x62\x75\x61\x74\x20\x43\x53\x56\x3a", err);
         }
       });
     }
   }
 
   function updateStatus(text) {
-    const el       = document.getElementById("autoStatus");
-    const badge    = document.getElementById("statusBadge");
-    const bar      = document.getElementById("returTopBar");
-    const closeBtn = document.getElementById("returCloseBtn");
-    const downloadBtn = document.getElementById("returDownloadCsvBtn");
+    const el       = document.getElementById("\x61\x75\x74\x6f\x53\x74\x61\x74\x75\x73");
+    const badge    = document.getElementById("\x73\x74\x61\x74\x75\x73\x42\x61\x64\x67\x65");
+    const bar      = document.getElementById("\x72\x65\x74\x75\x72\x54\x6f\x70\x42\x61\x72");
+    const closeBtn = document.getElementById("\x72\x65\x74\x75\x72\x43\x6c\x6f\x73\x65\x42\x74\x6e");
+    const downloadBtn = document.getElementById("\x72\x65\x74\x75\x72\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x43\x73\x76\x42\x74\x6e");
 
     if (!el || !badge) return;
     el.textContent = text;
 
-    if (text === "\x44\x4f\x4e\x45") {
-      badge.classList.add("done");
-      bar?.classList.add("done");
-      closeBtn?.classList.add("visible");
+    if (text === "\x\x34\x34\x\x34\x66\x\x34\x65\x\x34\x35") {
+      badge.classList.add("\x64\x6f\x6e\x65");
+      bar?.classList.add("\x64\x6f\x6e\x65");
+      closeBtn?.classList.add("\x76\x69\x73\x69\x62\x6c\x65");
       // 🔹 Tampilkan tombol download CSV ketika DONE
-      downloadBtn?.classList.add("visible");
+      downloadBtn?.classList.add("\x76\x69\x73\x69\x62\x6c\x65");
     }
-    if (text === "ERROR ❌ Cek console.") {
-      badge.classList.add("error");
-      closeBtn?.classList.add("visible");
+    if (text === "\x45\x52\x52\x4f\x52\x20\u274c\x20\x43\x65\x6b\x20\x63\x6f\x6e\x73\x6f\x6c\x65\x2e") {
+      badge.classList.add("\x65\x72\x72\x6f\x72");
+      closeBtn?.classList.add("\x76\x69\x73\x69\x62\x6c\x65");
     }
   }
 
   function updateCounter() {
-    const el = document.getElementById("downloadCount");
+    const el = document.getElementById("\x64\x6f\x77\x6e\x6c\x6f\x61\x64\x43\x6f\x75\x6e\x74");
     if (el) el.textContent = totalDownloaded;
   }
 
   function updatePageNumber() {
-    const el = document.getElementById("pageNumber");
-    if (el) el.textContent = getCurrentPageNumber() || "—";
+    const el = document.getElementById("\x70\x61\x67\x65\x4e\x75\x6d\x62\x65\x72");
+    if (el) el.textContent = getCurrentPageNumber() || "\u2014";
   }
 
   createModal();
@@ -496,23 +496,23 @@
   }
 
   function getRows() {
-    return document.querySelectorAll("table tbody tr");
+    return document.querySelectorAll("\x74\x61\x62\x6c\x65\x20\x74\x62\x6f\x64\x79\x20\x74\x72");
   }
 
   function getCurrentPageNumber() {
-    const el = document.querySelector(".p-paginator-bottom .p-paginator-page.p-highlight");
+    const el = document.querySelector("\x2e\x70\x2d\x70\x61\x67\x69\x6e\x61\x74\x6f\x72\x2d\x62\x6f\x74\x74\x6f\x6d\x20\x2e\x70\x2d\x70\x61\x67\x69\x6e\x61\x74\x6f\x72\x2d\x70\x61\x67\x65\x2e\x70\x2d\x68\x69\x67\x68\x6c\x69\x67\x68\x74");
     return el ? el.textContent.trim() : null;
   }
 
   function getNextButton() {
-    return document.querySelector(".p-paginator-bottom .p-paginator-next");
+    return document.querySelector("\x2e\x70\x2d\x70\x61\x67\x69\x6e\x61\x74\x6f\x72\x2d\x62\x6f\x74\x74\x6f\x6d\x20\x2e\x70\x2d\x70\x61\x67\x69\x6e\x61\x74\x6f\x72\x2d\x6e\x65\x78\x74");
   }
 
   function hasSpinner() {
     return !!(
-      document.querySelector(".p-datatable-loading-overlay") ||
-      document.querySelector("ui-progress-spinner .p-progress-spinner") ||
-      document.querySelector("p-progressspinner .p-progress-spinner")
+      document.querySelector("\x2e\x70\x2d\x64\x61\x74\x61\x74\x61\x62\x6c\x65\x2d\x6c\x6f\x61\x64\x69\x6e\x67\x2d\x6f\x76\x65\x72\x6c\x61\x79") ||
+      document.querySelector("\x75\x69\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x2d\x73\x70\x69\x6e\x6e\x65\x72\x20\x2e\x70\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x2d\x73\x70\x69\x6e\x6e\x65\x72") ||
+      document.querySelector("\x70\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x73\x70\x69\x6e\x6e\x65\x72\x20\x2e\x70\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x2d\x73\x70\x69\x6e\x6e\x65\x72")
     );
   }
 
@@ -525,7 +525,7 @@
         if (!hasSpinner()) return;
         await sleep(BASE_POLL);
       }
-      console.warn("⚠️ Spinner timeout.");
+      console.warn("\u26a0\ufe0f\x20\x53\x70\x69\x6e\x6e\x65\x72\x20\x74\x69\x6d\x65\x6f\x75\x74\x2e");
     } else {
       await sleep(Math.min(BASE_POLL * 2, 600));
     }
@@ -538,7 +538,7 @@
     const clientX = rect.left + rect.width / 2;
     const clientY = rect.top + rect.height / 2;
 
-    ["mouseover", "mousedown", "mouseup", "click"].forEach(type => {
+    ["\x6d\x6f\x75\x73\x65\x6f\x76\x65\x72", "\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e", "\x6d\x6f\x75\x73\x65\x75\x70", "\x63\x6c\x69\x63\x6b"].forEach(type => {
       element.dispatchEvent(new MouseEvent(type, {
         bubbles: true,
         cancelable: true,
@@ -552,8 +552,8 @@
 
   async function clickDownloadButton(row, nomorRetur) {
     let btn =
-      row.querySelector("button#DownloadButton") ||
-      row.querySelector("button .pi-file-pdf")?.closest("button");
+      row.querySelector("\x62\x75\x74\x74\x6f\x6e\x23\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x42\x75\x74\x74\x6f\x6e") ||
+      row.querySelector("\x62\x75\x74\x74\x6f\x6e\x20\x2e\x70\x69\x2d\x66\x69\x6c\x65\x2d\x70\x64\x66")?.closest("\x62\x75\x74\x74\x6f\x6e");
 
     if (!btn) {
       console.warn(`⚠️ [${nomorRetur}] Tombol download tidak ditemukan`);
@@ -639,13 +639,13 @@
    **************************************/
   function downloadCSVOfSuccess() {
     if (!successfulDownloads.length) {
-      console.warn("Tidak ada data sukses untuk diexport.");
-      alert("Tidak ada data nomor retur yang berhasil di-download.");
+      console.warn("\x54\x69\x64\x61\x6b\x20\x61\x64\x61\x20\x64\x61\x74\x61\x20\x73\x75\x6b\x73\x65\x73\x20\x75\x6e\x74\x75\x6b\x20\x64\x69\x65\x78\x70\x6f\x72\x74\x2e");
+      alert("\x54\x69\x64\x61\x6b\x20\x61\x64\x61\x20\x64\x61\x74\x61\x20\x6e\x6f\x6d\x6f\x72\x20\x72\x65\x74\x75\x72\x20\x79\x61\x6e\x67\x20\x62\x65\x72\x68\x61\x73\x69\x6c\x20\x64\x69\x2d\x64\x6f\x77\x6e\x6c\x6f\x61\x64\x2e");
       return;
     }
 
     // Header CSV
-    const headers = ["Nomor Retur", "Page", "Downloaded At"];
+    const headers = ["\x4e\x6f\x6d\x6f\x72\x20\x52\x65\x74\x75\x72", "\x50\x61\x67\x65", "\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x65\x64\x20\x41\x74"];
 
     const rows = successfulDownloads.map(item => {
       // Bersihkan prefix "Nomor Retur" di sini saja
@@ -666,8 +666,8 @@
     const escapeCSV = (value) => {
       if (value == null) return "";
       const str = String(value);
-      if (/[",\n;]/.test(str)) {
-        return `"${str.replace(/"/g, '""')}"`;
+      if (/["\x2c\n\x3b\x5d\x2f\x2e\x74\x65\x73\x74\x28\x73\x74\x72\x29\x29\x20\x7b
+\x20\x20\x20\x20\x20\x20\x20\x20\x72\x65\x74\x75\x72\x6e\x20\x60"${str.replace(/"\x2f\x67\x2c\x20\x27""\x27\x29\x7d"`;
       }
       return str;
     };

@@ -154,6 +154,153 @@ function obfuscateSafeLiterals(code) {
   return out;
 }
 
+function escapeLiteralCharacter(ch) {
+  const codePoint = ch.codePointAt(0);
+  if (codePoint <= 0xff) {
+    return `\\x${codePoint.toString(16).padStart(2, '0')}`;
+  }
+  if (codePoint <= 0xffff) {
+    return `\\u${codePoint.toString(16).padStart(4, '0')}`;
+  }
+  return `\\u{${codePoint.toString(16)}}`;
+}
+
+function obfuscateQuotedStrings(code) {
+  let out = '';
+  let i = 0;
+  let mode = 'normal';
+  let quote = '';
+
+  while (i < code.length) {
+    const ch = code[i];
+    const next = code[i + 1];
+
+    if (mode === 'normal') {
+      if (ch === '/' && next === '/') {
+        out += ch + next;
+        i += 2;
+        mode = 'lineComment';
+        continue;
+      }
+      if (ch === '/' && next === '*') {
+        out += ch + next;
+        i += 2;
+        mode = 'blockComment';
+        continue;
+      }
+      if (ch === '\'' || ch === '"') {
+        quote = ch;
+        out += ch;
+        i += 1;
+        mode = 'string';
+        continue;
+      }
+      if (ch === '`') {
+        out += ch;
+        i += 1;
+        mode = 'template';
+        continue;
+      }
+      out += ch;
+      i += 1;
+      continue;
+    }
+
+    if (mode === 'lineComment') {
+      out += ch;
+      i += 1;
+      if (ch === '\n') mode = 'normal';
+      continue;
+    }
+
+    if (mode === 'blockComment') {
+      out += ch;
+      i += 1;
+      if (ch === '*' && code[i] === '/') {
+        out += '/';
+        i += 1;
+        mode = 'normal';
+      }
+      continue;
+    }
+
+    if (mode === 'template') {
+      out += ch;
+      i += 1;
+      if (ch === '\\' && i < code.length) {
+        out += code[i];
+        i += 1;
+        continue;
+      }
+      if (ch === '`') mode = 'normal';
+      continue;
+    }
+
+    if (mode === 'string') {
+      if (ch === '\\') {
+        out += ch;
+        i += 1;
+        if (i < code.length) {
+          out += code[i];
+          i += 1;
+        }
+        continue;
+      }
+      if (ch === quote) {
+        out += ch;
+        i += 1;
+        mode = 'normal';
+        continue;
+      }
+
+      if (ch === '\n' || ch === '\r') {
+        out += ch;
+        i += 1;
+        continue;
+      }
+
+      const codePoint = code.codePointAt(i);
+      const currentChar = String.fromCodePoint(codePoint);
+      out += escapeLiteralCharacter(currentChar);
+      i += currentChar.length;
+      continue;
+    }
+  }
+
+  return out;
+}
+
+function buildAutoVersion(baseVersion) {
+  const parts = String(baseVersion || '1.0.0')
+    .split('.')
+    .map((part) => {
+      const asNumber = Number.parseInt(part, 10);
+      if (Number.isNaN(asNumber)) return 0;
+      return Math.max(0, Math.min(65535, asNumber));
+    });
+
+  while (parts.length < 3) {
+    parts.push(0);
+  }
+
+  const major = parts[0] || 0;
+  const minor = parts[1] || 0;
+  const patch = parts[2] || 0;
+  const build = Math.floor(Date.now() / 60000) % 65535;
+  return `${major}.${minor}.${patch}.${build}`;
+}
+
+function autoVersionManifest(manifestContent) {
+  const manifest = JSON.parse(manifestContent);
+  const baseVersion = manifest.version || '1.0.0';
+  manifest.version_name = baseVersion;
+  manifest.version = buildAutoVersion(baseVersion);
+  return {
+    manifestVersion: manifest.version,
+    content: `${JSON.stringify(manifest, null, 2)}\n`
+  };
+}
+
 function obfuscateJavaScript(code) {
   if (!code.trim()) return code;
 
@@ -162,7 +309,7 @@ function obfuscateJavaScript(code) {
     .replace(/[ \t]+$/gm, '')
     .replace(/\n{3,}/g, '\n\n');
 
-  return obfuscateSafeLiterals(normalized);
+  return obfuscateQuotedStrings(obfuscateSafeLiterals(normalized));
 }
 
 function main() {
@@ -172,6 +319,7 @@ function main() {
   const allFiles = listFilesRecursive(sourceDir);
   const moduleMapping = {};
   const usedNames = new Set(Object.values(fixedModuleNames));
+  let generatedManifestVersion = null;
 
   for (const absoluteFile of allFiles) {
     const relPath = path.relative(sourceDir, absoluteFile);
@@ -202,6 +350,14 @@ function main() {
     const destinationAbsPath = path.join(outputDir, destinationRelPath);
     ensureDir(path.dirname(destinationAbsPath));
 
+    if (relPath === 'manifest.json') {
+      const manifestRaw = fs.readFileSync(absoluteFile, 'utf8');
+      const { manifestVersion, content } = autoVersionManifest(manifestRaw);
+      generatedManifestVersion = manifestVersion;
+      fs.writeFileSync(destinationAbsPath, content, 'utf8');
+      continue;
+    }
+
     if (!shouldObfuscate(absoluteFile, relPath)) {
       fs.copyFileSync(absoluteFile, destinationAbsPath);
       continue;
@@ -216,18 +372,14 @@ function main() {
     fs.writeFileSync(destinationAbsPath, obfuscatedCode, 'utf8');
   }
 
-  const mappingLines = Object.entries(moduleMapping)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([from, to]) => `${from.padEnd(45)} ${to}`);
-
-  const guideContent = mappingLines.join('\n') + '\n';
-  fs.writeFileSync(path.join(outputDir, 'file_obfuscated_guide.MD'), guideContent, 'utf8');
-
   console.log('Obfuscation complete.');
   console.log(`Mode   : custom-safe-obfuscation`);
   console.log(`Source : ${sourceDir}`);
   console.log(`Output : ${outputDir}`);
   console.log(`Modules: ${Object.keys(moduleMapping).length}`);
+  if (generatedManifestVersion) {
+    console.log(`Version: ${generatedManifestVersion}`);
+  }
 }
 
 main();
