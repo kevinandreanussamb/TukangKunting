@@ -43,7 +43,7 @@ function ensureDir(targetPath) {
 }
 
 function listFilesRecursive(dirPath) {
-  const out = [];
+  const filesList = [];
   const queue = [dirPath];
 
   while (queue.length) {
@@ -54,12 +54,12 @@ function listFilesRecursive(dirPath) {
       if (entry.isDirectory()) {
         queue.push(fullPath);
       } else if (entry.isFile()) {
-        out.push(fullPath);
+        filesList.push(fullPath);
       }
     }
   }
 
-  return out.sort((a, b) => a.localeCompare(b));
+  return filesList.sort((a, b) => a.localeCompare(b));
 }
 
 function shouldSkipCopy(filePath) {
@@ -79,7 +79,6 @@ function buildModuleName(originalName, used) {
     return fixedModuleNames[originalName];
   }
 
-  const base = path.parse(originalName).name;
   const hash = crypto
     .createHash('sha1')
     .update(originalName)
@@ -101,18 +100,18 @@ function escapeRegExp(str) {
 }
 
 function rewriteBackgroundReferences(code, mapping) {
-  let out = code;
+  let rewrittenCode = code;
   for (const [originalName, obfuscatedName] of Object.entries(mapping)) {
     const pattern = new RegExp(`(["'])${escapeRegExp(originalName)}\\1`, 'g');
-    out = out.replace(pattern, `'${obfuscatedName}'`);
+    rewrittenCode = rewrittenCode.replace(pattern, `'${obfuscatedName}'`);
   }
-  return out;
+  return rewrittenCode;
 }
 
 function obfuscateJavaScript(code) {
   if (!code.trim()) return code;
 
-  const antiDebugSnippet = "const __tk_guard=setInterval(function(){const __t=new Date();debugger;if(new Date()-__t>100){clearInterval(__tk_guard);}},3000);\n";
+  const antiDebugSnippet = "const __tk_guard=setInterval(function(){const __startTime=new Date();debugger;if(new Date()-__startTime>100){clearInterval(__tk_guard);}},3000);\n";
   const source = antiDebugSnippet + code;
 
   const result = JavaScriptObfuscator.obfuscate(source, {
