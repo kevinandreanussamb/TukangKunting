@@ -213,6 +213,19 @@
     });
   }
 
+  const CHANGELOG_VERSION = "1.5";
+  const BADGE_CLEAR_TIMEOUT_MS = 60_000;
+  const MAX_ACTIVITY_LOG_SIZE  = 200;
+  const CHANGELOG_ITEMS = [
+    "⏸ Pause / Resume / Cancel proses batch kapan saja",
+    "🔄 Retry otomatis untuk faktur yang gagal diproses",
+    "🔔 Notifikasi Chrome native saat batch selesai",
+    "📊 Activity Log tersimpan di Pengaturan",
+    "⌨️ Keyboard shortcut Ctrl+Shift+T untuk membuka extension",
+    "⏰ Countdown 3 detik sebelum Pembatalan Faktur dieksekusi",
+    "💡 Onboarding tour untuk pengguna baru",
+  ];
+
   chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.action === "checkLicense") {
       (async () => {
@@ -224,6 +237,43 @@
           sendResponse(result);
         } catch (e) { sendResponse({ ok: false, reason: "error: " + e.message }); }
       })();
+      return true;
+    }
+
+    if (msg.action === "batchComplete") {
+      const { module: modName, summary, failCount } = msg;
+      chrome.notifications.create(`tukang_batch_${Date.now()}`, {
+        type: "basic",
+        iconUrl: chrome.runtime.getURL("icon.png"),
+        title: `Tukangkunting — ${modName} Selesai`,
+        message: summary,
+      });
+      if (failCount > 0) {
+        chrome.action.setBadgeText({ text: String(failCount) });
+        chrome.action.setBadgeBackgroundColor({ color: "#ef4444" });
+      } else {
+        chrome.action.setBadgeText({ text: "✓" });
+        chrome.action.setBadgeBackgroundColor({ color: "#22c55e" });
+      }
+      setTimeout(() => chrome.action.setBadgeText({ text: "" }), BADGE_CLEAR_TIMEOUT_MS);
+      sendResponse({ ok: true });
+      return true;
+    }
+
+    if (msg.action === "saveActivityLog") {
+      chrome.storage.local.get({ activity_log: [] }, (data) => {
+        const log = data.activity_log;
+        log.unshift(msg.entry);
+        if (log.length > MAX_ACTIVITY_LOG_SIZE) log.length = MAX_ACTIVITY_LOG_SIZE;
+        chrome.storage.local.set({ activity_log: log });
+      });
+      return;
+    }
+
+    if (msg.action === "getActivityLog") {
+      chrome.storage.local.get({ activity_log: [] }, (data) => {
+        sendResponse({ log: data.activity_log });
+      });
       return true;
     }
   });
@@ -729,8 +779,28 @@
               summary.style.display = "flex";
               summary.innerHTML = `<span class="tkcsv-dot tkcsv-dot-green"></span> ${validCount} valid` + (errorCount > 0 ? ` &nbsp; <span class="tkcsv-dot tkcsv-dot-red"></span> ${errorCount} error` : "");
 
-              if (errorCount === 0) { showStatus(`✅ <strong>${filename}</strong> — ${validCount} faktur terdeteksi, semua valid. Siap dibatalkan!`, "ok"); processBtn.disabled = false; }
-              else if (validCount > 0) { showStatus(`⚠️ <strong>${filename}</strong> — ${validCount} faktur valid, <strong>${errorCount} bermasalah</strong> (akan dilewati).`, "warn"); processBtn.disabled = false; }
+              let countdownTimer = null;
+              function enableWithCountdown() {
+                if (countdownTimer) clearInterval(countdownTimer);
+                processBtn.disabled = true;
+                let cd = 3;
+                processBtn.textContent = `⏳ Siap dalam ${cd}s...`;
+                processBtn.style.cursor = "not-allowed";
+                countdownTimer = setInterval(() => {
+                  cd--;
+                  if (cd <= 0) {
+                    clearInterval(countdownTimer); countdownTimer = null;
+                    processBtn.disabled = false;
+                    processBtn.textContent = "🚫 Batalkan Semua Faktur";
+                    processBtn.style.cursor = "pointer";
+                  } else {
+                    processBtn.textContent = `⏳ Siap dalam ${cd}s...`;
+                  }
+                }, 1000);
+              }
+
+              if (errorCount === 0) { showStatus(`✅ <strong>${filename}</strong> — ${validCount} faktur terdeteksi, semua valid. Siap dibatalkan!`, "ok"); enableWithCountdown(); }
+              else if (validCount > 0) { showStatus(`⚠️ <strong>${filename}</strong> — ${validCount} faktur valid, <strong>${errorCount} bermasalah</strong> (akan dilewati).`, "warn"); enableWithCountdown(); }
               else { showStatus(`❌ <strong>${filename}</strong> — Semua ${errorCount} baris bermasalah. Perbaiki CSV dan upload ulang.`, "err"); processBtn.disabled = true; }
             }
 
@@ -752,13 +822,27 @@
     const result = await ensureActivation(tab);
     if (!result.activated) return;
 
+    // Clear badge from previous batch
+    chrome.action.setBadgeText({ text: "" });
+
     const licenseExpiry = result.expiry;
     const remaining = daysLeft(licenseExpiry);
 
+    // Load user preferences
+    const prefs = await new Promise(r => chrome.storage.local.get([
+      "tukang_last_module", "tukang_onboarded", "tukang_last_version"
+    ], r));
+    const lastModule = prefs.tukang_last_module || "";
+    const showOnboarding = !prefs.tukang_onboarded;
+    const showChangelog = !!(prefs.tukang_last_version && prefs.tukang_last_version !== CHANGELOG_VERSION);
+    if (prefs.tukang_last_version !== CHANGELOG_VERSION) {
+      chrome.storage.local.set({ tukang_last_version: CHANGELOG_VERSION });
+    }
+
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
-      args: [formatExpiry(licenseExpiry), remaining],
-      func: (expiryStr, daysRemaining) => {
+      args: [formatExpiry(licenseExpiry), remaining, lastModule, showOnboarding, showChangelog, CHANGELOG_ITEMS],
+      func: (expiryStr, daysRemaining, lastModule, showOnboarding, showChangelog, changelogItems) => {
 
         if (document.getElementById("doc-select-modal")) return null;
 
@@ -767,7 +851,7 @@
           styleEl.textContent = `
             @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
             #tukang-overlay{position:fixed;inset:0;background:rgba(8,10,18,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:9998;animation:tukang-fadeIn .2s ease}
-            #doc-select-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);width:380px;background:#0f1117;border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 24px 64px rgba(0,0,0,.6),0 0 80px rgba(56,130,246,.06);z-index:9999;font-family:'DM Sans',sans-serif;overflow:hidden;animation:tukang-slideUp .25s cubic-bezier(.16,1,.3,1)}
+            #doc-select-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);width:min(380px,calc(100vw - 24px));max-height:calc(100vh - 24px);background:#0f1117;border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 24px 64px rgba(0,0,0,.6),0 0 80px rgba(56,130,246,.06);z-index:9999;font-family:'DM Sans',sans-serif;overflow:hidden;animation:tukang-slideUp .25s cubic-bezier(.16,1,.3,1)}
             .tukang-header{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 16px;border-bottom:1px solid rgba(255,255,255,.06)}
             .tukang-brand{display:flex;align-items:center;gap:10px}
             .tukang-icon{width:32px;height:32px;background:linear-gradient(135deg,#3882f6,#2563eb);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 4px 12px rgba(56,130,246,.35)}
@@ -799,13 +883,36 @@
             .tukang-license-badge.green{background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.2)}
             .tukang-license-badge.orange{background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.2)}
             .tukang-license-badge.red{background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2)}
+            .tukang-expiry-warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.22);border-radius:9px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#f59e0b;line-height:1.5;display:flex;gap:8px;align-items:center}
+            .tukang-changelog-banner{background:rgba(56,130,246,.08);border:1px solid rgba(56,130,246,.2);border-radius:9px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:#7aa8f5;line-height:1.6}
+            .tukang-changelog-banner ul{margin:6px 0 8px 16px;padding:0}
+            .tukang-changelog-banner li{margin-bottom:2px}
+            .tukang-changelog-dismiss{font-size:11px;color:#3882f6;cursor:pointer;background:none;border:none;padding:0;font-family:'DM Sans',sans-serif;text-decoration:underline;display:block;margin-top:4px}
             #tukang-settings-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:10000;animation:tukang-fadeIn .15s ease}
-            #settings-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#0f1117;border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.6);z-index:10001;width:360px;font-family:'DM Sans',sans-serif;overflow:hidden;animation:tukang-slideUp .2s cubic-bezier(.16,1,.3,1)}
+            #settings-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#0f1117;border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.6);z-index:10001;width:380px;font-family:'DM Sans',sans-serif;overflow:hidden;animation:tukang-slideUp .2s cubic-bezier(.16,1,.3,1)}
             .settings-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid rgba(255,255,255,.06)}
             .settings-title{font-size:14px;font-weight:600;color:#f0f2f8;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
-            .settings-body{padding:18px 20px;max-height:400px;overflow-y:auto}
+            .settings-body{padding:18px 20px;max-height:480px;overflow-y:auto}
             .settings-body::-webkit-scrollbar{width:4px}.settings-body::-webkit-scrollbar-track{background:transparent}.settings-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px}
             .settings-info-box{background:rgba(56,130,246,.08);border:1px solid rgba(56,130,246,.18);border-radius:8px;padding:10px 13px;font-size:12px;color:#7aa8f5;line-height:1.5;margin-bottom:18px;display:flex;gap:8px}
+            .settings-log-item{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#94a3b8;margin-bottom:8px;padding:8px 10px;background:rgba(255,255,255,.03);border-radius:6px;border:1px solid rgba(255,255,255,.06)}
+            .settings-log-left{display:flex;flex-direction:column;gap:2px}
+            .settings-log-module{font-weight:500;color:#e2e8f0}
+            .settings-log-ts{color:#64748b;font-size:10px}
+            .settings-log-counts{font-family:'DM Mono',monospace;font-size:11px;text-align:right}
+            #tukang-log-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:10002;animation:tukang-fadeIn .15s ease}
+            #tukang-log-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#0f1117;border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.6);z-index:10003;width:400px;max-height:80vh;font-family:'DM Sans',sans-serif;overflow:hidden;display:flex;flex-direction:column;animation:tukang-slideUp .2s cubic-bezier(.16,1,.3,1)}
+            #tukang-onboarding{position:absolute;inset:0;background:#0f1117;z-index:10010;display:flex;flex-direction:column;justify-content:space-between;padding:24px 22px 20px;animation:tukang-fadeIn .2s ease;overflow-y:auto}
+            .onboarding-step{display:none}.onboarding-step.active{display:flex;flex-direction:column;gap:8px;flex:1}
+            .onboarding-icon{font-size:28px;margin-bottom:4px}
+            .onboarding-title{font-size:15px;font-weight:600;color:#f0f2f8}
+            .onboarding-desc{font-size:12px;color:#94a3b8;line-height:1.6}
+            .onboarding-dots{display:flex;gap:5px;justify-content:center;margin:8px 0}
+            .onboarding-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.15);transition:background .2s}
+            .onboarding-dot.active{background:#3882f6}
+            .onboarding-nav{display:flex;gap:8px}
+            .onboarding-skip{flex:1;padding:9px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);border-radius:8px;color:#4e5668;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif}
+            .onboarding-next{flex:2;padding:9px;background:linear-gradient(135deg,#3882f6,#2563eb);border:none;border-radius:8px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
             .settings-field{margin-bottom:14px}
             .settings-field-label{font-size:11px;font-weight:500;color:#4e5668;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;display:block}
             .settings-input{width:100%;padding:9px 13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:8px;color:#e2e8f0;font-family:'DM Mono',monospace;font-size:13px;outline:none;transition:border-color .15s,box-shadow .15s;box-sizing:border-box}
@@ -837,24 +944,59 @@
           brandText.append(titleEl, subtitleEl); brand.append(iconBox, brandText);
 
           const headerActions = document.createElement("div"); headerActions.className = "tukang-header-actions";
+
+          // Log button (activity log)
+          const logBtn = document.createElement("button"); logBtn.className = "tukang-icon-btn"; logBtn.title = "Activity Log";
+          logBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+
           const settingsBtn = document.createElement("button"); settingsBtn.className = "tukang-icon-btn"; settingsBtn.title = "Settings";
           settingsBtn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`;
           const closeBtn = document.createElement("button"); closeBtn.className = "tukang-icon-btn close-btn"; closeBtn.title = "Close";
           closeBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
           closeBtn.onclick = () => { container.remove(); overlay.remove(); resolve(null); };
-          headerActions.append(settingsBtn, closeBtn);
+          headerActions.append(logBtn, settingsBtn, closeBtn);
           header.append(brand, headerActions);
 
           // Body
           const body = document.createElement("div"); body.className = "tukang-body";
+
+          // Changelog banner
+          if (showChangelog && changelogItems && changelogItems.length) {
+            const banner = document.createElement("div"); banner.className = "tukang-changelog-banner";
+            const bannerTitle = document.createElement("div"); bannerTitle.style.cssText = "font-weight:600;color:#7aa8f5;margin-bottom:4px;font-size:12px;";
+            bannerTitle.textContent = "✨ Yang Baru di Tukangkunting!";
+            const bannerList = document.createElement("ul");
+            changelogItems.forEach(item => {
+              const li = document.createElement("li"); li.textContent = item; bannerList.appendChild(li);
+            });
+            const bannerDismiss = document.createElement("button"); bannerDismiss.className = "tukang-changelog-dismiss";
+            bannerDismiss.textContent = "OK, mengerti";
+            bannerDismiss.onclick = () => banner.remove();
+            banner.append(bannerTitle, bannerList, bannerDismiss);
+            body.appendChild(banner);
+          }
+
+          // Expiry warning banner
+          if (daysRemaining <= 7) {
+            const warnBanner = document.createElement("div"); warnBanner.className = "tukang-expiry-warn";
+            warnBanner.innerHTML = `<span style="font-size:16px;flex-shrink:0;">⚠️</span><span>Lisensi Anda berakhir dalam <strong>${daysRemaining} hari</strong>. Segera hubungi owner untuk perpanjangan.</span>`;
+            body.appendChild(warnBanner);
+          }
+
           const selectLabel = document.createElement("div"); selectLabel.className = "tukang-label"; selectLabel.textContent = "Jenis Dokumen";
           // ── ADDED "Pembatalan Faktur" to menu ──
           const opts = ["Dokumen Saya (Bold Only)","Dokumen Saya","Faktur Pajak Keluaran","Faktur Pajak Masukan","Faktur Pajak Retur (Keluaran & Masukan)","BPPU & BPNR","Bukti Potong Saya","Pengkreditan Faktur","Pembatalan Faktur"];
           const select = document.createElement("select"); select.className = "tukang-select";
           opts.forEach(o => { const op = document.createElement("option"); op.value = o; op.textContent = o; select.appendChild(op); });
+          // Restore last selected module
+          if (lastModule && opts.includes(lastModule)) select.value = lastModule;
           const divider = document.createElement("div"); divider.className = "tukang-divider";
           const submit = document.createElement("button"); submit.className = "tukang-submit"; submit.textContent = "Jalankan Proses";
-          submit.onclick = () => { const val = select.value; container.remove(); overlay.remove(); resolve(val); };
+          submit.onclick = () => {
+            const val = select.value;
+            chrome.storage.local.set({ tukang_last_module: val });
+            container.remove(); overlay.remove(); resolve(val);
+          };
           body.append(selectLabel, select, divider, submit);
 
           // Footer
@@ -870,7 +1012,42 @@
           container.append(header, body, footer);
           document.body.append(overlay, container);
 
-          // ── Settings handler (UPDATED with passphrase field) ──
+          // ── Log button handler ──
+          logBtn.onclick = () => {
+            if (document.getElementById("tukang-log-overlay")) return;
+            chrome.runtime.sendMessage({ action: "getActivityLog" }, (res) => {
+              const log = (res && res.log) || [];
+              const logOverlay = document.createElement("div"); logOverlay.id = "tukang-log-overlay";
+              const logModal = document.createElement("div"); logModal.id = "tukang-log-modal";
+              const lHeader = document.createElement("div"); lHeader.className = "settings-header";
+              const lTitle = document.createElement("div"); lTitle.className = "settings-title"; lTitle.innerHTML = `<span style="font-size:13px;opacity:.8">📊</span> Activity Log`;
+              const lCloseBtn = document.createElement("button"); lCloseBtn.className = "tukang-icon-btn close-btn"; lCloseBtn.title = "Tutup";
+              lCloseBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+              lCloseBtn.onclick = () => { logModal.remove(); logOverlay.remove(); };
+              lHeader.append(lTitle, lCloseBtn);
+              const lBody = document.createElement("div"); lBody.className = "settings-body"; lBody.style.padding = "12px 16px";
+              if (log.length === 0) {
+                const empty = document.createElement("div"); empty.style.cssText = "text-align:center;color:#4e5668;font-size:12px;padding:24px 0;font-style:italic;"; empty.textContent = "Belum ada aktivitas yang tercatat.";
+                lBody.appendChild(empty);
+              } else {
+                log.forEach(entry => {
+                  const item = document.createElement("div"); item.className = "settings-log-item";
+                  const left = document.createElement("div"); left.className = "settings-log-left";
+                  const mod = document.createElement("div"); mod.className = "settings-log-module"; mod.textContent = entry.module || "–";
+                  const ts = document.createElement("div"); ts.className = "settings-log-ts";
+                  ts.textContent = new Date(entry.timestamp).toLocaleString("id-ID", { day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" });
+                  left.append(mod, ts);
+                  const counts = document.createElement("div"); counts.className = "settings-log-counts";
+                  counts.innerHTML = `<span style="color:#22c55e;">${entry.success || 0}✓</span>` + (entry.failed > 0 ? ` <span style="color:#f87171;margin-left:4px;">${entry.failed}✗</span>` : "");
+                  item.append(left, counts); lBody.appendChild(item);
+                });
+              }
+              logModal.append(lHeader, lBody);
+              document.body.append(logOverlay, logModal);
+            });
+          };
+
+          // ── Settings handler (UPDATED with passphrase field + activity log) ──
           settingsBtn.onclick = () => {
             if (document.getElementById("settings-modal")) return;
             const settingsOverlay = document.createElement("div"); settingsOverlay.id = "tukang-settings-overlay";
@@ -914,6 +1091,29 @@
               passInput.value = res.passphrase ?? "";
             });
 
+            // ── Section: Activity Log ──
+            const logDivider = document.createElement("div"); logDivider.className = "settings-divider"; sBody.appendChild(logDivider);
+            const logSection = document.createElement("div"); logSection.className = "settings-section-title"; logSection.innerHTML = `📊 Aktivitas Terakhir`;
+            sBody.appendChild(logSection);
+            chrome.runtime.sendMessage({ action: "getActivityLog" }, (res) => {
+              const log = (res && res.log) || [];
+              if (log.length === 0) {
+                const emptyMsg = document.createElement("div"); emptyMsg.style.cssText = "font-size:11px;color:#4e5668;font-style:italic;margin-bottom:14px;"; emptyMsg.textContent = "Belum ada aktivitas tercatat.";
+                sBody.insertBefore(emptyMsg, sFooter);
+              } else {
+                log.slice(0, 5).forEach(entry => {
+                  const item = document.createElement("div"); item.className = "settings-log-item";
+                  const left = document.createElement("div"); left.className = "settings-log-left";
+                  const mod = document.createElement("div"); mod.className = "settings-log-module"; mod.textContent = entry.module || "–";
+                  const ts = document.createElement("div"); ts.className = "settings-log-ts"; ts.textContent = new Date(entry.timestamp).toLocaleString("id-ID", { day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" });
+                  left.append(mod, ts);
+                  const cnts = document.createElement("div"); cnts.className = "settings-log-counts";
+                  cnts.innerHTML = `<span style="color:#22c55e;">${entry.success || 0}✓</span>` + (entry.failed > 0 ? ` <span style="color:#f87171;margin-left:4px;">${entry.failed}✗</span>` : "");
+                  item.append(left, cnts); sBody.insertBefore(item, sFooter);
+                });
+              }
+            });
+
             const sFooter = document.createElement("div"); sFooter.className = "settings-footer";
             const sCancelBtn = document.createElement("button"); sCancelBtn.className = "btn-secondary"; sCancelBtn.textContent = "Batal";
             sCancelBtn.onclick = () => { settingsBox.remove(); settingsOverlay.remove(); };
@@ -929,6 +1129,48 @@
             settingsBox.append(sHeader, sBody, sFooter);
             document.body.append(settingsOverlay, settingsBox);
           };
+
+          // ── Onboarding tour (first run) ──
+          if (showOnboarding) {
+            const onboardingSteps = [
+              { icon: "👋", title: "Selamat Datang di Tukangkunting!", desc: "Extension ini mengotomasi operasi dokumen di portal e-Faktur Pajak. Hemat waktu untuk proses massal yang berulang." },
+              { icon: "📋", title: "Pilih Jenis Dokumen", desc: "Gunakan dropdown di bawah untuk memilih modul yang ingin dijalankan. Tersedia berbagai jenis dokumen pajak." },
+              { icon: "🚀", title: "Jalankan Proses", desc: "Klik 'Jalankan Proses' dan biarkan extension bekerja otomatis. Pastikan Anda berada di halaman yang sesuai." },
+              { icon: "📊", title: "Pantau Progress", desc: "Panel progress akan muncul di kanan bawah layar. Anda bisa Pause, Resume, atau Cancel kapan saja selama proses berlangsung." },
+            ];
+            const tour = document.createElement("div"); tour.id = "tukang-onboarding";
+            let currentStep = 0;
+            const stepsContainer = document.createElement("div"); stepsContainer.style.flex = "1";
+            onboardingSteps.forEach((s, idx) => {
+              const step = document.createElement("div"); step.className = "onboarding-step" + (idx === 0 ? " active" : "");
+              step.innerHTML = `<div class="onboarding-icon">${s.icon}</div><div class="onboarding-title">${s.title}</div><div class="onboarding-desc">${s.desc}</div>`;
+              stepsContainer.appendChild(step);
+            });
+            const dotsRow = document.createElement("div"); dotsRow.className = "onboarding-dots";
+            onboardingSteps.forEach((_, idx) => {
+              const d = document.createElement("div"); d.className = "onboarding-dot" + (idx === 0 ? " active" : ""); dotsRow.appendChild(d);
+            });
+            const navRow = document.createElement("div"); navRow.className = "onboarding-nav";
+            const skipBtn = document.createElement("button"); skipBtn.className = "onboarding-skip"; skipBtn.textContent = "Lewati";
+            const nextBtn = document.createElement("button"); nextBtn.className = "onboarding-next"; nextBtn.textContent = "Lanjut →";
+            function finishOnboarding() {
+              tour.remove();
+              chrome.storage.local.set({ tukang_onboarded: true });
+            }
+            function goStep(n) {
+              stepsContainer.querySelectorAll(".onboarding-step").forEach((s, i) => s.classList.toggle("active", i === n));
+              dotsRow.querySelectorAll(".onboarding-dot").forEach((d, i) => d.classList.toggle("active", i === n));
+              nextBtn.textContent = n === onboardingSteps.length - 1 ? "Mulai ✓" : "Lanjut →";
+            }
+            skipBtn.onclick = finishOnboarding;
+            nextBtn.onclick = () => {
+              if (currentStep < onboardingSteps.length - 1) { currentStep++; goStep(currentStep); }
+              else finishOnboarding();
+            };
+            navRow.append(skipBtn, nextBtn);
+            tour.append(stepsContainer, dotsRow, navRow);
+            container.appendChild(tour);
+          }
         });
       }
     }, async (results) => {

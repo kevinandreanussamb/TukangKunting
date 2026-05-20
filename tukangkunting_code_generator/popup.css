@@ -443,7 +443,52 @@ textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
   margin-right: 3px;
 }
 
-/* ─── TOAST ───────────────────────────────────��────────── */
+/* ─── STATS CARD ───────────────────────────────────────── */
+.stats-card { padding: 14px 16px; margin-bottom: 0; }
+.stats-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 8px; text-align: center;
+}
+.stat-item {}
+.stat-value {
+  font-size: 20px; font-weight: 700; color: var(--text);
+  font-family: 'Inter', monospace; line-height: 1;
+}
+.stat-value.green  { color: var(--green); }
+.stat-value.orange { color: var(--orange); }
+.stat-value.red    { color: var(--red); }
+.stat-value.purple { color: var(--purple); }
+.stat-label { font-size: 9px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: .04em; }
+
+/* ─── SEARCH ────────────────────────────────────────────── */
+.search-wrap {
+  position: relative; margin-bottom: 10px;
+}
+.search-icon {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); pointer-events: none;
+}
+.search-input {
+  width: 100%; padding: 8px 12px 8px 32px;
+  background: var(--bg-input); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-size: 12px; font-family: 'Inter', sans-serif;
+  outline: none; transition: border-color .15s;
+  box-sizing: border-box;
+}
+.search-input:focus { border-color: var(--border-h); }
+.search-input::placeholder { color: var(--text-muted); }
+
+/* ─── REVOKED BADGE ─────────────────────────────────────── */
+.hi-revoked-badge {
+  font-size: 9px; padding: 2px 6px; border-radius: 4px;
+  background: rgba(239,68,68,.12); color: var(--red);
+  border: 1px solid rgba(239,68,68,.2); font-weight: 600;
+  letter-spacing: .04em; text-transform: uppercase; margin-left: 4px;
+}
+.history-item.is-revoked { opacity: .6; }
+
+/* ─── TOAST ──────────────────────────────────────────────── */
 .toast {
   position: fixed; bottom: 16px; left: 50%;
   transform: translateX(-50%) translateY(16px);

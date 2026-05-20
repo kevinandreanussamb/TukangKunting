@@ -804,6 +804,11 @@
 
     console.log("🎉 DONE ALL PAGES. Total downloaded:", totalDownloaded);
     updateStatus("DONE");
+    const notifSummary = `${totalDownloaded} berhasil, 0 gagal`;
+    try {
+      chrome.runtime.sendMessage({ action: "batchComplete", module: "Faktur Pajak Masukan", summary: notifSummary, failCount: 0 });
+      chrome.runtime.sendMessage({ action: "saveActivityLog", entry: { module: "Faktur Pajak Masukan", total: totalDownloaded, success: totalDownloaded, failed: 0, skipped: 0, timestamp: Date.now(), url: window.location.href } });
+    } catch (e) { /* non-critical */ }
   }
 
   try {

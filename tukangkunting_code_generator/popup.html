@@ -151,6 +151,29 @@
         </button>
       </div>
 
+      <!-- BULK GENERATE -->
+      <div class="card">
+        <h2 class="card-title">
+          <span class="title-icon">📦</span>
+          Bulk Generate dari CSV
+        </h2>
+        <p class="card-desc">Upload CSV dengan kolom: <code style="background:rgba(99,102,241,.12);padding:1px 5px;border-radius:4px;">machine_code,label,days</code> untuk generate massal.</p>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="btn btn-secondary" id="bulkDownloadTemplate">
+            📥 Download Template
+          </button>
+          <button class="btn btn-secondary" id="bulkUploadBtn">
+            📎 Upload CSV
+          </button>
+        </div>
+        <input type="file" id="bulkFileInput" accept=".csv,.txt" style="display:none;" />
+        <div id="bulkStatus" style="margin-top:10px;font-size:12px;color:#64748b;display:none;"></div>
+        <button class="btn btn-primary btn-lg" id="bulkGenerateBtn" style="margin-top:12px;display:none;">
+          <span class="btn-content">⚡ Generate Semua</span>
+          <span class="btn-loader hidden"><span class="spinner"></span> Generating...</span>
+        </button>
+      </div>
+
       <!-- OUTPUT RESULT -->
       <div class="card result-card hidden" id="resultCard">
         <div class="result-header">
@@ -268,21 +291,69 @@
 
     <!-- ══ TAB 3 — HISTORY ═══════════════════════════════ -->
     <section class="panel" id="panel-history">
+
+      <!-- Stats Card -->
+      <div class="card stats-card">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-label">Total</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value green" id="stat-active">0</div>
+            <div class="stat-label">Aktif</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value orange" id="stat-expiring">0</div>
+            <div class="stat-label">Segera Habis</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value red" id="stat-expired">0</div>
+            <div class="stat-label">Expired</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value purple" id="stat-revoked">0</div>
+            <div class="stat-label">Dicabut</div>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <div class="history-header">
           <h2 class="card-title">
             <span class="title-icon">📋</span>
             Riwayat Generate
           </h2>
-          <button class="btn btn-ghost btn-sm" id="clearHistory">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="3 6 5 6 21 6"/>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-            </svg>
-            Hapus Semua
-          </button>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="btn btn-ghost btn-sm" id="exportHistory" title="Export ke CSV">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Export
+            </button>
+            <button class="btn btn-ghost btn-sm" id="clearHistory">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              </svg>
+              Hapus Semua
+            </button>
+          </div>
+        </div>
+        <!-- Search -->
+        <div class="search-wrap">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" id="historySearch" class="search-input"
+                 placeholder="Cari machine code atau nama user..." autocomplete="off" />
         </div>
         <div class="history-list" id="historyList">
           <div class="history-empty">
