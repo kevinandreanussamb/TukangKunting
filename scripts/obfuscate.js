@@ -104,7 +104,7 @@ function buildModuleName(originalName, used) {
   }
 
   const hash = crypto
-    .createHash('sha1')
+    .createHash('sha256')
     .update(originalName)
     .digest('hex')
     .slice(0, 6);
@@ -133,9 +133,16 @@ function rewriteBackgroundReferences(code, mapping) {
 }
 
 function toHexEscapedContent(value) {
-  return [...value]
-    .map((ch) => `\\x${ch.charCodeAt(0).toString(16).padStart(2, '0')}`)
-    .join('');
+  return [...value].map((ch) => {
+    const codePoint = ch.codePointAt(0);
+    if (codePoint <= 0xff) {
+      return `\\x${codePoint.toString(16).padStart(2, '0')}`;
+    }
+    if (codePoint <= 0xffff) {
+      return `\\u${codePoint.toString(16).padStart(4, '0')}`;
+    }
+    return `\\u{${codePoint.toString(16)}}`;
+  }).join('');
 }
 
 function obfuscateSafeLiterals(code) {

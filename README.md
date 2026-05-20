@@ -111,9 +111,7 @@ Hak cipta © Kevin Andreanussamb. Seluruh kode bersifat proprietary dan tidak un
 
 Untuk generate ulang folder `tukangkunting_commerce_edition` dari source `tukangkunting_before_obfuscate`:
 
-1. Install dependency:
-   - `npm install`
-2. Jalankan obfuscation:
+1. Jalankan obfuscation:
    - `npm run obfuscate`
 
 Script akan:

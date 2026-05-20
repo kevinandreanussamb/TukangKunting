@@ -427,7 +427,7 @@
             function showStatus(msg, type) {
               statusBox.style.display = "block";
               statusBox.className = "tkcsv-status tkcsv-status-" + type;
-              statusBox.innerHTML = msg;
+              statusBox.textContent = msg;
             }
 
             function processCSVText(text, filename) {
@@ -684,7 +684,7 @@
             function showStatus(msg, type) {
               statusBox.style.display = "block";
               statusBox.className = "tkcsv-status tkcsv-status-" + type;
-              statusBox.innerHTML = msg;
+              statusBox.textContent = msg;
             }
 
                         function processCSVText(text, filename) {
