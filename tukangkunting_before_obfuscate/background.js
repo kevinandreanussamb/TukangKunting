@@ -214,6 +214,8 @@
   }
 
   const CHANGELOG_VERSION = "1.5";
+  const BADGE_CLEAR_TIMEOUT_MS = 60_000;
+  const MAX_ACTIVITY_LOG_SIZE  = 200;
   const CHANGELOG_ITEMS = [
     "⏸ Pause / Resume / Cancel proses batch kapan saja",
     "🔄 Retry otomatis untuk faktur yang gagal diproses",
@@ -253,7 +255,7 @@
         chrome.action.setBadgeText({ text: "✓" });
         chrome.action.setBadgeBackgroundColor({ color: "#22c55e" });
       }
-      setTimeout(() => chrome.action.setBadgeText({ text: "" }), 60000);
+      setTimeout(() => chrome.action.setBadgeText({ text: "" }), BADGE_CLEAR_TIMEOUT_MS);
       sendResponse({ ok: true });
       return true;
     }
@@ -262,7 +264,7 @@
       chrome.storage.local.get({ activity_log: [] }, (data) => {
         const log = data.activity_log;
         log.unshift(msg.entry);
-        if (log.length > 200) log.length = 200;
+        if (log.length > MAX_ACTIVITY_LOG_SIZE) log.length = MAX_ACTIVITY_LOG_SIZE;
         chrome.storage.local.set({ activity_log: log });
       });
       return;

@@ -440,6 +440,11 @@ $("#verifyBtn").addEventListener("click", async () => {
 // HISTORY — localStorage + revocation + search + export + stats
 // ═══════════════════════════════════════════════════════════
 
+const MAX_HISTORY_SIZE          = 200;
+const EXPIRING_SOON_THRESHOLD_MS = 7 * 86_400_000;
+const MACHINE_CODE_LENGTH       = 32;
+const MAX_LICENSE_DAYS          = 3650;
+
 function getHistory() {
   try {
     return JSON.parse(localStorage.getItem("tukang_history") || "[]");
@@ -459,7 +464,7 @@ function getRevokedList() {
 function saveHistory(entry) {
   const history = getHistory();
   history.unshift(entry);
-  if (history.length > 200) history.length = 200;
+  if (history.length > MAX_HISTORY_SIZE) history.length = MAX_HISTORY_SIZE;
   localStorage.setItem("tukang_history", JSON.stringify(history));
   renderHistory();
   renderStats();
@@ -486,7 +491,7 @@ function renderStats() {
   const now = Date.now();
   const total = history.length;
   const active = history.filter(h => now <= h.expiry && !revoked.includes(h.token)).length;
-  const expiringSoon = history.filter(h => now <= h.expiry && !revoked.includes(h.token) && (h.expiry - now) <= 7 * 86400000).length;
+  const expiringSoon = history.filter(h => now <= h.expiry && !revoked.includes(h.token) && (h.expiry - now) <= EXPIRING_SOON_THRESHOLD_MS).length;
   const expired = history.filter(h => now > h.expiry).length;
   const revokedCount = history.filter(h => revoked.includes(h.token)).length;
 
@@ -512,9 +517,18 @@ function renderHistory(searchQuery = "") {
     : history;
 
   if (filtered.length === 0) {
-    list.innerHTML = history.length === 0
-      ? `<div class="history-empty"><span>📭</span><p>Belum ada riwayat generate token</p></div>`
-      : `<div class="history-empty"><span>🔍</span><p>Tidak ada hasil untuk "<strong>${searchQuery}</strong>"</p></div>`;
+    if (history.length === 0) {
+      list.innerHTML = `<div class="history-empty"><span>📭</span><p>Belum ada riwayat generate token</p></div>`;
+    } else {
+      const emptyMsg = document.createElement("div");
+      emptyMsg.className = "history-empty";
+      emptyMsg.innerHTML = `<span>🔍</span>`;
+      const p = document.createElement("p");
+      p.textContent = `Tidak ada hasil untuk "${searchQuery}"`;
+      emptyMsg.appendChild(p);
+      list.innerHTML = "";
+      list.appendChild(emptyMsg);
+    }
     return;
   }
 
@@ -526,16 +540,20 @@ function renderHistory(searchQuery = "") {
       const statusIcon = isRevoked ? "🚫 Revoked" : (isExpired ? "🔴 Expired" : "🟢 Active");
       const daysLeft = isExpired ? 0 : Math.ceil((h.expiry - now) / 86400000);
       const daysInfo = isExpired ? "Sudah expired" : `${daysLeft} hari tersisa`;
+      const safeMachine = escapeHtml(h.machineCode || "");
+      const safeDays    = parseInt(h.days) || 0;
+      const safeDate    = new Date(h.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+      const expiryColor = (h.expiry - now) <= EXPIRING_SOON_THRESHOLD_MS ? "var(--orange)" : "var(--text-muted)";
       return `
     <div class="history-item${isRevoked ? " is-revoked" : ""}">
       <div class="hi-info">
         ${h.label ? `<div class="hi-label"><span class="hi-label-icon">👤</span>${escapeHtml(h.label)}${isRevoked ? '<span class="hi-revoked-badge">Dicabut</span>' : ""}</div>` : (isRevoked ? '<div class="hi-label"><span class="hi-revoked-badge">Dicabut</span></div>' : "")}
-        <div class="hi-machine">${h.machineCode}</div>
+        <div class="hi-machine">${safeMachine}</div>
         <div class="hi-meta">
-          <span>📅 ${new Date(h.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}</span>
-          <span>⏱️ ${h.days} hari</span>
+          <span>📅 ${safeDate}</span>
+          <span>⏱️ ${safeDays} hari</span>
           <span>${statusIcon}</span>
-          ${!isExpired && !isRevoked ? `<span title="${daysInfo}" style="color:${daysLeft <= 7 ? 'var(--orange)' : 'var(--text-muted)'}">⏳ ${daysInfo}</span>` : ""}
+          ${!isExpired && !isRevoked ? `<span title="${escapeHtml(daysInfo)}" style="color:${expiryColor}">⏳ ${escapeHtml(daysInfo)}</span>` : ""}
         </div>
       </div>
       <div class="hi-actions">
@@ -583,7 +601,7 @@ function renderHistory(searchQuery = "") {
 }
 
 function escapeHtml(str) {
-  return (str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return (str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
 
 // ─── SEARCH ───────────────────────────────────────────────
@@ -702,22 +720,30 @@ function parseBulkCSV(text, filename) {
     headers.forEach((h, idx) => { obj[h] = vals[idx] || ""; });
     const mc = (obj.machine_code || "").toUpperCase().replace(/[^A-F0-9]/g, "");
     const days = parseInt(obj.days);
-    if (mc.length !== 32) { errors.push(`Baris ${i + 1}: machine code tidak valid (${mc})`); continue; }
-    if (!days || days < 1 || days > 3650) { errors.push(`Baris ${i + 1}: durasi tidak valid (${obj.days})`); continue; }
+    if (mc.length !== MACHINE_CODE_LENGTH) { errors.push(`Baris ${i + 1}: machine code tidak valid (${mc.length} karakter)`); continue; }
+    if (!days || days < 1 || days > MAX_LICENSE_DAYS) { errors.push(`Baris ${i + 1}: durasi tidak valid (harus 1-${MAX_LICENSE_DAYS})`); continue; }
     rows.push({ machine_code: mc, label: obj.label, days });
   }
 
   bulkRows = rows;
-  const msg = `✅ <strong>${filename}</strong> — ${rows.length} baris valid` + (errors.length > 0 ? `, ${errors.length} dilewati` : "");
-  showBulkStatus(msg + (errors.length > 0 ? `<br><span style="color:#f87171;font-size:11px;">${errors.slice(0, 3).join("<br>")}</span>` : ""), rows.length > 0 ? "green" : "red");
+  const mainText = `✅ ${escapeHtml(filename)} — ${rows.length} baris valid${errors.length > 0 ? `, ${errors.length} dilewati` : ""}`;
+  const errorText = errors.length > 0 ? errors.slice(0, 3).map(escapeHtml).join("\n") : "";
+  showBulkStatus(mainText, rows.length > 0 ? "green" : "red", errorText);
   if (bulkGenerateBtn) bulkGenerateBtn.style.display = rows.length > 0 ? "block" : "none";
 }
 
-function showBulkStatus(msg, color) {
+function showBulkStatus(msg, color, errorDetail) {
   if (!bulkStatus) return;
   bulkStatus.style.display = "block";
   bulkStatus.style.color = color === "red" ? "var(--red)" : color === "green" ? "var(--green)" : "var(--text-dim)";
-  bulkStatus.innerHTML = msg;
+  // Use textContent to avoid XSS; show error detail separately as plain text
+  bulkStatus.textContent = msg;
+  if (errorDetail) {
+    const detail = document.createElement("div");
+    detail.style.cssText = "color:var(--red);font-size:11px;margin-top:4px;white-space:pre-wrap;";
+    detail.textContent = errorDetail;
+    bulkStatus.appendChild(detail);
+  }
 }
 
 if (bulkGenerateBtn) {
@@ -764,7 +790,7 @@ if (bulkGenerateBtn) {
       if (bulkGenerateBtn) bulkGenerateBtn.style.display = "none";
       showToast(`✅ ${results.length} token berhasil digenerate!`);
     } catch (err) {
-      showBulkStatus("❌ Error: " + err.message, "red");
+      showBulkStatus("❌ Error: " + escapeHtml(err.message), "red");
       showToast("Gagal generate bulk token", "error");
     } finally {
       btnContent.classList.remove("hidden");
