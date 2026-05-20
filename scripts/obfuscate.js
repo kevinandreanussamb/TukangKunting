@@ -155,13 +155,17 @@ function obfuscateSafeLiterals(code) {
   return out;
 }
 
-async function stripJsComments(code) {
+async function transformJavaScript(code) {
   const result = await terser.minify(code, {
     compress: false,
-    mangle: false,
+    mangle: {
+      toplevel: true,
+      keep_fnames: false,
+      keep_classnames: false
+    },
     format: {
       comments: false,
-      beautify: true
+      beautify: false
     }
   });
 
@@ -206,8 +210,8 @@ function autoVersionManifest(manifestContent) {
 async function obfuscateJavaScript(code) {
   if (!code.trim()) return code;
 
-  const withoutComments = await stripJsComments(code);
-  const normalized = withoutComments
+  const transformed = await transformJavaScript(code);
+  const normalized = transformed
     .replace(/\r\n/g, '\n')
     .replace(/[ \t]+$/gm, '')
     .replace(/\n{3,}/g, '\n\n');
