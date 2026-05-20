@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Tukang Kunting (Commercial)",
-  "version": "2.0",
-  "description": "Nyuruh Tukang Aja!!",
+  "name": "Tukangkunting",
+  "version": "1.5",
+  "description": "Tukang ajah",
   "icons": { "48": "icon.png" },
   "permissions": [
     "activeTab",
@@ -20,7 +20,7 @@
   },
   "action": {
     "default_icon": "icon.png",
-    "default_title": "Suruh Tukang!"
+    "default_title": "Suruh Tukang"
   },
   "content_scripts": [
     {

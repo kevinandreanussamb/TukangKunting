@@ -1,0 +1,12 @@
+{
+  "name": "tukangkunting-tools",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Automation tools for TukangKunting",
+  "scripts": {
+    "obfuscate": "node scripts/obfuscate.js"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "5.4.2"
+  }
+}

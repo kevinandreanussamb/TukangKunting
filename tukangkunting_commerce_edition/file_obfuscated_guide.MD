@@ -1,0 +1,8 @@
+bppu_bpnr.js                                  m0d_e2c7a0.js
+dokumen_saya_all.js                           m0d_b7d2e4.js
+dokumen_saya_bold.js                          m0d_a3f8c1.js
+faktur_pajak_keluaran.js                      m0d_c8ad8s.js
+faktur_pajak_masukan.js                       m0d_c9a1f6.js
+faktur_pajak_retur_masukan_keluaran.js        m0d_d4b5e8.js
+pembatalan_faktur.js                          m0d_g8d4c7.js
+pengkreditan_faktur.js                        m0d_f5e3b2.js
