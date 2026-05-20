@@ -849,7 +849,7 @@
           const body = document.createElement("div"); body.className = "tukang-body";
           const selectLabel = document.createElement("div"); selectLabel.className = "tukang-label"; selectLabel.textContent = "Jenis Dokumen";
           // ── ADDED "Pembatalan Faktur" to menu ──
-          const opts = ["Dokumen Saya (Bold Only)","Dokumen Saya","Faktur Pajak Keluaran","Faktur Pajak Masukan","Faktur Pajak Retur (Keluaran & Masukan)","BPPU & BPNR","Pengkreditan Faktur","Pembatalan Faktur"];
+          const opts = ["Dokumen Saya (Bold Only)","Dokumen Saya","Faktur Pajak Keluaran","Faktur Pajak Masukan","Faktur Pajak Retur (Keluaran & Masukan)","BPPU & BPNR","Bukti Potong Saya","Pengkreditan Faktur","Pembatalan Faktur"];
           const select = document.createElement("select"); select.className = "tukang-select";
           opts.forEach(o => { const op = document.createElement("option"); op.value = o; op.textContent = o; select.appendChild(op); });
           const divider = document.createElement("div"); divider.className = "tukang-divider";
@@ -983,6 +983,7 @@
       if (sel === "Faktur Pajak Masukan") file = "faktur_pajak_masukan.js";
       if (sel === "Faktur Pajak Retur (Keluaran & Masukan)") file = "faktur_pajak_retur_masukan_keluaran.js";
       if (sel === "BPPU & BPNR") file = "bppu_bpnr.js";
+      if (sel === "Bukti Potong Saya") file = "bukti_potong_saya.js";
 
       if (file) {
         chrome.scripting.executeScript({
