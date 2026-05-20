@@ -154,122 +154,6 @@ function obfuscateSafeLiterals(code) {
   return out;
 }
 
-function escapeLiteralCharacter(ch) {
-  const codePoint = ch.codePointAt(0);
-  if (codePoint <= 0xff) {
-    return `\\x${codePoint.toString(16).padStart(2, '0')}`;
-  }
-  if (codePoint <= 0xffff) {
-    return `\\u${codePoint.toString(16).padStart(4, '0')}`;
-  }
-  return `\\u{${codePoint.toString(16)}}`;
-}
-
-function obfuscateQuotedStrings(code) {
-  let out = '';
-  let i = 0;
-  let mode = 'normal';
-  let quote = '';
-
-  while (i < code.length) {
-    const ch = code[i];
-    const next = code[i + 1];
-
-    if (mode === 'normal') {
-      if (ch === '/' && next === '/') {
-        out += ch + next;
-        i += 2;
-        mode = 'lineComment';
-        continue;
-      }
-      if (ch === '/' && next === '*') {
-        out += ch + next;
-        i += 2;
-        mode = 'blockComment';
-        continue;
-      }
-      if (ch === '\'' || ch === '"') {
-        quote = ch;
-        out += ch;
-        i += 1;
-        mode = 'string';
-        continue;
-      }
-      if (ch === '`') {
-        out += ch;
-        i += 1;
-        mode = 'template';
-        continue;
-      }
-      out += ch;
-      i += 1;
-      continue;
-    }
-
-    if (mode === 'lineComment') {
-      out += ch;
-      i += 1;
-      if (ch === '\n') mode = 'normal';
-      continue;
-    }
-
-    if (mode === 'blockComment') {
-      out += ch;
-      i += 1;
-      if (ch === '*' && code[i] === '/') {
-        out += '/';
-        i += 1;
-        mode = 'normal';
-      }
-      continue;
-    }
-
-    if (mode === 'template') {
-      out += ch;
-      i += 1;
-      if (ch === '\\' && i < code.length) {
-        out += code[i];
-        i += 1;
-        continue;
-      }
-      if (ch === '`') mode = 'normal';
-      continue;
-    }
-
-    if (mode === 'string') {
-      if (ch === '\\') {
-        out += ch;
-        i += 1;
-        if (i < code.length) {
-          out += code[i];
-          i += 1;
-        }
-        continue;
-      }
-      if (ch === quote) {
-        out += ch;
-        i += 1;
-        mode = 'normal';
-        continue;
-      }
-
-      if (ch === '\n' || ch === '\r') {
-        out += ch;
-        i += 1;
-        continue;
-      }
-
-      const codePoint = code.codePointAt(i);
-      const currentChar = String.fromCodePoint(codePoint);
-      out += escapeLiteralCharacter(currentChar);
-      i += currentChar.length;
-      continue;
-    }
-  }
-
-  return out;
-}
-
 function buildAutoVersion(baseVersion) {
   const parts = String(baseVersion || '1.0.0')
     .split('.')
@@ -309,7 +193,7 @@ function obfuscateJavaScript(code) {
     .replace(/[ \t]+$/gm, '')
     .replace(/\n{3,}/g, '\n\n');
 
-  return obfuscateQuotedStrings(obfuscateSafeLiterals(normalized));
+  return obfuscateSafeLiterals(normalized);
 }
 
 function main() {

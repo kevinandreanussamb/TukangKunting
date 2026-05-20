@@ -11,15 +11,15 @@
   async function checkLicense() {
     return new Promise((resolve) => {
       if (!chrome?.runtime?.sendMessage) {
-        resolve({ ok: false, reason: "\x\x36\x65\x\x36\x66\x\x35\x66\x\x37\x32\x\x37\x35\x\x36\x65\x\x37\x34\x\x36\x39\x\x36\x64\x\x36\x35" });
+        resolve({ ok: false, reason: "\x6e\x6f\x5f\x72\x75\x6e\x74\x69\x6d\x65" });
         return;
       }
-      chrome.runtime.sendMessage({ action: "\x\x36\x33\x\x36\x38\x\x36\x35\x\x36\x33\x\x36\x62\x\x34\x63\x\x36\x39\x\x36\x33\x\x36\x35\x\x36\x65\x\x37\x33\x\x36\x35" }, (response) => {
+      chrome.runtime.sendMessage({ action: "\x63\x68\x65\x63\x6b\x4c\x69\x63\x65\x6e\x73\x65" }, (response) => {
         if (chrome.runtime.lastError) {
           resolve({ ok: false, reason: chrome.runtime.lastError.message });
           return;
         }
-        resolve(response || { ok: false, reason: "\x\x36\x65\x\x36\x66\x\x35\x66\x\x37\x32\x\x36\x35\x\x37\x33\x\x37\x30\x\x36\x66\x\x36\x65\x\x37\x33\x\x36\x35" });
+        resolve(response || { ok: false, reason: "\x6e\x6f\x5f\x72\x65\x73\x70\x6f\x6e\x73\x65" });
       });
     });
   }
@@ -27,9 +27,9 @@
   const license = await checkLicense();
 
   if (!license.ok) {
-    console.error("\u274c\x20\x4c\x69\x73\x65\x6e\x73\x69\x20\x74\x69\x64\x61\x6b\x20\x76\x61\x6c\x69\x64\x3a", license.reason);
-    const notice = document.createElement("\x64\x69\x76");
-    notice.id = "\x74\x75\x6b\x61\x6e\x67\x2d\x6c\x69\x63\x65\x6e\x73\x65\x2d\x6e\x6f\x74\x69\x63\x65";
+    console.error("❌ Lisensi tidak valid:", license.reason);
+    const notice = document.createElement("div");
+    notice.id = "tukang-license-notice";
     notice.style.cssText = `
       position:fixed;bottom:24px;right:24px;width:300px;
       background:#0f1117;border:1px solid rgba(239,68,68,.3);
@@ -38,10 +38,10 @@
       box-shadow:0 16px 48px rgba(0,0,0,.5);
       animation:tka-slideup .3s cubic-bezier(.16,1,.3,1);
     `;
-    let reasonText = "\x4c\x69\x73\x65\x6e\x73\x69\x20\x74\x69\x64\x61\x6b\x20\x64\x69\x74\x65\x6d\x75\x6b\x61\x6e\x2e";
-    if (license.reason === "\x\x36\x63\x\x36\x39\x\x37\x33\x\x36\x35\x\x36\x65\x\x37\x33\x\x36\x39\x\x32\x30\x\x37\x33\x\x37\x35\x\x36\x34\x\x36\x31\x\x36\x38\x\x32\x30\x\x36\x35\x\x37\x38\x\x37\x30\x\x36\x39\x\x37\x32\x\x36\x35\x\x36\x34") reasonText = "\x4c\x69\x73\x65\x6e\x73\x69\x20\x41\x6e\x64\x61\x20\x73\x75\x64\x61\x68\x20\x65\x78\x70\x69\x72\x65\x64\x2e\x20\x48\x75\x62\x75\x6e\x67\x69\x20\x6f\x77\x6e\x65\x72\x20\x75\x6e\x74\x75\x6b\x20\x70\x65\x72\x70\x61\x6e\x6a\x61\x6e\x67\x61\x6e\x2e";
-    else if (license.reason === "\x\x36\x64\x\x36\x31\x\x36\x33\x\x36\x38\x\x36\x39\x\x36\x65\x\x36\x35\x\x32\x30\x\x36\x33\x\x36\x66\x\x36\x34\x\x36\x35\x\x32\x30\x\x37\x34\x\x36\x39\x\x36\x34\x\x36\x31\x\x36\x62\x\x32\x30\x\x36\x33\x\x36\x66\x\x36\x33\x\x36\x66\x\x36\x62") reasonText = "\x54\x6f\x6b\x65\x6e\x20\x74\x69\x64\x61\x6b\x20\x63\x6f\x63\x6f\x6b\x20\x64\x65\x6e\x67\x61\x6e\x20\x70\x65\x72\x61\x6e\x67\x6b\x61\x74\x20\x69\x6e\x69\x2e";
-    else if (license.reason === "\x\x36\x65\x\x36\x66\x\x35\x66\x\x36\x63\x\x36\x39\x\x36\x33\x\x36\x35\x\x36\x65\x\x37\x33\x\x36\x35") reasonText = "\x42\x65\x6c\x75\x6d\x20\x61\x64\x61\x20\x6c\x69\x73\x65\x6e\x73\x69\x20\x61\x6b\x74\x69\x66\x2e\x20\x4b\x6c\x69\x6b\x20\x69\x63\x6f\x6e\x20\x65\x78\x74\x65\x6e\x73\x69\x6f\x6e\x20\x75\x6e\x74\x75\x6b\x20\x61\x6b\x74\x69\x76\x61\x73\x69\x2e";
+    let reasonText = "Lisensi tidak ditemukan.";
+    if (license.reason === "\x6c\x69\x73\x65\x6e\x73\x69\x20\x73\x75\x64\x61\x68\x20\x65\x78\x70\x69\x72\x65\x64") reasonText = "Lisensi Anda sudah expired. Hubungi owner untuk perpanjangan.";
+    else if (license.reason === "\x6d\x61\x63\x68\x69\x6e\x65\x20\x63\x6f\x64\x65\x20\x74\x69\x64\x61\x6b\x20\x63\x6f\x63\x6f\x6b") reasonText = "Token tidak cocok dengan perangkat ini.";
+    else if (license.reason === "\x6e\x6f\x5f\x6c\x69\x63\x65\x6e\x73\x65") reasonText = "Belum ada lisensi aktif. Klik icon extension untuk aktivasi.";
     notice.innerHTML = `
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
         <div style="width:32px;height:32px;background:rgba(239,68,68,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🔒</div>
@@ -59,13 +59,13 @@
       ">Tutup</button>
     `;
     document.body.appendChild(notice);
-    document.getElementById("\x74\x75\x6b\x61\x6e\x67\x2d\x6c\x69\x63\x65\x6e\x73\x65\x2d\x63\x6c\x6f\x73\x65").onclick = () => notice.remove();
+    document.getElementById("tukang-license-close").onclick = () => notice.remove();
     return;
   }
 
   if (license.expiry) {
     const daysLeft = Math.ceil((license.expiry - Date.now()) / 86_400_000);
-    const expDate = new Date(license.expiry).toLocaleDateString("\x\x36\x39\x\x36\x34\x\x32\x64\x\x34\x39\x\x34\x34", { day: "\x\x36\x65\x\x37\x35\x\x36\x64\x\x36\x35\x\x37\x32\x\x36\x39\x\x36\x33", month: "\x\x36\x63\x\x36\x66\x\x36\x65\x\x36\x37", year: "\x\x36\x65\x\x37\x35\x\x36\x64\x\x36\x35\x\x37\x32\x\x36\x39\x\x36\x33" });
+    const expDate = new Date(license.expiry).toLocaleDateString("\x69\x64\x2d\x49\x44", { day: "\x6e\x75\x6d\x65\x72\x69\x63", month: "\x6c\x6f\x6e\x67", year: "\x6e\x75\x6d\x65\x72\x69\x63" });
     console.log(`✅ Lisensi aktif — berlaku hingga ${expDate} (${daysLeft} hari lagi)`);
   }
 
@@ -77,19 +77,19 @@
   delete window.__pembatalanPassphrase;
 
   if (!values || values.length === 0) {
-    console.error("\x5b\x50\x65\x6d\x62\x61\x74\x61\x6c\x61\x6e\x20\x46\x61\x6b\x74\x75\x72\x5d\x20\x54\x69\x64\x61\x6b\x20\x61\x64\x61\x20\x64\x61\x74\x61\x20\x66\x61\x6b\x74\x75\x72\x20\x75\x6e\x74\x75\x6b\x20\x64\x69\x70\x72\x6f\x73\x65\x73\x2e");
+    console.error("[Pembatalan Faktur] Tidak ada data faktur untuk diproses.");
     return;
   }
 
   if (!kataSandi) {
-    console.error("\x5b\x50\x65\x6d\x62\x61\x74\x61\x6c\x61\x6e\x20\x46\x61\x6b\x74\x75\x72\x5d\x20\x50\x61\x73\x73\x70\x68\x72\x61\x73\x65\x20\x74\x69\x64\x61\x6b\x20\x64\x69\x74\x65\x6d\x75\x6b\x61\x6e\x2e");
+    console.error("[Pembatalan Faktur] Passphrase tidak ditemukan.");
     return;
   }
 
   // Get delay setting from storage
   let delay = 1500;
   try {
-    const res = await chrome.storage.local.get("\x\x36\x34\x\x36\x35\x\x36\x63\x\x36\x31\x\x37\x39\x\x35\x66\x\x37\x30\x\x36\x35\x\x36\x64\x\x36\x32\x\x36\x31\x\x37\x34\x\x36\x31\x\x36\x63\x\x36\x31\x\x36\x65");
+    const res = await chrome.storage.local.get("\x64\x65\x6c\x61\x79\x5f\x70\x65\x6d\x62\x61\x74\x61\x6c\x61\x6e");
     if (res.delay_pembatalan) delay = parseInt(res.delay_pembatalan) || 1500;
   } catch {
     // use default delay
@@ -107,23 +107,23 @@
 
   function setAngularInputValue(inputEl, value) {
     const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-      window.HTMLInputElement.prototype, "\x76\x61\x6c\x75\x65"
+      window.HTMLInputElement.prototype, "value"
     ).set;
     nativeInputValueSetter.call(inputEl, value);
-    inputEl.dispatchEvent(new Event("\x69\x6e\x70\x75\x74", { bubbles: true }));
-    inputEl.dispatchEvent(new Event("\x63\x68\x61\x6e\x67\x65", { bubbles: true }));
+    inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+    inputEl.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
   /**
    * Check if any loading spinner/overlay is currently visible.
    */
   function hasSpinner() {
-    const modal = document.querySelector("\x75\x69\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x2d\x73\x70\x69\x6e\x6e\x65\x72\x20\x2e\x6d\x6f\x64\x61\x6c");
+    const modal = document.querySelector("ui-progress-spinner .modal");
     if (modal && modal.offsetParent !== null) return true;
-    const dtLoading = document.querySelector("\x2e\x70\x2d\x64\x61\x74\x61\x74\x61\x62\x6c\x65\x2d\x6c\x6f\x61\x64\x69\x6e\x67\x2d\x6f\x76\x65\x72\x6c\x61\x79");
+    const dtLoading = document.querySelector(".p-datatable-loading-overlay");
     if (dtLoading) return true;
-    const spinner2 = document.querySelector("\x75\x69\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x2d\x73\x70\x69\x6e\x6e\x65\x72\x20\x2e\x70\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x2d\x73\x70\x69\x6e\x6e\x65\x72");
-    const spinner3 = document.querySelector("\x70\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x73\x70\x69\x6e\x6e\x65\x72\x20\x2e\x70\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x2d\x73\x70\x69\x6e\x6e\x65\x72");
+    const spinner2 = document.querySelector("ui-progress-spinner .p-progress-spinner");
+    const spinner3 = document.querySelector("p-progressspinner .p-progress-spinner");
     if (spinner2 || spinner3) return true;
     return false;
   }
@@ -141,7 +141,7 @@
       if (!hasSpinner()) return true;
       await sleep(BASE_POLL);
     }
-    console.warn("\x5b\x53\x70\x69\x6e\x6e\x65\x72\x5d\x20\x54\x69\x6d\x65\x6f\x75\x74\x20\u2014\x20\x73\x70\x69\x6e\x6e\x65\x72\x20\x74\x69\x64\x61\x6b\x20\x68\x69\x6c\x61\x6e\x67");
+    console.warn("[Spinner] Timeout — spinner tidak hilang");
     return false;
   }
 
@@ -187,9 +187,9 @@
     return new Promise((resolve) => {
       const start = Date.now();
       const interval = setInterval(() => {
-        const dialog = document.querySelector("\x2e\x70\x2d\x63\x6f\x6e\x66\x69\x72\x6d\x2d\x64\x69\x61\x6c\x6f\x67");
+        const dialog = document.querySelector(".p-confirm-dialog");
         if (dialog && dialog.offsetParent !== null) {
-          const acceptBtn = dialog.querySelector("\x2e\x70\x2d\x63\x6f\x6e\x66\x69\x72\x6d\x2d\x64\x69\x61\x6c\x6f\x67\x2d\x61\x63\x63\x65\x70\x74");
+          const acceptBtn = dialog.querySelector(".p-confirm-dialog-accept");
           if (acceptBtn && acceptBtn.offsetParent !== null) {
             clearInterval(interval);
             resolve(acceptBtn);
@@ -212,8 +212,8 @@
     return new Promise((resolve) => {
       const start = Date.now();
       const interval = setInterval(() => {
-        const passwordInput = document.getElementById("\x53\x69\x67\x6e\x65\x72\x50\x61\x73\x73\x77\x6f\x72\x64\x2d\x69\x6e\x70\x75\x74");
-        const closeBtn = document.getElementById("\x62\x75\x74\x74\x6f\x6e\x2d\x63\x6c\x6f\x73\x65");
+        const passwordInput = document.getElementById("SignerPassword-input");
+        const closeBtn = document.getElementById("button-close");
         if (passwordInput && closeBtn) {
           clearInterval(interval);
           resolve({ passwordInput, closeBtn });
@@ -233,11 +233,11 @@
   async function selectSignerProvider(timeoutMs = 10000) {
     const start = Date.now();
     while (Date.now() - start < timeoutMs) {
-      const dropdown = document.querySelector("\x23\x73\x65\x6c\x65\x63\x74\x2d\x53\x69\x67\x6e\x65\x72\x50\x72\x6f\x76\x69\x64\x65\x72\x20\x2e\x70\x2d\x64\x72\x6f\x70\x64\x6f\x77\x6e");
-      if (dropdown && !dropdown.classList.contains("\x\x37\x30\x\x32\x64\x\x36\x34\x\x36\x39\x\x37\x33\x\x36\x31\x\x36\x32\x\x36\x63\x\x36\x35\x\x36\x34")) {
+      const dropdown = document.querySelector("#select-SignerProvider .p-dropdown");
+      if (dropdown && !dropdown.classList.contains("\x70\x2d\x64\x69\x73\x61\x62\x6c\x65\x64")) {
         // Check if already has a value selected (not placeholder)
-        const label = dropdown.querySelector("\x2e\x70\x2d\x64\x72\x6f\x70\x64\x6f\x77\x6e\x2d\x6c\x61\x62\x65\x6c");
-        if (label && !label.classList.contains("\x70\x2d\x70\x6c\x61\x63\x65\x68\x6f\x6c\x64\x65\x72")) {
+        const label = dropdown.querySelector(".p-dropdown-label");
+        if (label && !label.classList.contains("p-placeholder")) {
           return true; // Already selected
         }
 
@@ -246,7 +246,7 @@
         await sleep(500);
 
         // Find dropdown items
-        const items = document.querySelectorAll("\x2e\x70\x2d\x64\x72\x6f\x70\x64\x6f\x77\x6e\x2d\x69\x74\x65\x6d\x73\x20\x2e\x70\x2d\x64\x72\x6f\x70\x64\x6f\x77\x6e\x2d\x69\x74\x65\x6d");
+        const items = document.querySelectorAll(".p-dropdown-items .p-dropdown-item");
         if (items.length > 0) {
           items[0].click(); // Select first option
           await sleep(300);
@@ -267,7 +267,7 @@
       let toastAppeared = false;
 
       const interval = setInterval(() => {
-        const toastItems = document.querySelectorAll("\x70\x2d\x74\x6f\x61\x73\x74\x20\x70\x2d\x74\x6f\x61\x73\x74\x69\x74\x65\x6d");
+        const toastItems = document.querySelectorAll("p-toast p-toastitem");
         const visibleToast = Array.from(toastItems).some(
           item => item.offsetParent !== null
         );
@@ -294,7 +294,7 @@
     return new Promise((resolve) => {
       const start = Date.now();
       const interval = setInterval(() => {
-        const passwordInput = document.getElementById("\x53\x69\x67\x6e\x65\x72\x50\x61\x73\x73\x77\x6f\x72\x64\x2d\x69\x6e\x70\x75\x74");
+        const passwordInput = document.getElementById("SignerPassword-input");
         if (!passwordInput) {
           clearInterval(interval);
           resolve(true);
@@ -309,9 +309,9 @@
   }
 
   function getDataTableTbody() {
-    const tbody = document.querySelector("\x70\x2d\x74\x61\x62\x6c\x65\x20\x2e\x70\x2d\x64\x61\x74\x61\x74\x61\x62\x6c\x65\x2d\x74\x62\x6f\x64\x79");
+    const tbody = document.querySelector("p-table .p-datatable-tbody");
     if (tbody) return tbody;
-    const tables = document.querySelectorAll("\x5b\x69\x64\x24\x3d\x27\x2d\x74\x61\x62\x6c\x65\x27\x5d\x20\x3e\x20\x2e\x70\x2d\x64\x61\x74\x61\x74\x61\x62\x6c\x65\x2d\x74\x62\x6f\x64\x79");
+    const tables = document.querySelectorAll("[id$='-table'] > .p-datatable-tbody");
     return tables.length > 0 ? tables[0] : null;
   }
 
@@ -319,7 +319,7 @@
     return new Promise((resolve) => {
       const start = Date.now();
       const interval = setInterval(() => {
-        if (document.getElementById("\x66\x69\x6c\x74\x65\x72\x54\x61\x78\x49\x6e\x76\x6f\x69\x63\x65\x4e\x75\x6d\x62\x65\x72")) {
+        if (document.getElementById("filterTaxInvoiceNumber")) {
           clearInterval(interval);
           resolve(true);
         }
@@ -335,7 +335,7 @@
   const rekapResults = [];
 
   function downloadRekapCSV() {
-    const header = "\x4e\x6f\x6d\x6f\x72\x20\x46\x61\x6b\x74\x75\x72\x2c\x53\x74\x61\x74\x75\x73\x2c\x4b\x65\x74\x65\x72\x61\x6e\x67\x61\x6e\x2c\x57\x61\x6b\x74\x75\x20\x50\x72\x6f\x73\x65\x73";
+    const header = "Nomor Faktur,Status,Keterangan,Waktu Proses";
     const rows = rekapResults.map(r => {
       const fields = [
         `'${r.nomorFaktur}`,
@@ -343,23 +343,23 @@
         `"${(r.keterangan || "").replace(/"/g, '""')}"`,
         r.waktuProses
       ];
-      return fields.join("\x2c");
+      return fields.join(",");
     });
 
-    const csvContent = "\u\x46\x45\x46\x46" + header + "\n" + rows.join("\n") + "\n";
-    const blob = new Blob([csvContent], { type: "\x74\x65\x78\x74\x2f\x63\x73\x76\x3b\x63\x68\x61\x72\x73\x65\x74\x3d\x75\x74\x66\x2d\x38\x3b" });
+    const csvContent = "\uFEFF" + header + "\n" + rows.join("\n") + "\n";
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("\x61");
+    const a = document.createElement("a");
     const now = new Date();
     const timestamp = now.getFullYear().toString() +
-      String(now.getMonth() + 1).padStart(2, "\x30") +
-      String(now.getDate()).padStart(2, "\x30") + "\x5f" +
-      String(now.getHours()).padStart(2, "\x30") +
-      String(now.getMinutes()).padStart(2, "\x30") +
-      String(now.getSeconds()).padStart(2, "\x30");
+      String(now.getMonth() + 1).padStart(2, "0") +
+      String(now.getDate()).padStart(2, "0") + "_" +
+      String(now.getHours()).padStart(2, "0") +
+      String(now.getMinutes()).padStart(2, "0") +
+      String(now.getSeconds()).padStart(2, "0");
     a.href = url;
     a.download = `rekap_pembatalan_faktur_${timestamp}.csv`;
-    a.style.display = "\x6e\x6f\x6e\x65";
+    a.style.display = "none";
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -370,8 +370,8 @@
   //  PROGRESS PANEL UI
   // ══════════════════════════════════════════════════════════════
 
-  const progressPanel = document.createElement("\x64\x69\x76");
-  progressPanel.id = "\x74\x75\x6b\x61\x6e\x67\x2d\x70\x65\x6d\x62\x61\x74\x61\x6c\x61\x6e\x2d\x70\x72\x6f\x67\x72\x65\x73\x73";
+  const progressPanel = document.createElement("div");
+  progressPanel.id = "tukang-pembatalan-progress";
   progressPanel.style.cssText = `
     position:fixed;bottom:24px;right:24px;width:360px;
     background:#0f1117;border:1px solid rgba(255,255,255,.08);
@@ -400,11 +400,11 @@
   `;
   document.body.appendChild(progressPanel);
 
-  const elSubtitle = document.getElementById("\x74\x6b\x62\x66\x2d\x73\x75\x62\x74\x69\x74\x6c\x65");
-  const elStatus = document.getElementById("\x74\x6b\x62\x66\x2d\x73\x74\x61\x74\x75\x73");
-  const elPercent = document.getElementById("\x74\x6b\x62\x66\x2d\x70\x65\x72\x63\x65\x6e\x74");
-  const elBar = document.getElementById("\x74\x6b\x62\x66\x2d\x62\x61\x72");
-  const elCurrent = document.getElementById("\x74\x6b\x62\x66\x2d\x63\x75\x72\x72\x65\x6e\x74");
+  const elSubtitle = document.getElementById("tkbf-subtitle");
+  const elStatus = document.getElementById("tkbf-status");
+  const elPercent = document.getElementById("tkbf-percent");
+  const elBar = document.getElementById("tkbf-bar");
+  const elCurrent = document.getElementById("tkbf-current");
 
   function updateProgress(index, total, text, color) {
     const pct = Math.round(((index + 1) / total) * 100);
@@ -412,19 +412,19 @@
     elPercent.textContent = `${pct}%`;
     elBar.style.width = `${pct}%`;
     elCurrent.textContent = text;
-    elCurrent.style.color = color || "\x23\x39\x34\x61\x33\x62\x38";
+    elCurrent.style.color = color || "#94a3b8";
   }
 
   // ══════════════════════════════════════════════════════════════
   //  MAIN PROCESSING LOOP
   // ══════════════════════════════════════════════════════════════
 
-  const invoiceInput = document.querySelector('\x23\x66\x69\x6c\x74\x65\x72\x54\x61\x78\x49\x6e\x76\x6f\x69\x63\x65\x4e\x75\x6d\x62\x65\x72\x20\x69\x6e\x70\x75\x74');
+  const invoiceInput = document.querySelector('#filterTaxInvoiceNumber input');
 
   if (!invoiceInput) {
-    console.error("\x5b\x50\x65\x6d\x62\x61\x74\x61\x6c\x61\x6e\x20\x46\x61\x6b\x74\x75\x72\x5d\x20\x49\x6e\x70\x75\x74\x20\x6e\x6f\x6d\x6f\x72\x20\x66\x61\x6b\x74\x75\x72\x20\x74\x69\x64\x61\x6b\x20\x64\x69\x74\x65\x6d\x75\x6b\x61\x6e\x20\x70\x61\x64\x61\x20\x68\x61\x6c\x61\x6d\x61\x6e\x2e");
-    elCurrent.textContent = "\u274c\x20\x49\x6e\x70\x75\x74\x20\x6e\x6f\x6d\x6f\x72\x20\x66\x61\x6b\x74\x75\x72\x20\x74\x69\x64\x61\x6b\x20\x64\x69\x74\x65\x6d\x75\x6b\x61\x6e\x20\x70\x61\x64\x61\x20\x68\x61\x6c\x61\x6d\x61\x6e\x2e";
-    elCurrent.style.color = "\x23\x66\x38\x37\x31\x37\x31";
+    console.error("[Pembatalan Faktur] Input nomor faktur tidak ditemukan pada halaman.");
+    elCurrent.textContent = "❌ Input nomor faktur tidak ditemukan pada halaman.";
+    elCurrent.style.color = "#f87171";
     return;
   }
 
@@ -438,29 +438,29 @@
   for (let i = 0; i < values.length; i++) {
     // ── Escape leading apostrophe from CSV ──
     let nomorFaktur = values[i].nomorFaktur;
-    nomorFaktur = nomorFaktur.replace(/^'\x2b\x2f\x2c\x20\x22\x22\x29\x2e\x74\x72\x69\x6d\x28\x29\x3b
+    nomorFaktur = nomorFaktur.replace(/^'+/, "").trim();
 
-\x20\x20\x20\x20\x63\x6f\x6e\x73\x74\x20\x70\x72\x6f\x63\x65\x73\x73\x53\x74\x61\x72\x74\x54\x69\x6d\x65\x20\x3d\x20\x6e\x65\x77\x20\x44\x61\x74\x65\x28\x29\x2e\x74\x6f\x4c\x6f\x63\x61\x6c\x65\x53\x74\x72\x69\x6e\x67\x28\x22\x\x36\x39\x\x36\x34\x\x32\x64\x\x34\x39\x\x34\x34\x22\x29\x3b
+    const processStartTime = new Date().toLocaleString("\x69\x64\x2d\x49\x44");
 
-\x20\x20\x20\x20\x69\x66\x20\x28\x21\x6e\x6f\x6d\x6f\x72\x46\x61\x6b\x74\x75\x72\x29\x20\x7b
-\x20\x20\x20\x20\x20\x20\x63\x6f\x6e\x73\x6f\x6c\x65\x2e\x77\x61\x72\x6e\x28\x60\x5b\x50\x65\x6d\x62\x61\x74\x61\x6c\x61\x6e\x20\x46\x61\x6b\x74\x75\x72\x5d\x20\x28\x24\x7b\x69\x20\x2b\x20\x31\x7d\x2f\x24\x7b\x76\x61\x6c\x75\x65\x73\x2e\x6c\x65\x6e\x67\x74\x68\x7d\x29\x20\x4e\x6f\x6d\x6f\x72\x20\x66\x61\x6b\x74\x75\x72\x20\x6b\x6f\x73\x6f\x6e\x67\x2c\x20\x73\x6b\x69\x70\x2e\x60\x29\x3b
-\x20\x20\x20\x20\x20\x20\x72\x65\x6b\x61\x70\x52\x65\x73\x75\x6c\x74\x73\x2e\x70\x75\x73\x68\x28\x7b
-\x20\x20\x20\x20\x20\x20\x20\x20\x6e\x6f\x6d\x6f\x72\x46\x61\x6b\x74\x75\x72\x3a\x20\x22\x28\x6b\x6f\x73\x6f\x6e\x67\x29\x22\x2c
-\x20\x20\x20\x20\x20\x20\x20\x20\x73\x74\x61\x74\x75\x73\x3a\x20\x22\x53\x4b\x49\x50\x22\x2c
-\x20\x20\x20\x20\x20\x20\x20\x20\x6b\x65\x74\x65\x72\x61\x6e\x67\x61\x6e\x3a\x20\x22\x4e\x6f\x6d\x6f\x72\x20\x66\x61\x6b\x74\x75\x72\x20\x6b\x6f\x73\x6f\x6e\x67\x22\x2c
-\x20\x20\x20\x20\x20\x20\x20\x20\x77\x61\x6b\x74\x75\x50\x72\x6f\x73\x65\x73\x3a\x20\x70\x72\x6f\x63\x65\x73\x73\x53\x74\x61\x72\x74\x54\x69\x6d\x65
-\x20\x20\x20\x20\x20\x20\x7d\x29\x3b
-\x20\x20\x20\x20\x20\x20\x63\x6f\x6e\x74\x69\x6e\x75\x65\x3b
-\x20\x20\x20\x20\x7d
+    if (!nomorFaktur) {
+      console.warn(`[Pembatalan Faktur] (${i + 1}/${values.length}) Nomor faktur kosong, skip.`);
+      rekapResults.push({
+        nomorFaktur: "(kosong)",
+        status: "SKIP",
+        keterangan: "Nomor faktur kosong",
+        waktuProses: processStartTime
+      });
+      continue;
+    }
 
-\x20\x20\x20\x20\x63\x6f\x6e\x73\x6f\x6c\x65\x2e\x6c\x6f\x67\x28\x60\x5b\x50\x65\x6d\x62\x61\x74\x61\x6c\x61\x6e\x20\x46\x61\x6b\x74\x75\x72\x5d\x20\x28\x24\x7b\x69\x20\x2b\x20\x31\x7d\x2f\x24\x7b\x76\x61\x6c\x75\x65\x73\x2e\x6c\x65\x6e\x67\x74\x68\x7d\x29\x20\x4d\x65\x6d\x70\x72\x6f\x73\x65\x73\x3a\x20\x24\x7b\x6e\x6f\x6d\x6f\x72\x46\x61\x6b\x74\x75\x72\x7d\x60\x29\x3b
-\x20\x20\x20\x20\x75\x70\x64\x61\x74\x65\x50\x72\x6f\x67\x72\x65\x73\x73\x28\x69\x2c\x20\x76\x61\x6c\x75\x65\x73\x2e\x6c\x65\x6e\x67\x74\x68\x2c\x20\x6e\x6f\x6d\x6f\x72\x46\x61\x6b\x74\x75\x72\x2c\x20\x22\x23\x66\x63\x61\x35\x61\x35\x22\x29\x3b
-\x20\x20\x20\x20\x65\x6c\x53\x75\x62\x74\x69\x74\x6c\x65\x2e\x74\x65\x78\x74\x43\x6f\x6e\x74\x65\x6e\x74\x20\x3d\x20\x60\x4d\x65\x6d\x70\x72\x6f\x73\x65\x73\x20\x24\x7b\x69\x20\x2b\x20\x31\x7d\x20\x64\x61\x72\x69\x20\x24\x7b\x76\x61\x6c\x75\x65\x73\x2e\x6c\x65\x6e\x67\x74\x68\x7d\x2e\x2e\x2e\x60\x3b
+    console.log(`[Pembatalan Faktur] (${i + 1}/${values.length}) Memproses: ${nomorFaktur}`);
+    updateProgress(i, values.length, nomorFaktur, "#fca5a5");
+    elSubtitle.textContent = `Memproses ${i + 1} dari ${values.length}...`;
 
-\x20\x20\x20\x20\x74\x72\x79\x20\x7b
-\x20\x20\x20\x20\x20\x20\x2f\x2f\x20\u2500\u2500\x20\x53\x74\x65\x70\x20\x31\x3a\x20\x45\x6e\x73\x75\x72\x65\x20\x77\x65're on grid page ──
+    try {
+      // ── Step 1: Ensure we're on grid page ──
       const onGrid = await waitForGridPage(5000);
-      if (!onGrid) throw new Error("\x54\x69\x64\x61\x6b\x20\x62\x65\x72\x61\x64\x61\x20\x64\x69\x20\x68\x61\x6c\x61\x6d\x61\x6e\x20\x67\x72\x69\x64");
+      if (!onGrid) throw new Error("Tidak berada di halaman grid");
       await waitSpinnerGone();
 
       // ── Step 2: Fill invoice input ──
@@ -470,12 +470,12 @@
       console.log(`  ✓ Input filled: ${nomorFaktur}`);
 
       // ── Step 3: Click Refresh ──
-      const refreshBtn = document.querySelector('\x62\x75\x74\x74\x6f\x6e\x5b\x70\x74\x6f\x6f\x6c\x74\x69\x70\x3d\x22\x52\x65\x66\x72\x65\x73\x68\x22\x5d');
+      const refreshBtn = document.querySelector('button[ptooltip="Refresh"]');
       if (refreshBtn) {
         refreshBtn.click();
         console.log(`  ✓ Refresh clicked`);
       } else {
-        throw new Error("\x54\x6f\x6d\x62\x6f\x6c\x20\x52\x65\x66\x72\x65\x73\x68\x20\x74\x69\x64\x61\x6b\x20\x64\x69\x74\x65\x6d\x75\x6b\x61\x6e");
+        throw new Error("Tombol Refresh tidak ditemukan");
       }
 
       // ── Step 4: Wait for spinner to disappear after refresh ──
@@ -486,9 +486,9 @@
       await sleep(delay);
 
       // ── Step 5: Find and click Cancel button ──
-      const cancelBtn = document.getElementById('\x43\x61\x6e\x63\x65\x6c\x42\x75\x74\x74\x6f\x6e');
+      const cancelBtn = document.getElementById('CancelButton');
       if (!cancelBtn || cancelBtn.offsetParent === null) {
-        throw new Error("\x54\x6f\x6d\x62\x6f\x6c\x20\x43\x61\x6e\x63\x65\x6c\x20\x74\x69\x64\x61\x6b\x20\x64\x69\x74\x65\x6d\x75\x6b\x61\x6e\x20\x61\x74\x61\x75\x20\x74\x69\x64\x61\x6b\x20\x74\x65\x72\x6c\x69\x68\x61\x74");
+        throw new Error("Tombol Cancel tidak ditemukan atau tidak terlihat");
       }
       cancelBtn.click();
       console.log(`  ✓ Cancel clicked`);
@@ -496,7 +496,7 @@
       // ── Step 6: Wait for confirmation dialog to appear ──
       const confirmAcceptBtn = await waitForConfirmDialog(15000);
       if (!confirmAcceptBtn) {
-        throw new Error("\x44\x69\x61\x6c\x6f\x67\x20\x6b\x6f\x6e\x66\x69\x72\x6d\x61\x73\x69\x20\x70\x65\x6d\x62\x61\x74\x61\x6c\x61\x6e\x20\x74\x69\x64\x61\x6b\x20\x6d\x75\x6e\x63\x75\x6c");
+        throw new Error("Dialog konfirmasi pembatalan tidak muncul");
       }
       console.log(`  ✓ Confirmation dialog appeared`);
 
@@ -510,7 +510,7 @@
       // ── Step 9: Wait for signing modal to appear ──
       const signingModal = await waitForSigningModal(30000);
       if (!signingModal) {
-        throw new Error("\x4d\x6f\x64\x61\x6c\x20\x54\x61\x6e\x64\x61\x20\x54\x61\x6e\x67\x61\x6e\x20\x44\x6f\x6b\x75\x6d\x65\x6e\x20\x74\x69\x64\x61\x6b\x20\x6d\x75\x6e\x63\x75\x6c");
+        throw new Error("Modal Tanda Tangan Dokumen tidak muncul");
       }
       console.log(`  ✓ Signing modal appeared`);
 
@@ -538,12 +538,12 @@
       const simpanBtn = closeBtn.previousElementSibling;
       if (simpanBtn) {
         // Enable the button if disabled
-        simpanBtn.removeAttribute('\x64\x69\x73\x61\x62\x6c\x65\x64');
+        simpanBtn.removeAttribute('disabled');
         await sleep(300);
         simpanBtn.click();
         console.log(`  ✓ Simpan clicked`);
       } else {
-        throw new Error("\x54\x6f\x6d\x62\x6f\x6c\x20\x53\x69\x6d\x70\x61\x6e\x20\x74\x69\x64\x61\x6b\x20\x64\x69\x74\x65\x6d\x75\x6b\x61\x6e");
+        throw new Error("Tombol Simpan tidak ditemukan");
       }
 
       // ── Step 13: Wait for spinner after Simpan ──
@@ -553,7 +553,7 @@
       await sleep(delay);
 
       // Click the "Konfirmasi Tanda Tangan" / Close button
-      const confirmSignBtn = document.getElementById("\x62\x75\x74\x74\x6f\x6e\x2d\x63\x6c\x6f\x73\x65");
+      const confirmSignBtn = document.getElementById("button-close");
       if (confirmSignBtn && confirmSignBtn.offsetParent !== null) {
         confirmSignBtn.click();
         console.log(`  ✓ Konfirmasi Tanda Tangan clicked`);
@@ -575,39 +575,39 @@
 
       successCount++;
       console.log(`  ✅ Faktur ${nomorFaktur} berhasil dibatalkan`);
-      updateProgress(i, values.length, `✓ ${nomorFaktur}`, "\x23\x32\x32\x63\x35\x35\x65");
+      updateProgress(i, values.length, `✓ ${nomorFaktur}`, "#22c55e");
 
       rekapResults.push({
         nomorFaktur,
-        status: "\x42\x45\x52\x48\x41\x53\x49\x4c",
-        keterangan: "\x53\x75\x6b\x73\x65\x73\x20\x64\x69\x62\x61\x74\x61\x6c\x6b\x61\x6e",
+        status: "BERHASIL",
+        keterangan: "Sukses dibatalkan",
         waktuProses: processStartTime
       });
 
     } catch (err) {
       console.error(`  ❌ Error pada faktur ${nomorFaktur}:`, err.message);
-      updateProgress(i, values.length, `✗ ${nomorFaktur}: ${err.message}`, "\x23\x66\x38\x37\x31\x37\x31");
+      updateProgress(i, values.length, `✗ ${nomorFaktur}: ${err.message}`, "#f87171");
       failCount++;
 
       rekapResults.push({
         nomorFaktur,
-        status: "\x47\x41\x47\x41\x4c",
+        status: "GAGAL",
         keterangan: err.message,
         waktuProses: processStartTime
       });
 
       // Try to close any open modal/dialog
       try {
-        const rejectBtn = document.querySelector("\x2e\x70\x2d\x63\x6f\x6e\x66\x69\x72\x6d\x2d\x64\x69\x61\x6c\x6f\x67\x2d\x72\x65\x6a\x65\x63\x74");
+        const rejectBtn = document.querySelector(".p-confirm-dialog-reject");
         if (rejectBtn && rejectBtn.offsetParent !== null) rejectBtn.click();
       } catch {}
       try {
-        const dialogClose = document.querySelector("\x2e\x70\x2d\x64\x69\x61\x6c\x6f\x67\x2d\x68\x65\x61\x64\x65\x72\x2d\x63\x6c\x6f\x73\x65");
+        const dialogClose = document.querySelector(".p-dialog-header-close");
         if (dialogClose && dialogClose.offsetParent !== null) dialogClose.click();
       } catch {}
 
       // Ensure we're back on grid
-      const onGrid = document.getElementById("\x66\x69\x6c\x74\x65\x72\x54\x61\x78\x49\x6e\x76\x6f\x69\x63\x65\x4e\x75\x6d\x62\x65\x72");
+      const onGrid = document.getElementById("filterTaxInvoiceNumber");
       if (!onGrid) {
         await sleep(1000);
         // Try to wait for grid
@@ -632,14 +632,14 @@
   console.log(`  📊 Total: ${values.length}`);
   console.log(`══════════════════════════════════════════\n`);
 
-  elSubtitle.textContent = "\x53\x65\x6c\x65\x73\x61\x69\x21";
+  elSubtitle.textContent = "Selesai!";
   elCurrent.textContent = totalMsg;
-  elCurrent.style.color = "\x23\x32\x32\x63\x35\x35\x65";
-  elBar.style.background = "\x6c\x69\x6e\x65\x61\x72\x2d\x67\x72\x61\x64\x69\x65\x6e\x74\x28\x39\x30\x64\x65\x67\x2c\x23\x32\x32\x63\x35\x35\x65\x2c\x23\x31\x36\x61\x33\x34\x61\x29";
-  elBar.style.width = "\x31\x30\x30\x25";
+  elCurrent.style.color = "#22c55e";
+  elBar.style.background = "linear-gradient(90deg,#22c55e,#16a34a)";
+  elBar.style.width = "100%";
 
   // Rekap summary
-  const rekapSummary = document.createElement("\x64\x69\x76");
+  const rekapSummary = document.createElement("div");
   rekapSummary.style.cssText = `
     margin-top:12px;padding:12px 14px;
     background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
@@ -658,8 +658,8 @@
   progressPanel.appendChild(rekapSummary);
 
   // Download Rekap CSV button
-  const downloadBtn = document.createElement("\x62\x75\x74\x74\x6f\x6e");
-  downloadBtn.textContent = "\u{1f4e5}\x20\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x20\x52\x65\x6b\x61\x70\x20\x43\x53\x56";
+  const downloadBtn = document.createElement("button");
+  downloadBtn.textContent = "📥 Download Rekap CSV";
   downloadBtn.style.cssText = `
     width:100%;padding:10px;margin-top:10px;
     border:none;
@@ -669,30 +669,30 @@
     box-shadow:0 3px 10px rgba(239,68,68,.3);
     transition:opacity .15s,transform .12s;
   `;
-  downloadBtn.onmouseover = () => { downloadBtn.style.opacity = "\x30\x2e\x39"; downloadBtn.style.transform = "\x74\x72\x61\x6e\x73\x6c\x61\x74\x65\x59\x28\x2d\x31\x70\x78\x29"; };
-  downloadBtn.onmouseout = () => { downloadBtn.style.opacity = "\x31"; downloadBtn.style.transform = "\x6e\x6f\x6e\x65"; };
+  downloadBtn.onmouseover = () => { downloadBtn.style.opacity = "0.9"; downloadBtn.style.transform = "translateY(-1px)"; };
+  downloadBtn.onmouseout = () => { downloadBtn.style.opacity = "1"; downloadBtn.style.transform = "none"; };
   downloadBtn.onclick = () => {
     downloadRekapCSV();
-    downloadBtn.textContent = "\u2705\x20\x52\x65\x6b\x61\x70\x20\x54\x65\x72\x64\x6f\x77\x6e\x6c\x6f\x61\x64\x21";
-    downloadBtn.style.background = "\x6c\x69\x6e\x65\x61\x72\x2d\x67\x72\x61\x64\x69\x65\x6e\x74\x28\x31\x33\x35\x64\x65\x67\x2c\x23\x32\x32\x63\x35\x35\x65\x2c\x23\x31\x36\x61\x33\x34\x61\x29";
+    downloadBtn.textContent = "✅ Rekap Terdownload!";
+    downloadBtn.style.background = "linear-gradient(135deg,#22c55e,#16a34a)";
     setTimeout(() => {
-      downloadBtn.textContent = "\u{1f4e5}\x20\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x20\x52\x65\x6b\x61\x70\x20\x43\x53\x56";
-      downloadBtn.style.background = "\x6c\x69\x6e\x65\x61\x72\x2d\x67\x72\x61\x64\x69\x65\x6e\x74\x28\x31\x33\x35\x64\x65\x67\x2c\x23\x65\x66\x34\x34\x34\x34\x2c\x23\x64\x63\x32\x36\x32\x36\x29";
+      downloadBtn.textContent = "📥 Download Rekap CSV";
+      downloadBtn.style.background = "linear-gradient(135deg,#ef4444,#dc2626)";
     }, 2000);
   };
   progressPanel.appendChild(downloadBtn);
 
   // Close button
-  const closePanelBtn = document.createElement("\x62\x75\x74\x74\x6f\x6e");
-  closePanelBtn.textContent = "\x54\x75\x74\x75\x70";
+  const closePanelBtn = document.createElement("button");
+  closePanelBtn.textContent = "Tutup";
   closePanelBtn.style.cssText = `
     width:100%;padding:9px;margin-top:8px;
     border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);
     border-radius:8px;color:#a0aec0;font-size:12px;font-weight:500;
     cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;
   `;
-  closePanelBtn.onmouseover = () => { closePanelBtn.style.background = "\x72\x67\x62\x61\x28\x32\x35\x35\x2c\x32\x35\x35\x2c\x32\x35\x35\x2c\x2e\x31\x29"; };
-  closePanelBtn.onmouseout = () => { closePanelBtn.style.background = "\x72\x67\x62\x61\x28\x32\x35\x35\x2c\x32\x35\x35\x2c\x32\x35\x35\x2c\x2e\x30\x34\x29"; };
+  closePanelBtn.onmouseover = () => { closePanelBtn.style.background = "rgba(255,255,255,.1)"; };
+  closePanelBtn.onmouseout = () => { closePanelBtn.style.background = "rgba(255,255,255,.04)"; };
   closePanelBtn.onclick = () => progressPanel.remove();
   progressPanel.appendChild(closePanelBtn);
 

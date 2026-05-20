@@ -6,15 +6,15 @@
   async function checkLicense() {
     return new Promise((resolve) => {
       if (!chrome?.runtime?.sendMessage) {
-        resolve({ ok: false, reason: "\x\x36\x65\x\x36\x66\x\x35\x66\x\x37\x32\x\x37\x35\x\x36\x65\x\x37\x34\x\x36\x39\x\x36\x64\x\x36\x35" });
+        resolve({ ok: false, reason: "\x6e\x6f\x5f\x72\x75\x6e\x74\x69\x6d\x65" });
         return;
       }
-      chrome.runtime.sendMessage({ action: "\x\x36\x33\x\x36\x38\x\x36\x35\x\x36\x33\x\x36\x62\x\x34\x63\x\x36\x39\x\x36\x33\x\x36\x35\x\x36\x65\x\x37\x33\x\x36\x35" }, (response) => {
+      chrome.runtime.sendMessage({ action: "\x63\x68\x65\x63\x6b\x4c\x69\x63\x65\x6e\x73\x65" }, (response) => {
         if (chrome.runtime.lastError) {
           resolve({ ok: false, reason: chrome.runtime.lastError.message });
           return;
         }
-        resolve(response || { ok: false, reason: "\x\x36\x65\x\x36\x66\x\x35\x66\x\x37\x32\x\x36\x35\x\x37\x33\x\x37\x30\x\x36\x66\x\x36\x65\x\x37\x33\x\x36\x35" });
+        resolve(response || { ok: false, reason: "\x6e\x6f\x5f\x72\x65\x73\x70\x6f\x6e\x73\x65" });
       });
     });
   }
@@ -23,11 +23,11 @@
   const license = await checkLicense();
 
   if (!license.ok) {
-    console.error("\u274c\x20\x4c\x69\x73\x65\x6e\x73\x69\x20\x74\x69\x64\x61\x6b\x20\x76\x61\x6c\x69\x64\x3a", license.reason);
+    console.error("❌ Lisensi tidak valid:", license.reason);
 
     // Tampilkan pesan di halaman
-    const notice = document.createElement("\x64\x69\x76");
-    notice.id = "\x74\x75\x6b\x61\x6e\x67\x2d\x6c\x69\x63\x65\x6e\x73\x65\x2d\x6e\x6f\x74\x69\x63\x65";
+    const notice = document.createElement("div");
+    notice.id = "tukang-license-notice";
     notice.style.cssText = `
       position:fixed;bottom:24px;right:24px;width:300px;
       background:#0f1117;border:1px solid rgba(239,68,68,.3);
@@ -37,13 +37,13 @@
       animation:tka-slideup .3s cubic-bezier(.16,1,.3,1);
     `;
 
-    let reasonText = "\x4c\x69\x73\x65\x6e\x73\x69\x20\x74\x69\x64\x61\x6b\x20\x64\x69\x74\x65\x6d\x75\x6b\x61\x6e\x2e";
-    if (license.reason === "\x\x36\x63\x\x36\x39\x\x37\x33\x\x36\x35\x\x36\x65\x\x37\x33\x\x36\x39\x\x32\x30\x\x37\x33\x\x37\x35\x\x36\x34\x\x36\x31\x\x36\x38\x\x32\x30\x\x36\x35\x\x37\x38\x\x37\x30\x\x36\x39\x\x37\x32\x\x36\x35\x\x36\x34") {
-      reasonText = "\x4c\x69\x73\x65\x6e\x73\x69\x20\x41\x6e\x64\x61\x20\x73\x75\x64\x61\x68\x20\x65\x78\x70\x69\x72\x65\x64\x2e\x20\x48\x75\x62\x75\x6e\x67\x69\x20\x6f\x77\x6e\x65\x72\x20\x75\x6e\x74\x75\x6b\x20\x70\x65\x72\x70\x61\x6e\x6a\x61\x6e\x67\x61\x6e\x2e";
-    } else if (license.reason === "\x\x36\x64\x\x36\x31\x\x36\x33\x\x36\x38\x\x36\x39\x\x36\x65\x\x36\x35\x\x32\x30\x\x36\x33\x\x36\x66\x\x36\x34\x\x36\x35\x\x32\x30\x\x37\x34\x\x36\x39\x\x36\x34\x\x36\x31\x\x36\x62\x\x32\x30\x\x36\x33\x\x36\x66\x\x36\x33\x\x36\x66\x\x36\x62") {
-      reasonText = "\x54\x6f\x6b\x65\x6e\x20\x74\x69\x64\x61\x6b\x20\x63\x6f\x63\x6f\x6b\x20\x64\x65\x6e\x67\x61\x6e\x20\x70\x65\x72\x61\x6e\x67\x6b\x61\x74\x20\x69\x6e\x69\x2e";
-    } else if (license.reason === "\x\x36\x65\x\x36\x66\x\x35\x66\x\x36\x63\x\x36\x39\x\x36\x33\x\x36\x35\x\x36\x65\x\x37\x33\x\x36\x35") {
-      reasonText = "\x42\x65\x6c\x75\x6d\x20\x61\x64\x61\x20\x6c\x69\x73\x65\x6e\x73\x69\x20\x61\x6b\x74\x69\x66\x2e\x20\x4b\x6c\x69\x6b\x20\x69\x63\x6f\x6e\x20\x65\x78\x74\x65\x6e\x73\x69\x6f\x6e\x20\x75\x6e\x74\x75\x6b\x20\x61\x6b\x74\x69\x76\x61\x73\x69\x2e";
+    let reasonText = "Lisensi tidak ditemukan.";
+    if (license.reason === "\x6c\x69\x73\x65\x6e\x73\x69\x20\x73\x75\x64\x61\x68\x20\x65\x78\x70\x69\x72\x65\x64") {
+      reasonText = "Lisensi Anda sudah expired. Hubungi owner untuk perpanjangan.";
+    } else if (license.reason === "\x6d\x61\x63\x68\x69\x6e\x65\x20\x63\x6f\x64\x65\x20\x74\x69\x64\x61\x6b\x20\x63\x6f\x63\x6f\x6b") {
+      reasonText = "Token tidak cocok dengan perangkat ini.";
+    } else if (license.reason === "\x6e\x6f\x5f\x6c\x69\x63\x65\x6e\x73\x65") {
+      reasonText = "Belum ada lisensi aktif. Klik icon extension untuk aktivasi.";
     }
 
     notice.innerHTML = `
@@ -65,7 +65,7 @@
 
     document.body.appendChild(notice);
 
-    document.getElementById("\x74\x75\x6b\x61\x6e\x67\x2d\x6c\x69\x63\x65\x6e\x73\x65\x2d\x63\x6c\x6f\x73\x65").onclick = () => notice.remove();
+    document.getElementById("tukang-license-close").onclick = () => notice.remove();
 
     // ⛔ STOP — tidak lanjut eksekusi
     return;
@@ -74,8 +74,8 @@
   // ✅ Lisensi valid — log info
   if (license.expiry) {
     const daysLeft = Math.ceil((license.expiry - Date.now()) / 86_400_000);
-    const expDate = new Date(license.expiry).toLocaleDateString("\x\x36\x39\x\x36\x34\x\x32\x64\x\x34\x39\x\x34\x34", {
-      day: "\x\x36\x65\x\x37\x35\x\x36\x64\x\x36\x35\x\x37\x32\x\x36\x39\x\x36\x33", month: "\x\x36\x63\x\x36\x66\x\x36\x65\x\x36\x37", year: "\x\x36\x65\x\x37\x35\x\x36\x64\x\x36\x35\x\x37\x32\x\x36\x39\x\x36\x33"
+    const expDate = new Date(license.expiry).toLocaleDateString("\x69\x64\x2d\x49\x44", {
+      day: "\x6e\x75\x6d\x65\x72\x69\x63", month: "\x6c\x6f\x6e\x67", year: "\x6e\x75\x6d\x65\x72\x69\x63"
     });
     console.log(`✅ Lisensi aktif — berlaku hingga ${expDate} (${daysLeft} hari lagi)`);
   }
@@ -106,27 +106,27 @@
   }
 
   const DEFAULT_DELAY = 500;
-  const GLOBAL_DELAY = await getDelay("\x\x36\x34\x\x36\x35\x\x36\x63\x\x36\x31\x\x37\x39\x\x35\x66\x\x36\x34\x\x36\x66\x\x36\x62\x\x37\x35\x\x36\x64\x\x36\x35\x\x36\x65\x\x35\x66\x\x36\x31\x\x36\x63\x\x36\x63", DEFAULT_DELAY);
+  const GLOBAL_DELAY = await getDelay("\x64\x65\x6c\x61\x79\x5f\x64\x6f\x6b\x75\x6d\x65\x6e\x5f\x61\x6c\x6c", DEFAULT_DELAY);
   const DOWNLOAD_RETRY = 3;
   const BASE_POLL = Math.max(Math.min(GLOBAL_DELAY, 1000), 250);
   const PAGE_MOVE_TIMEOUT = Math.max(GLOBAL_DELAY * 12, 10000);
   const PAGINATOR_SETTLE_TIMEOUT = Math.max(GLOBAL_DELAY * 10, 6000);
 
-  console.log("\u23f3\x20\x50\x50\x4e\x20\x52\x4f\x57\x20\x44\x45\x4c\x41\x59\x3a", GLOBAL_DELAY);
-  console.log("\u23f3\x20\x50\x41\x47\x45\x5f\x4d\x4f\x56\x45\x5f\x54\x49\x4d\x45\x4f\x55\x54\x3a", PAGE_MOVE_TIMEOUT);
-  console.log("\u23f3\x20\x50\x41\x47\x49\x4e\x41\x54\x4f\x52\x5f\x53\x45\x54\x54\x4c\x45\x5f\x54\x49\x4d\x45\x4f\x55\x54\x3a", PAGINATOR_SETTLE_TIMEOUT);
+  console.log("⏳ PPN ROW DELAY:", GLOBAL_DELAY);
+  console.log("⏳ PAGE_MOVE_TIMEOUT:", PAGE_MOVE_TIMEOUT);
+  console.log("⏳ PAGINATOR_SETTLE_TIMEOUT:", PAGINATOR_SETTLE_TIMEOUT);
 
   /**************************************
    * MODAL
    **************************************/
-  const EXT_ICON = typeof chrome !== "\x75\x6e\x64\x65\x66\x69\x6e\x65\x64" && chrome.runtime && chrome.runtime.getURL
-    ? chrome.runtime.getURL("\x69\x63\x6f\x6e\x2e\x70\x6e\x67")
+  const EXT_ICON = typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getURL
+    ? chrome.runtime.getURL("icon.png")
     : "";
 
   createModal();
 
   function createModal() {
-    const style = document.createElement("\x73\x74\x79\x6c\x65");
+    const style = document.createElement("style");
     style.textContent = `
       @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
 
@@ -391,15 +391,15 @@
     `;
     document.head.appendChild(style);
 
-    const modal = document.createElement("\x64\x69\x76");
-    modal.id = "\x72\x6f\x77\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x65\x72\x4d\x6f\x64\x61\x6c";
+    const modal = document.createElement("div");
+    modal.id = "rowDownloaderModal";
 
     modal.innerHTML = `
       <div class="row-top-bar" id="rowTopBar"></div>
 
       <div class="row-header">
         <div class="row-header-icon">
-          ${EXT_ICON ? `<img src="\x24\x7b\x45\x58\x54\x5f\x49\x43\x4f\x4e\x7d" />` : "📄"}
+          ${EXT_ICON ? `<img src="${EXT_ICON}" />` : "📄"}
         </div>
         <div class="row-header-text">
           <div class="row-header-title">Tukang Kunting</div>
@@ -444,56 +444,56 @@
 
     document.body.appendChild(modal);
 
-    document.getElementById("\x72\x6f\x77\x43\x6c\x6f\x73\x65\x42\x74\x6e").onclick = () => modal.remove();
+    document.getElementById("rowCloseBtn").onclick = () => modal.remove();
 
-    const downloadBtn = document.getElementById("\x72\x6f\x77\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x43\x73\x76\x42\x74\x6e");
+    const downloadBtn = document.getElementById("rowDownloadCsvBtn");
     if (downloadBtn) {
-      downloadBtn.addEventListener("\x63\x6c\x69\x63\x6b", () => {
+      downloadBtn.addEventListener("click", () => {
         try {
           downloadCSVOfSuccess();
         } catch (err) {
-          console.error("\x47\x61\x67\x61\x6c\x20\x6d\x65\x6d\x62\x75\x61\x74\x20\x43\x53\x56\x20\x52\x4f\x57\x3a", err);
-          alert("\x54\x65\x72\x6a\x61\x64\x69\x20\x65\x72\x72\x6f\x72\x20\x73\x61\x61\x74\x20\x6d\x65\x6d\x62\x75\x61\x74\x20\x43\x53\x56\x2e\x20\x43\x65\x6b\x20\x63\x6f\x6e\x73\x6f\x6c\x65\x2e");
+          console.error("Gagal membuat CSV ROW:", err);
+          alert("Terjadi error saat membuat CSV. Cek console.");
         }
       });
     }
   }
 
   function updateStatus(text) {
-    const el = document.getElementById("\x72\x6f\x77\x41\x75\x74\x6f\x53\x74\x61\x74\x75\x73");
-    const badge = document.getElementById("\x72\x6f\x77\x53\x74\x61\x74\x75\x73\x42\x61\x64\x67\x65");
-    const bar = document.getElementById("\x72\x6f\x77\x54\x6f\x70\x42\x61\x72");
-    const closeBtn = document.getElementById("\x72\x6f\x77\x43\x6c\x6f\x73\x65\x42\x74\x6e");
-    const downloadBtn = document.getElementById("\x72\x6f\x77\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x43\x73\x76\x42\x74\x6e");
+    const el = document.getElementById("rowAutoStatus");
+    const badge = document.getElementById("rowStatusBadge");
+    const bar = document.getElementById("rowTopBar");
+    const closeBtn = document.getElementById("rowCloseBtn");
+    const downloadBtn = document.getElementById("rowDownloadCsvBtn");
 
     if (!el || !badge) return;
     el.textContent = text;
 
-    badge.classList.remove("\x64\x6f\x6e\x65", "\x65\x72\x72\x6f\x72");
-    bar?.classList.remove("\x64\x6f\x6e\x65");
+    badge.classList.remove("done", "error");
+    bar?.classList.remove("done");
 
-    if (text === "\x\x34\x34\x\x34\x66\x\x34\x65\x\x34\x35") {
-      badge.classList.add("\x64\x6f\x6e\x65");
-      bar?.classList.add("\x64\x6f\x6e\x65");
-      closeBtn?.classList.add("\x76\x69\x73\x69\x62\x6c\x65");
-      downloadBtn?.classList.add("\x76\x69\x73\x69\x62\x6c\x65");
-    } else if (text.startsWith("\x\x34\x35\x\x35\x32\x\x35\x32\x\x34\x66\x\x35\x32")) {
-      badge.classList.add("\x65\x72\x72\x6f\x72");
-      closeBtn?.classList.add("\x76\x69\x73\x69\x62\x6c\x65");
+    if (text === "\x44\x4f\x4e\x45") {
+      badge.classList.add("done");
+      bar?.classList.add("done");
+      closeBtn?.classList.add("visible");
+      downloadBtn?.classList.add("visible");
+    } else if (text.startsWith("\x45\x52\x52\x4f\x52")) {
+      badge.classList.add("error");
+      closeBtn?.classList.add("visible");
       if (successfulDownloads.length > 0) {
-        downloadBtn?.classList.add("\x76\x69\x73\x69\x62\x6c\x65");
+        downloadBtn?.classList.add("visible");
       }
     }
   }
 
   function updateDownloadedCounter() {
-    const el = document.getElementById("\x72\x6f\x77\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x43\x6f\x75\x6e\x74");
+    const el = document.getElementById("rowDownloadCount");
     if (el) el.textContent = totalDownloaded;
   }
 
   function updatePageNumber() {
-    const el = document.getElementById("\x72\x6f\x77\x50\x61\x67\x65\x4e\x75\x6d\x62\x65\x72");
-    if (el) el.textContent = getCurrentPageNumber() || "\u2014";
+    const el = document.getElementById("rowPageNumber");
+    if (el) el.textContent = getCurrentPageNumber() || "—";
   }
 
   /**************************************
@@ -504,7 +504,7 @@
   }
 
   function getRows() {
-    return document.querySelectorAll("\x74\x61\x62\x6c\x65\x20\x74\x62\x6f\x64\x79\x20\x74\x72");
+    return document.querySelectorAll("table tbody tr");
   }
 
   /**
@@ -513,15 +513,15 @@
    */
   function isRowBold(row) {
     const fw = window.getComputedStyle(row).fontWeight;
-    return fw === "\x37\x30\x30" || fw === "\x62\x6f\x6c\x64";
+    return fw === "700" || fw === "bold";
   }
 
   function getCurrentPageNumber() {
     const selectors = [
-      "\x2e\x70\x2d\x70\x61\x67\x69\x6e\x61\x74\x6f\x72\x2d\x62\x6f\x74\x74\x6f\x6d\x20\x2e\x70\x2d\x70\x61\x67\x69\x6e\x61\x74\x6f\x72\x2d\x70\x61\x67\x65\x2e\x70\x2d\x68\x69\x67\x68\x6c\x69\x67\x68\x74",
-      "\x2e\x70\x2d\x70\x61\x67\x69\x6e\x61\x74\x6f\x72\x20\x2e\x70\x2d\x70\x61\x67\x69\x6e\x61\x74\x6f\x72\x2d\x70\x61\x67\x65\x2e\x70\x2d\x68\x69\x67\x68\x6c\x69\x67\x68\x74",
-      "\x2e\x70\x2d\x70\x61\x67\x69\x6e\x61\x74\x6f\x72\x2d\x62\x6f\x74\x74\x6f\x6d\x20\x2e\x70\x2d\x68\x69\x67\x68\x6c\x69\x67\x68\x74",
-      "\x2e\x70\x2d\x70\x61\x67\x69\x6e\x61\x74\x6f\x72\x20\x2e\x70\x2d\x68\x69\x67\x68\x6c\x69\x67\x68\x74"
+      ".p-paginator-bottom .p-paginator-page.p-highlight",
+      ".p-paginator .p-paginator-page.p-highlight",
+      ".p-paginator-bottom .p-highlight",
+      ".p-paginator .p-highlight"
     ];
 
     for (const selector of selectors) {
@@ -534,10 +534,10 @@
   }
 
   function hasSpinner() {
-    const spinner1 = document.querySelector("\x2e\x70\x2d\x64\x61\x74\x61\x74\x61\x62\x6c\x65\x2d\x6c\x6f\x61\x64\x69\x6e\x67\x2d\x6f\x76\x65\x72\x6c\x61\x79");
-    const spinner2 = document.querySelector("\x75\x69\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x2d\x73\x70\x69\x6e\x6e\x65\x72\x20\x2e\x70\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x2d\x73\x70\x69\x6e\x6e\x65\x72");
-    const spinner3 = document.querySelector("\x70\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x73\x70\x69\x6e\x6e\x65\x72\x20\x2e\x70\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x2d\x73\x70\x69\x6e\x6e\x65\x72");
-    const spinner4 = document.querySelector("\x2e\x70\x2d\x70\x72\x6f\x67\x72\x65\x73\x73\x2d\x73\x70\x69\x6e\x6e\x65\x72");
+    const spinner1 = document.querySelector(".p-datatable-loading-overlay");
+    const spinner2 = document.querySelector("ui-progress-spinner .p-progress-spinner");
+    const spinner3 = document.querySelector("p-progressspinner .p-progress-spinner");
+    const spinner4 = document.querySelector(".p-progress-spinner");
     return !!(spinner1 || spinner2 || spinner3 || spinner4);
   }
 
@@ -550,14 +550,14 @@
 
     return (
       el.disabled === true ||
-      el.classList.contains("\x\x37\x30\x\x32\x64\x\x36\x34\x\x36\x39\x\x37\x33\x\x36\x31\x\x36\x32\x\x36\x63\x\x36\x35\x\x36\x34") ||
-      el.getAttribute("\x\x36\x31\x\x37\x32\x\x36\x39\x\x36\x31\x\x32\x64\x\x36\x34\x\x36\x39\x\x37\x33\x\x36\x31\x\x36\x32\x\x36\x63\x\x36\x35\x\x36\x34") === "\x\x37\x34\x\x37\x32\x\x37\x35\x\x36\x35" ||
-      el.getAttribute("\x64\x69\x73\x61\x62\x6c\x65\x64") !== null
+      el.classList.contains("\x70\x2d\x64\x69\x73\x61\x62\x6c\x65\x64") ||
+      el.getAttribute("\x61\x72\x69\x61\x2d\x64\x69\x73\x61\x62\x6c\x65\x64") === "\x74\x72\x75\x65" ||
+      el.getAttribute("disabled") !== null
     );
   }
 
   function getAllNextButtons() {
-    return Array.from(document.querySelectorAll("\x2e\x70\x2d\x70\x61\x67\x69\x6e\x61\x74\x6f\x72\x2d\x6e\x65\x78\x74"));
+    return Array.from(document.querySelectorAll(".p-paginator-next"));
   }
 
   function getNextButton() {
@@ -580,7 +580,7 @@
       disabled: btn ? isElementDisabled(btn) : true,
       visible: btn ? isVisible(btn) : false,
       className: btn?.className || "",
-      ariaDisabled: btn?.getAttribute("\x\x36\x31\x\x37\x32\x\x36\x39\x\x36\x31\x\x32\x64\x\x36\x34\x\x36\x39\x\x37\x33\x\x36\x31\x\x36\x32\x\x36\x63\x\x36\x35\x\x36\x34") || null,
+      ariaDisabled: btn?.getAttribute("\x61\x72\x69\x61\x2d\x64\x69\x73\x61\x62\x6c\x65\x64") || null,
       html: btn?.outerHTML || ""
     };
   }
@@ -606,13 +606,13 @@
     if (hasSpinner()) {
       while (Date.now() - start < effectiveTimeout) {
         if (!hasSpinner()) {
-          console.log("\u2705\x20\x73\x70\x69\x6e\x6e\x65\x72\x20\x68\x69\x6c\x61\x6e\x67");
+          console.log("✅ spinner hilang");
           await sleep(Math.min(BASE_POLL * 2, 700));
           return;
         }
         await sleep(BASE_POLL);
       }
-      console.warn("\u26a0\ufe0f\x20\x73\x70\x69\x6e\x6e\x65\x72\x20\x74\x69\x64\x61\x6b\x20\x68\x69\x6c\x61\x6e\x67\x20\x73\x61\x6d\x70\x61\x69\x20\x74\x69\x6d\x65\x6f\x75\x74");
+      console.warn("⚠️ spinner tidak hilang sampai timeout");
     } else {
       await sleep(Math.min(BASE_POLL * 2, 700));
     }
@@ -622,7 +622,7 @@
     const start = Date.now();
 
     while (Date.now() - start < timeoutMs) {
-      const paginator = document.querySelector("\x2e\x70\x2d\x70\x61\x67\x69\x6e\x61\x74\x6f\x72");
+      const paginator = document.querySelector(".p-paginator");
       const rows = getRows();
 
       if (paginator && rows.length > 0 && !hasSpinner()) {
@@ -633,7 +633,7 @@
       await sleep(BASE_POLL);
     }
 
-    console.warn("\u26a0\ufe0f\x20\x77\x61\x69\x74\x46\x6f\x72\x50\x61\x67\x69\x6e\x61\x74\x6f\x72\x52\x65\x61\x64\x79\x20\x74\x69\x6d\x65\x6f\x75\x74");
+    console.warn("⚠️ waitForPaginatorReady timeout");
     return false;
   }
 
@@ -661,7 +661,7 @@
       }
 
       if (state.exists && state.visible && stableCount >= 3) {
-        console.log("\u2705\x20\x4e\x65\x78\x74\x20\x62\x75\x74\x74\x6f\x6e\x20\x73\x74\x61\x74\x65\x20\x73\x65\x74\x74\x6c\x65\x64\x3a", state);
+        console.log("✅ Next button state settled:", state);
         return state;
       }
 
@@ -669,7 +669,7 @@
     }
 
     const finalState = getNextButtonState();
-    console.warn("\u26a0\ufe0f\x20\x4e\x65\x78\x74\x20\x62\x75\x74\x74\x6f\x6e\x20\x74\x69\x64\x61\x6b\x20\x73\x65\x74\x74\x6c\x65\x20\x73\x61\x6d\x70\x61\x69\x20\x74\x69\x6d\x65\x6f\x75\x74\x2c\x20\x70\x61\x6b\x61\x69\x20\x73\x74\x61\x74\x65\x20\x74\x65\x72\x61\x6b\x68\x69\x72\x3a", finalState);
+    console.warn("⚠️ Next button tidak settle sampai timeout, pakai state terakhir:", finalState);
     return finalState;
   }
 
@@ -681,7 +681,7 @@
       const clientX = rect.left + rect.width / 2;
       const clientY = rect.top + rect.height / 2;
 
-      ["\x6d\x6f\x75\x73\x65\x6f\x76\x65\x72", "\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e", "\x6d\x6f\x75\x73\x65\x75\x70", "\x63\x6c\x69\x63\x6b"].forEach(type => {
+      ["mouseover", "mousedown", "mouseup", "click"].forEach(type => {
         const evt = new MouseEvent(type, {
           bubbles: true,
           cancelable: true,
@@ -693,7 +693,7 @@
         element.dispatchEvent(evt);
       });
     } catch (err) {
-      console.warn("\u26a0\ufe0f\x20\x68\x75\x6d\x61\x6e\x43\x6c\x69\x63\x6b\x20\x67\x61\x67\x61\x6c\x2c\x20\x66\x61\x6c\x6c\x62\x61\x63\x6b\x20\x6b\x65\x20\x6e\x61\x74\x69\x76\x65\x20\x63\x6c\x69\x63\x6b\x28\x29", err);
+      console.warn("⚠️ humanClick gagal, fallback ke native click()", err);
       element.click?.();
     }
   }
@@ -702,7 +702,7 @@
    * CLICK DOWNLOAD BUTTON
    **************************************/
   async function clickDownloadButton(row, nomorDokumen) {
-    const btn = row.querySelector("\x62\x75\x74\x74\x6f\x6e\x23\x41\x63\x74\x69\x6f\x6e\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x42\x75\x74\x74\x6f\x6e\x2c\x20\x23\x41\x63\x74\x69\x6f\x6e\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x42\x75\x74\x74\x6f\x6e");
+    const btn = row.querySelector("button#ActionDownloadButton, #ActionDownloadButton");
 
     if (!btn) {
       console.warn(`⚠️ [${nomorDokumen}] ActionDownloadButton tidak ditemukan di row ini`);
@@ -749,7 +749,7 @@
     await waitForPaginatorReady();
     updatePageNumber();
 
-    const page = getCurrentPageNumber() || "\u2014";
+    const page = getCurrentPageNumber() || "—";
     console.log(`📄 Proses Page ${page}`);
     updateStatus(`Page ${page} - memindai row bold...`);
 
@@ -823,12 +823,12 @@
    **************************************/
   function downloadCSVOfSuccess() {
     if (!successfulDownloads.length) {
-      console.warn("\x54\x69\x64\x61\x6b\x20\x61\x64\x61\x20\x64\x61\x74\x61\x20\x73\x75\x6b\x73\x65\x73\x20\x75\x6e\x74\x75\x6b\x20\x64\x69\x65\x78\x70\x6f\x72\x74\x2e");
-      alert("\x54\x69\x64\x61\x6b\x20\x61\x64\x61\x20\x64\x6f\x6b\x75\x6d\x65\x6e\x20\x79\x61\x6e\x67\x20\x62\x65\x72\x68\x61\x73\x69\x6c\x20\x64\x69\x2d\x64\x6f\x77\x6e\x6c\x6f\x61\x64\x2e");
+      console.warn("Tidak ada data sukses untuk diexport.");
+      alert("Tidak ada dokumen yang berhasil di-download.");
       return;
     }
 
-    const headers = ["\x4e\x6f\x6d\x6f\x72\x20\x44\x6f\x6b\x75\x6d\x65\x6e", "\x50\x61\x67\x65", "\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x65\x64\x20\x41\x74"];
+    const headers = ["Nomor Dokumen", "Page", "Downloaded At"];
 
     const rows = successfulDownloads.map(item => {
       let nomor = item.nomor_dokumen || "";
@@ -848,8 +848,8 @@
     const escapeCSV = (value) => {
       if (value == null) return "";
       const str = String(value);
-      if (/["\x2c\n\x3b\x5d\x2f\x2e\x74\x65\x73\x74\x28\x73\x74\x72\x29\x29\x20\x7b
-\x20\x20\x20\x20\x20\x20\x20\x20\x72\x65\x74\x75\x72\x6e\x20\x60"${str.replace(/"\x2f\x67\x2c\x20\x27""\x27\x29\x7d"`;
+      if (/[",\n;]/.test(str)) {
+        return `"${str.replace(/"/g, '""')}"`;
       }
       return str;
     };
