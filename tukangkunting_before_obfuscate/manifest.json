@@ -7,8 +7,18 @@
   "permissions": [
     "activeTab",
     "scripting",
-    "storage"
+    "storage",
+    "notifications"
   ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+T",
+        "mac": "Command+Shift+T"
+      },
+      "description": "Buka Tukangkunting"
+    }
+  },
   "web_accessible_resources": [
     {
       "resources": ["icon.png"],

@@ -437,7 +437,7 @@ $("#verifyBtn").addEventListener("click", async () => {
 });
 
 // ═══════════════════════════════════════════════════════════
-// HISTORY (localStorage — karena ini bukan extension)
+// HISTORY — localStorage + revocation + search + export + stats
 // ═══════════════════════════════════════════════════════════
 
 function getHistory() {
@@ -448,55 +448,109 @@ function getHistory() {
   }
 }
 
+function getRevokedList() {
+  try {
+    return JSON.parse(localStorage.getItem("tukang_revoked") || "[]");
+  } catch {
+    return [];
+  }
+}
+
 function saveHistory(entry) {
   const history = getHistory();
   history.unshift(entry);
-  if (history.length > 50) history.length = 50;
+  if (history.length > 200) history.length = 200;
   localStorage.setItem("tukang_history", JSON.stringify(history));
   renderHistory();
+  renderStats();
 }
 
-function renderHistory() {
+function toggleRevoke(token) {
+  const revoked = getRevokedList();
+  const idx = revoked.indexOf(token);
+  if (idx >= 0) {
+    revoked.splice(idx, 1);
+    showToast("Token dipulihkan");
+  } else {
+    revoked.push(token);
+    showToast("Token dicabut");
+  }
+  localStorage.setItem("tukang_revoked", JSON.stringify(revoked));
+  renderHistory();
+  renderStats();
+}
+
+function renderStats() {
+  const history = getHistory();
+  const revoked = getRevokedList();
+  const now = Date.now();
+  const total = history.length;
+  const active = history.filter(h => now <= h.expiry && !revoked.includes(h.token)).length;
+  const expiringSoon = history.filter(h => now <= h.expiry && !revoked.includes(h.token) && (h.expiry - now) <= 7 * 86400000).length;
+  const expired = history.filter(h => now > h.expiry).length;
+  const revokedCount = history.filter(h => revoked.includes(h.token)).length;
+
+  const el = (id) => document.getElementById(id);
+  if (el("stat-total"))    el("stat-total").textContent    = total;
+  if (el("stat-active"))   el("stat-active").textContent   = active;
+  if (el("stat-expiring")) el("stat-expiring").textContent = expiringSoon;
+  if (el("stat-expired"))  el("stat-expired").textContent  = expired;
+  if (el("stat-revoked"))  el("stat-revoked").textContent  = revokedCount;
+}
+
+function renderHistory(searchQuery = "") {
   const list = $("#historyList");
   const history = getHistory();
+  const revoked = getRevokedList();
 
-  if (history.length === 0) {
-    list.innerHTML = `
-      <div class="history-empty">
-        <span>📭</span>
-        <p>Belum ada riwayat generate token</p>
-      </div>`;
+  const q = searchQuery.trim().toLowerCase();
+  const filtered = q
+    ? history.filter(h =>
+        (h.machineCode || "").toLowerCase().includes(q) ||
+        (h.label || "").toLowerCase().includes(q)
+      )
+    : history;
+
+  if (filtered.length === 0) {
+    list.innerHTML = history.length === 0
+      ? `<div class="history-empty"><span>📭</span><p>Belum ada riwayat generate token</p></div>`
+      : `<div class="history-empty"><span>🔍</span><p>Tidak ada hasil untuk "<strong>${searchQuery}</strong>"</p></div>`;
     return;
   }
 
-  list.innerHTML = history
-    .map(
-      (h, i) => `
-    <div class="history-item">
+  const now = Date.now();
+  list.innerHTML = filtered
+    .map((h, i) => {
+      const isRevoked = revoked.includes(h.token);
+      const isExpired = now > h.expiry;
+      const statusIcon = isRevoked ? "🚫 Revoked" : (isExpired ? "🔴 Expired" : "🟢 Active");
+      const daysLeft = isExpired ? 0 : Math.ceil((h.expiry - now) / 86400000);
+      const daysInfo = isExpired ? "Sudah expired" : `${daysLeft} hari tersisa`;
+      return `
+    <div class="history-item${isRevoked ? " is-revoked" : ""}">
       <div class="hi-info">
-        ${h.label ? `<div class="hi-label"><span class="hi-label-icon">👤</span>${h.label}</div>` : ""}
+        ${h.label ? `<div class="hi-label"><span class="hi-label-icon">👤</span>${escapeHtml(h.label)}${isRevoked ? '<span class="hi-revoked-badge">Dicabut</span>' : ""}</div>` : (isRevoked ? '<div class="hi-label"><span class="hi-revoked-badge">Dicabut</span></div>' : "")}
         <div class="hi-machine">${h.machineCode}</div>
         <div class="hi-meta">
-          <span>📅 ${new Date(h.createdAt).toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          })}</span>
+          <span>📅 ${new Date(h.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}</span>
           <span>⏱️ ${h.days} hari</span>
-          <span>${Date.now() > h.expiry ? "🔴 Expired" : "🟢 Active"}</span>
+          <span>${statusIcon}</span>
+          ${!isExpired && !isRevoked ? `<span title="${daysInfo}" style="color:${daysLeft <= 7 ? 'var(--orange)' : 'var(--text-muted)'}">⏳ ${daysInfo}</span>` : ""}
         </div>
       </div>
       <div class="hi-actions">
         <button class="btn btn-secondary btn-sm" data-copy-idx="${i}" title="Copy Token">📋</button>
+        <button class="btn btn-secondary btn-sm" data-revoke-idx="${i}" title="${isRevoked ? "Pulihkan Token" : "Cabut Token"}" style="${isRevoked ? "color:var(--green)" : "color:var(--text-muted)"}">${isRevoked ? "🔓" : "🔒"}</button>
       </div>
-    </div>`
-    )
+    </div>`;
+    })
     .join("");
 
+  // copy buttons
   list.querySelectorAll("[data-copy-idx]").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const idx = parseInt(btn.dataset.copyIdx);
-      const h = getHistory()[idx];
+      const h = filtered[idx];
       if (h) {
         try {
           await navigator.clipboard.writeText(h.token);
@@ -512,16 +566,214 @@ function renderHistory() {
       }
     });
   });
+
+  // revoke buttons
+  list.querySelectorAll("[data-revoke-idx]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const idx = parseInt(btn.dataset.revokeIdx);
+      const h = filtered[idx];
+      if (h) {
+        const isRevoked = getRevokedList().includes(h.token);
+        if (!isRevoked || confirm("Pulihkan token ini?")) {
+          toggleRevoke(h.token);
+        }
+      }
+    });
+  });
 }
+
+function escapeHtml(str) {
+  return (str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+// ─── SEARCH ───────────────────────────────────────────────
+const historySearch = document.getElementById("historySearch");
+if (historySearch) {
+  historySearch.addEventListener("input", () => {
+    renderHistory(historySearch.value);
+  });
+}
+
+// ─── EXPORT HISTORY CSV ───────────────────────────────────
+function exportHistoryCSV() {
+  const history = getHistory();
+  const revoked = getRevokedList();
+  if (history.length === 0) { showToast("Tidak ada data untuk diekspor"); return; }
+
+  const headers = ["Label", "Machine Code", "Durasi (hari)", "Berlaku Hingga", "Dibuat", "Status"];
+  const rows = history.map(h => {
+    const isRevoked = revoked.includes(h.token);
+    const status = isRevoked ? "Dicabut" : (Date.now() > h.expiry ? "Expired" : "Aktif");
+    return [
+      `"${(h.label || "").replace(/"/g, '""')}"`,
+      h.machineCode,
+      h.days,
+      new Date(h.expiry).toLocaleDateString("id-ID"),
+      new Date(h.createdAt).toLocaleDateString("id-ID"),
+      status,
+    ].join(",");
+  });
+
+  const csv = "\uFEFF" + headers.join(",") + "\n" + rows.join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `tukang_license_history_${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("✅ History berhasil diekspor!");
+}
+
+$("#exportHistory").addEventListener("click", exportHistoryCSV);
 
 // ─── CLEAR HISTORY ────────────────────────────────────────
 $("#clearHistory").addEventListener("click", () => {
   if (confirm("Hapus semua riwayat?")) {
     localStorage.removeItem("tukang_history");
+    localStorage.removeItem("tukang_revoked");
     renderHistory();
+    renderStats();
     showToast("Riwayat dihapus");
   }
 });
 
+// ═══════════════════════════════════════════════════════════
+// BULK GENERATE FROM CSV
+// ═══════════════════════════════════════════════════════════
+
+let bulkRows = [];
+
+const bulkDownloadTemplate = document.getElementById("bulkDownloadTemplate");
+const bulkUploadBtn = document.getElementById("bulkUploadBtn");
+const bulkFileInput = document.getElementById("bulkFileInput");
+const bulkStatus = document.getElementById("bulkStatus");
+const bulkGenerateBtn = document.getElementById("bulkGenerateBtn");
+
+if (bulkDownloadTemplate) {
+  bulkDownloadTemplate.addEventListener("click", () => {
+    const csv = "machine_code,label,days\nAABBCCDDEEFF00112233445566778899,User A,365\n11223344556677889900AABBCCDDEEFF,User B,180\n";
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "template_bulk_generate.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+if (bulkUploadBtn) {
+  bulkUploadBtn.addEventListener("click", () => bulkFileInput && bulkFileInput.click());
+}
+
+if (bulkFileInput) {
+  bulkFileInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => parseBulkCSV(ev.target.result, file.name);
+    reader.readAsText(file);
+    bulkFileInput.value = "";
+  });
+}
+
+function parseBulkCSV(text, filename) {
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) {
+    showBulkStatus("❌ CSV harus memiliki header dan minimal 1 baris data.", "red");
+    return;
+  }
+  const sep = lines[0].includes(";") ? ";" : ",";
+  const headers = lines[0].split(sep).map(h => h.trim().toLowerCase().replace(/\s+/g, "_"));
+  const reqHeaders = ["machine_code", "label", "days"];
+  const missing = reqHeaders.filter(h => !headers.includes(h));
+  if (missing.length > 0) {
+    showBulkStatus(`❌ Kolom tidak ditemukan: ${missing.join(", ")}`, "red");
+    return;
+  }
+
+  const rows = [];
+  const errors = [];
+  for (let i = 1; i < lines.length; i++) {
+    const vals = lines[i].split(sep).map(v => v.trim().replace(/^["']|["']$/g, ""));
+    if (vals.every(v => !v)) continue;
+    const obj = {};
+    headers.forEach((h, idx) => { obj[h] = vals[idx] || ""; });
+    const mc = (obj.machine_code || "").toUpperCase().replace(/[^A-F0-9]/g, "");
+    const days = parseInt(obj.days);
+    if (mc.length !== 32) { errors.push(`Baris ${i + 1}: machine code tidak valid (${mc})`); continue; }
+    if (!days || days < 1 || days > 3650) { errors.push(`Baris ${i + 1}: durasi tidak valid (${obj.days})`); continue; }
+    rows.push({ machine_code: mc, label: obj.label, days });
+  }
+
+  bulkRows = rows;
+  const msg = `✅ <strong>${filename}</strong> — ${rows.length} baris valid` + (errors.length > 0 ? `, ${errors.length} dilewati` : "");
+  showBulkStatus(msg + (errors.length > 0 ? `<br><span style="color:#f87171;font-size:11px;">${errors.slice(0, 3).join("<br>")}</span>` : ""), rows.length > 0 ? "green" : "red");
+  if (bulkGenerateBtn) bulkGenerateBtn.style.display = rows.length > 0 ? "block" : "none";
+}
+
+function showBulkStatus(msg, color) {
+  if (!bulkStatus) return;
+  bulkStatus.style.display = "block";
+  bulkStatus.style.color = color === "red" ? "var(--red)" : color === "green" ? "var(--green)" : "var(--text-dim)";
+  bulkStatus.innerHTML = msg;
+}
+
+if (bulkGenerateBtn) {
+  bulkGenerateBtn.addEventListener("click", async () => {
+    if (bulkRows.length === 0) return;
+    const secret = $("#secretKey").value.trim();
+    if (!secret) { showToast("Secret key belum diisi!"); return; }
+
+    const btnContent = bulkGenerateBtn.querySelector(".btn-content");
+    const btnLoader = bulkGenerateBtn.querySelector(".btn-loader");
+    btnContent.classList.add("hidden");
+    btnLoader.classList.remove("hidden");
+    bulkGenerateBtn.disabled = true;
+
+    try {
+      const results = [];
+      for (const row of bulkRows) {
+        const token = await generateToken(row.machine_code, row.days, secret);
+        const expiry = Date.now() + row.days * 86400000;
+        results.push({ machine_code: row.machine_code, label: row.label, days: row.days, token, expiry });
+        saveHistory({ machineCode: row.machine_code, label: row.label, days: row.days, token, expiry, createdAt: Date.now() });
+      }
+
+      // Download results CSV
+      const headers = ["Label", "Machine Code", "Durasi (hari)", "Berlaku Hingga", "Token"];
+      const rows = results.map(r => [
+        `"${(r.label || "").replace(/"/g, '""')}"`,
+        r.machine_code,
+        r.days,
+        new Date(r.expiry).toLocaleDateString("id-ID"),
+        `"${r.token}"`,
+      ].join(","));
+      const csv = "\uFEFF" + headers.join(",") + "\n" + rows.join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `bulk_tokens_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      showBulkStatus(`✅ ${results.length} token berhasil digenerate dan disimpan ke history. File CSV terdownload!`, "green");
+      bulkRows = [];
+      if (bulkGenerateBtn) bulkGenerateBtn.style.display = "none";
+      showToast(`✅ ${results.length} token berhasil digenerate!`);
+    } catch (err) {
+      showBulkStatus("❌ Error: " + err.message, "red");
+      showToast("Gagal generate bulk token", "error");
+    } finally {
+      btnContent.classList.remove("hidden");
+      btnLoader.classList.add("hidden");
+      bulkGenerateBtn.disabled = false;
+    }
+  });
+}
+
 // ─── INIT ─────────────────────────────────────────────────
 renderHistory();
+renderStats();

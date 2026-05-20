@@ -35,6 +35,13 @@ const NON_COPIED_SUFFIXES = ['Zone.Identifier'];
 
 const SENSITIVE_LITERALS = [
   'checkLicense',
+  'batchComplete',
+  'saveActivityLog',
+  'getActivityLog',
+  'tukang_last_module',
+  'tukang_onboarded',
+  'tukang_last_version',
+  'activity_log',
   'no_runtime',
   'no_response',
   'no_license',

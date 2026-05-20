@@ -367,83 +367,118 @@
   }
 
   // ══════════════════════════════════════════════════════════════
-  //  PROGRESS PANEL UI
+  //  PROGRESS PANEL + MAIN PROCESSING — extracted into processBatch()
   // ══════════════════════════════════════════════════════════════
 
-  const progressPanel = document.createElement("div");
-  progressPanel.id = "tukang-pembatalan-progress";
-  progressPanel.style.cssText = `
-    position:fixed;bottom:24px;right:24px;width:360px;
-    background:#0f1117;border:1px solid rgba(255,255,255,.08);
-    border-radius:14px;padding:18px 20px;z-index:999999;
-    font-family:'DM Sans',system-ui,sans-serif;
-    box-shadow:0 16px 48px rgba(0,0,0,.5);color:#e2e8f0;
-  `;
-  progressPanel.innerHTML = `
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-      <div style="width:32px;height:32px;background:linear-gradient(135deg,#ef4444,#dc2626);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">🚫</div>
-      <div>
-        <div style="font-size:13px;font-weight:600;color:#f0f2f8;">Pembatalan Faktur</div>
-        <div id="tkbf-subtitle" style="font-size:11px;color:#4e5668;margin-top:2px;">Memulai proses...</div>
+  async function processBatch(list, passphrase) {
+    const batchCtrl = { paused: false, cancelled: false };
+
+    const progressPanel = document.createElement("div");
+    progressPanel.style.cssText = `
+      position:fixed;bottom:24px;right:24px;width:360px;
+      background:#0f1117;border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;padding:18px 20px;z-index:999999;
+      font-family:'DM Sans',system-ui,sans-serif;
+      box-shadow:0 16px 48px rgba(0,0,0,.5);color:#e2e8f0;
+    `;
+    progressPanel.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="width:32px;height:32px;background:linear-gradient(135deg,#ef4444,#dc2626);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">🚫</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#f0f2f8;">Pembatalan Faktur</div>
+          <div id="tkbf-subtitle" style="font-size:11px;color:#4e5668;margin-top:2px;">Memulai proses...</div>
+        </div>
       </div>
-    </div>
-    <div style="margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:#4e5668;margin-bottom:4px;">
-        <span id="tkbf-status">0 / ${values.length}</span>
-        <span id="tkbf-percent">0%</span>
+      <div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#4e5668;margin-bottom:4px;">
+          <span id="tkbf-status">0 / ${list.length}</span>
+          <span id="tkbf-percent">0%</span>
+        </div>
+        <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;">
+          <div id="tkbf-bar" style="height:100%;width:0%;border-radius:3px;background:linear-gradient(90deg,#ef4444,#dc2626);transition:width .5s cubic-bezier(.4,0,.2,1);"></div>
+        </div>
       </div>
-      <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;">
-        <div id="tkbf-bar" style="height:100%;width:0%;border-radius:3px;background:linear-gradient(90deg,#ef4444,#dc2626);transition:width .5s cubic-bezier(.4,0,.2,1);"></div>
-      </div>
-    </div>
-    <div id="tkbf-current" style="font-size:12px;color:#94a3b8;font-family:'DM Mono',monospace;word-break:break-all;margin-bottom:8px;">—</div>
-  `;
-  document.body.appendChild(progressPanel);
+      <div id="tkbf-current" style="font-size:12px;color:#94a3b8;font-family:'DM Mono',monospace;word-break:break-all;margin-bottom:8px;">—</div>
+    `;
+    document.body.appendChild(progressPanel);
 
-  const elSubtitle = document.getElementById("tkbf-subtitle");
-  const elStatus = document.getElementById("tkbf-status");
-  const elPercent = document.getElementById("tkbf-percent");
-  const elBar = document.getElementById("tkbf-bar");
-  const elCurrent = document.getElementById("tkbf-current");
+    // ── Pause / Resume / Cancel controls ──
+    const ctrlRow = document.createElement("div");
+    ctrlRow.style.cssText = "display:flex;gap:8px;margin-bottom:8px;";
+    const pauseBtn = document.createElement("button");
+    pauseBtn.textContent = "⏸ Pause";
+    pauseBtn.style.cssText = "flex:1;padding:7px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);border-radius:7px;color:#a0aec0;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;";
+    pauseBtn.onclick = () => {
+      batchCtrl.paused = !batchCtrl.paused;
+      pauseBtn.textContent = batchCtrl.paused ? "▶ Resume" : "⏸ Pause";
+      pauseBtn.style.color = batchCtrl.paused ? "#22c55e" : "#a0aec0";
+    };
+    const cancelCtrlBtn = document.createElement("button");
+    cancelCtrlBtn.textContent = "⏹ Batal";
+    cancelCtrlBtn.style.cssText = "flex:1;padding:7px;border:1px solid rgba(239,68,68,.25);background:rgba(239,68,68,.06);border-radius:7px;color:#f87171;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;";
+    cancelCtrlBtn.onclick = () => {
+      if (confirm("Batalkan proses yang sedang berjalan?")) {
+        batchCtrl.cancelled = true;
+        batchCtrl.paused = false;
+        cancelCtrlBtn.textContent = "⏹ Membatalkan...";
+        cancelCtrlBtn.disabled = true;
+        pauseBtn.disabled = true;
+      }
+    };
+    ctrlRow.append(pauseBtn, cancelCtrlBtn);
+    progressPanel.appendChild(ctrlRow);
 
-  function updateProgress(index, total, text, color) {
-    const pct = Math.round(((index + 1) / total) * 100);
-    elStatus.textContent = `${index + 1} / ${total}`;
-    elPercent.textContent = `${pct}%`;
-    elBar.style.width = `${pct}%`;
-    elCurrent.textContent = text;
-    elCurrent.style.color = color || "#94a3b8";
-  }
+    const elSubtitle = document.getElementById("tkbf-subtitle");
+    const elStatus = document.getElementById("tkbf-status");
+    const elPercent = document.getElementById("tkbf-percent");
+    const elBar = document.getElementById("tkbf-bar");
+    const elCurrent = document.getElementById("tkbf-current");
 
-  // ══════════════════════════════════════════════════════════════
-  //  MAIN PROCESSING LOOP
-  // ══════════════════════════════════════════════════════════════
+    function updateProgress(index, total, text, color) {
+      const pct = Math.round(((index + 1) / total) * 100);
+      elStatus.textContent = `${index + 1} / ${total}`;
+      elPercent.textContent = `${pct}%`;
+      elBar.style.width = `${pct}%`;
+      elCurrent.textContent = text;
+      elCurrent.style.color = color || "#94a3b8";
+    }
 
-  const invoiceInput = document.querySelector('#filterTaxInvoiceNumber input');
+    const invoiceInput = document.querySelector('#filterTaxInvoiceNumber input');
 
-  if (!invoiceInput) {
-    console.error("[Pembatalan Faktur] Input nomor faktur tidak ditemukan pada halaman.");
-    elCurrent.textContent = "❌ Input nomor faktur tidak ditemukan pada halaman.";
-    elCurrent.style.color = "#f87171";
-    return;
-  }
+    if (!invoiceInput) {
+      console.error("[Pembatalan Faktur] Input nomor faktur tidak ditemukan pada halaman.");
+      elCurrent.textContent = "❌ Input nomor faktur tidak ditemukan pada halaman.";
+      elCurrent.style.color = "#f87171";
+      return;
+    }
 
-  let successCount = 0;
-  let failCount = 0;
+    let successCount = 0;
+    let failCount = 0;
 
-  console.log(`[Pembatalan Faktur] Memulai proses pembatalan ${values.length} faktur...`);
-  console.log(`[Pembatalan Faktur] Delay: ${delay}ms`);
-  elSubtitle.textContent = `Memproses ${values.length} faktur...`;
+    console.log(`[Pembatalan Faktur] Memulai proses pembatalan ${list.length} faktur...`);
+    console.log(`[Pembatalan Faktur] Delay: ${delay}ms`);
+    elSubtitle.textContent = `Memproses ${list.length} faktur...`;
 
-  for (let i = 0; i < values.length; i++) {
-    // ── Escape leading apostrophe from CSV ──
-    let nomorFaktur = values[i].nomorFaktur;
+    for (let i = 0; i < list.length; i++) {
+      // ── Cancel check ──
+      if (batchCtrl.cancelled) {
+        elSubtitle.textContent = "❌ Proses dibatalkan oleh pengguna.";
+        break;
+      }
+      // ── Pause check ──
+      while (batchCtrl.paused) {
+        elSubtitle.textContent = "⏸ Dijeda — klik Resume untuk melanjutkan";
+        await sleep(500);
+      }
+
+      // ── Escape leading apostrophe from CSV ──
+      let nomorFaktur = list[i].nomorFaktur;
     nomorFaktur = nomorFaktur.replace(/^'+/, "").trim();
 
     const processStartTime = new Date().toLocaleString("id-ID");
 
     if (!nomorFaktur) {
-      console.warn(`[Pembatalan Faktur] (${i + 1}/${values.length}) Nomor faktur kosong, skip.`);
+      console.warn(`[Pembatalan Faktur] (${i + 1}/${list.length}) Nomor faktur kosong, skip.`);
       rekapResults.push({
         nomorFaktur: "(kosong)",
         status: "SKIP",
@@ -453,9 +488,9 @@
       continue;
     }
 
-    console.log(`[Pembatalan Faktur] (${i + 1}/${values.length}) Memproses: ${nomorFaktur}`);
-    updateProgress(i, values.length, nomorFaktur, "#fca5a5");
-    elSubtitle.textContent = `Memproses ${i + 1} dari ${values.length}...`;
+    console.log(`[Pembatalan Faktur] (${i + 1}/${list.length}) Memproses: ${nomorFaktur}`);
+    updateProgress(i, list.length, nomorFaktur, "#fca5a5");
+    elSubtitle.textContent = `Memproses ${i + 1} dari ${list.length}...`;
 
     try {
       // ── Step 1: Ensure we're on grid page ──
@@ -529,7 +564,7 @@
 
       // ── Step 11: Fill passphrase ──
       passwordInput.focus();
-      setAngularInputValue(passwordInput, kataSandi);
+      setAngularInputValue(passwordInput, passphrase);
       passwordInput.blur();
       console.log(`  ✓ Passphrase filled`);
 
@@ -575,7 +610,7 @@
 
       successCount++;
       console.log(`  ✅ Faktur ${nomorFaktur} berhasil dibatalkan`);
-      updateProgress(i, values.length, `✓ ${nomorFaktur}`, "#22c55e");
+      updateProgress(i, list.length, `✓ ${nomorFaktur}`, "#22c55e");
 
       rekapResults.push({
         nomorFaktur,
@@ -586,7 +621,7 @@
 
     } catch (err) {
       console.error(`  ❌ Error pada faktur ${nomorFaktur}:`, err.message);
-      updateProgress(i, values.length, `✗ ${nomorFaktur}: ${err.message}`, "#f87171");
+      updateProgress(i, list.length, `✗ ${nomorFaktur}: ${err.message}`, "#f87171");
       failCount++;
 
       rekapResults.push({
@@ -618,82 +653,118 @@
 
     // Wait before next iteration
     await sleep(delay);
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    //  DONE — Show summary + controls
+    // ══════════════════════════════════════════════════════════════
+
+    const totalMsg = `Selesai: ${successCount} berhasil, ${failCount} gagal`;
+    console.log(`\n══════════════════════════════════════════`);
+    console.log(`[Pembatalan Faktur] ${totalMsg}`);
+    console.log(`  ✅ Berhasil: ${successCount}`);
+    console.log(`  ❌ Gagal: ${failCount}`);
+    console.log(`  📊 Total: ${list.length}`);
+    console.log(`══════════════════════════════════════════\n`);
+
+    elSubtitle.textContent = batchCtrl.cancelled ? "Dibatalkan" : "Selesai!";
+    elCurrent.textContent = totalMsg;
+    elCurrent.style.color = "#22c55e";
+    elBar.style.background = "linear-gradient(90deg,#22c55e,#16a34a)";
+    elBar.style.width = "100%";
+    pauseBtn.style.display = "none";
+    cancelCtrlBtn.style.display = "none";
+
+    // Send Chrome notification + save activity log
+    const notifSummary = `${successCount} berhasil, ${failCount} gagal`;
+    try {
+      chrome.runtime.sendMessage({ action: "batchComplete", module: "Pembatalan Faktur", summary: notifSummary, failCount });
+      chrome.runtime.sendMessage({ action: "saveActivityLog", entry: { module: "Pembatalan Faktur", total: list.length, success: successCount, failed: failCount, skipped: 0, timestamp: Date.now(), url: window.location.href } });
+    } catch (e) { /* non-critical */ }
+
+    // Rekap summary
+    const rekapSummary = document.createElement("div");
+    rekapSummary.style.cssText = `
+      margin-top:12px;padding:12px 14px;
+      background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+      border-radius:10px;font-size:11px;color:#94a3b8;line-height:1.7;
+    `;
+    rekapSummary.innerHTML = `
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span>✅ Berhasil</span>
+        <span style="color:#22c55e;font-weight:600;font-family:'DM Mono',monospace;">${successCount}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;">
+        <span>❌ Gagal</span>
+        <span style="color:#f87171;font-weight:600;font-family:'DM Mono',monospace;">${failCount}</span>
+      </div>
+    `;
+    progressPanel.appendChild(rekapSummary);
+
+    // Retry Failed button
+    if (failCount > 0 && !batchCtrl.cancelled) {
+      const failedItems = rekapResults
+        .filter(r => r.status === "GAGAL")
+        .map(r => ({ nomorFaktur: r.nomorFaktur }));
+      const retryBtn = document.createElement("button");
+      retryBtn.textContent = `🔄 Coba Ulang ${failCount} Gagal`;
+      retryBtn.style.cssText = `
+        width:100%;padding:10px;margin-top:10px;
+        border:1px solid rgba(245,158,11,.3);
+        background:rgba(245,158,11,.08);
+        border-radius:8px;color:#f59e0b;font-size:12px;font-weight:600;
+        cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .15s;
+      `;
+      retryBtn.onmouseover = () => { retryBtn.style.opacity = "0.8"; };
+      retryBtn.onmouseout = () => { retryBtn.style.opacity = "1"; };
+      retryBtn.onclick = async () => {
+        progressPanel.remove();
+        await processBatch(failedItems, passphrase);
+      };
+      progressPanel.appendChild(retryBtn);
+    }
+
+    // Download Rekap CSV button
+    const downloadBtn = document.createElement("button");
+    downloadBtn.textContent = "📥 Download Rekap CSV";
+    downloadBtn.style.cssText = `
+      width:100%;padding:10px;margin-top:10px;
+      border:none;
+      background:linear-gradient(135deg,#ef4444,#dc2626);
+      border-radius:8px;color:#fff;font-size:12px;font-weight:600;
+      cursor:pointer;font-family:'DM Sans',sans-serif;
+      box-shadow:0 3px 10px rgba(239,68,68,.3);
+      transition:opacity .15s,transform .12s;
+    `;
+    downloadBtn.onmouseover = () => { downloadBtn.style.opacity = "0.9"; downloadBtn.style.transform = "translateY(-1px)"; };
+    downloadBtn.onmouseout = () => { downloadBtn.style.opacity = "1"; downloadBtn.style.transform = "none"; };
+    downloadBtn.onclick = () => {
+      downloadRekapCSV();
+      downloadBtn.textContent = "✅ Rekap Terdownload!";
+      downloadBtn.style.background = "linear-gradient(135deg,#22c55e,#16a34a)";
+      setTimeout(() => {
+        downloadBtn.textContent = "📥 Download Rekap CSV";
+        downloadBtn.style.background = "linear-gradient(135deg,#ef4444,#dc2626)";
+      }, 2000);
+    };
+    progressPanel.appendChild(downloadBtn);
+
+    // Close button
+    const closePanelBtn = document.createElement("button");
+    closePanelBtn.textContent = "Tutup";
+    closePanelBtn.style.cssText = `
+      width:100%;padding:9px;margin-top:8px;
+      border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);
+      border-radius:8px;color:#a0aec0;font-size:12px;font-weight:500;
+      cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;
+    `;
+    closePanelBtn.onmouseover = () => { closePanelBtn.style.background = "rgba(255,255,255,.1)"; };
+    closePanelBtn.onmouseout = () => { closePanelBtn.style.background = "rgba(255,255,255,.04)"; };
+    closePanelBtn.onclick = () => progressPanel.remove();
+    progressPanel.appendChild(closePanelBtn);
   }
 
-  // ══════════════════════════════════════════════════════════════
-  //  DONE — Show summary + download rekap button
-  // ══════════════════════════════════════════════════════════════
-
-  const totalMsg = `Selesai: ${successCount} berhasil, ${failCount} gagal`;
-  console.log(`\n══════════════════════════════════════════`);
-  console.log(`[Pembatalan Faktur] ${totalMsg}`);
-  console.log(`  ✅ Berhasil: ${successCount}`);
-  console.log(`  ❌ Gagal: ${failCount}`);
-  console.log(`  📊 Total: ${values.length}`);
-  console.log(`══════════════════════════════════════════\n`);
-
-  elSubtitle.textContent = "Selesai!";
-  elCurrent.textContent = totalMsg;
-  elCurrent.style.color = "#22c55e";
-  elBar.style.background = "linear-gradient(90deg,#22c55e,#16a34a)";
-  elBar.style.width = "100%";
-
-  // Rekap summary
-  const rekapSummary = document.createElement("div");
-  rekapSummary.style.cssText = `
-    margin-top:12px;padding:12px 14px;
-    background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
-    border-radius:10px;font-size:11px;color:#94a3b8;line-height:1.7;
-  `;
-  rekapSummary.innerHTML = `
-    <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-      <span>✅ Berhasil</span>
-      <span style="color:#22c55e;font-weight:600;font-family:'DM Mono',monospace;">${successCount}</span>
-    </div>
-    <div style="display:flex;justify-content:space-between;">
-      <span>❌ Gagal</span>
-      <span style="color:#f87171;font-weight:600;font-family:'DM Mono',monospace;">${failCount}</span>
-    </div>
-  `;
-  progressPanel.appendChild(rekapSummary);
-
-  // Download Rekap CSV button
-  const downloadBtn = document.createElement("button");
-  downloadBtn.textContent = "📥 Download Rekap CSV";
-  downloadBtn.style.cssText = `
-    width:100%;padding:10px;margin-top:10px;
-    border:none;
-    background:linear-gradient(135deg,#ef4444,#dc2626);
-    border-radius:8px;color:#fff;font-size:12px;font-weight:600;
-    cursor:pointer;font-family:'DM Sans',sans-serif;
-    box-shadow:0 3px 10px rgba(239,68,68,.3);
-    transition:opacity .15s,transform .12s;
-  `;
-  downloadBtn.onmouseover = () => { downloadBtn.style.opacity = "0.9"; downloadBtn.style.transform = "translateY(-1px)"; };
-  downloadBtn.onmouseout = () => { downloadBtn.style.opacity = "1"; downloadBtn.style.transform = "none"; };
-  downloadBtn.onclick = () => {
-    downloadRekapCSV();
-    downloadBtn.textContent = "✅ Rekap Terdownload!";
-    downloadBtn.style.background = "linear-gradient(135deg,#22c55e,#16a34a)";
-    setTimeout(() => {
-      downloadBtn.textContent = "📥 Download Rekap CSV";
-      downloadBtn.style.background = "linear-gradient(135deg,#ef4444,#dc2626)";
-    }, 2000);
-  };
-  progressPanel.appendChild(downloadBtn);
-
-  // Close button
-  const closePanelBtn = document.createElement("button");
-  closePanelBtn.textContent = "Tutup";
-  closePanelBtn.style.cssText = `
-    width:100%;padding:9px;margin-top:8px;
-    border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);
-    border-radius:8px;color:#a0aec0;font-size:12px;font-weight:500;
-    cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;
-  `;
-  closePanelBtn.onmouseover = () => { closePanelBtn.style.background = "rgba(255,255,255,.1)"; };
-  closePanelBtn.onmouseout = () => { closePanelBtn.style.background = "rgba(255,255,255,.04)"; };
-  closePanelBtn.onclick = () => progressPanel.remove();
-  progressPanel.appendChild(closePanelBtn);
+  // ── Entry Point ──
+  await processBatch(values, kataSandi);
 
 })();
