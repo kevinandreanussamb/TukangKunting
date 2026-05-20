@@ -6,3 +6,4 @@ faktur_pajak_retur_masukan_keluaran.js	    m0d_d4b5e8.js
 bppu_bpnr.js	                            m0d_e2c7a0.js
 pengkreditan_faktur.js                      m0d_f5e3b2.js
 pembatalan_faktur.js                        m0d_g8d4c7.js
+bukti_potong_saya.js                        mod_f51a5f.js

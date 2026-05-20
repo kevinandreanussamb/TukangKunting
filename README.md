@@ -103,3 +103,28 @@ Token menggunakan **AES-256-GCM** dengan secret key yang dikonfigurasi di extens
 ## Lisensi
 
 Hak cipta © Kevin Andreanussamb. Seluruh kode bersifat proprietary dan tidak untuk didistribusikan ulang tanpa izin.
+
+
+---
+
+## Automasi Obfuscation
+
+Untuk generate ulang folder `tukangkunting_commerce_edition` dari source `tukangkunting_before_obfuscate`:
+
+1. Jalankan obfuscation:
+   - `npm run obfuscate`
+
+Script akan:
+- Obfuscate custom-safe semua file JS (kecuali `libs/*.js`) tanpa library obfuscator eksternal
+- Rename file modul ke format `m0d_*.js` (mengikuti mapping commerce edition yang ada)
+- Update referensi modul di `background.js`
+- Hapus komentar JS (`//` dan `/* */`) pada seluruh file JS output non-libs
+- Obfuscate nama variable/function JS (mangle) di seluruh file JS output non-libs
+- Auto-versioning `manifest.json` di folder output setiap kali proses obfuscate
+
+Catatan: nama file `background.js` dan `content.js` memang dipertahankan (tidak di-rename) demi kompatibilitas manifest, tetapi isi kodenya tetap diproses obfuscation.
+
+Mode custom-safe menjaga perilaku runtime agar extension tetap jalan, dengan teknik ringan yang kompatibel (hex-escaped literal sensitif + mangle nama variable/function + hapus komentar + normalisasi output + rename modul).
+
+Opsional custom path via environment variable:
+- `OBFUSCATE_SOURCE=/path/source OBFUSCATE_OUTPUT=/path/output npm run obfuscate`
