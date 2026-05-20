@@ -640,6 +640,11 @@
 
     updateStatus("DONE");
     console.log("🎉 DONE BPPU. Total:", totalDownloaded);
+    const notifSummary = `${totalDownloaded} berhasil, 0 gagal`;
+    try {
+      chrome.runtime.sendMessage({ action: "batchComplete", module: "BPPU & BPNR", summary: notifSummary, failCount: 0 });
+      chrome.runtime.sendMessage({ action: "saveActivityLog", entry: { module: "BPPU & BPNR", total: totalDownloaded, success: totalDownloaded, failed: 0, skipped: 0, timestamp: Date.now(), url: window.location.href } });
+    } catch (e) { /* non-critical */ }
   }
 
   function downloadCSVOfSuccess() {

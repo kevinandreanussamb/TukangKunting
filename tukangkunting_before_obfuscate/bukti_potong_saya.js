@@ -633,6 +633,11 @@
 
     updateStatus("DONE");
     console.log("🎉 DONE BUKTI POTONG. Total:", totalDownloaded);
+    const notifSummary = `${totalDownloaded} berhasil, 0 gagal`;
+    try {
+      chrome.runtime.sendMessage({ action: "batchComplete", module: "Bukti Potong Saya", summary: notifSummary, failCount: 0 });
+      chrome.runtime.sendMessage({ action: "saveActivityLog", entry: { module: "Bukti Potong Saya", total: totalDownloaded, success: totalDownloaded, failed: 0, skipped: 0, timestamp: Date.now(), url: window.location.href } });
+    } catch (e) { /* non-critical */ }
   }
 
   try {

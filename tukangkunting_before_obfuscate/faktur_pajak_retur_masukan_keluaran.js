@@ -766,6 +766,11 @@
 
     updateStatus("DONE");
     console.log("🎉 DONE PPN RETUR. Total:", totalDownloaded);
+    const notifSummary = `${totalDownloaded} berhasil, 0 gagal`;
+    try {
+      chrome.runtime.sendMessage({ action: "batchComplete", module: "Faktur Pajak Retur (Keluaran & Masukan)", summary: notifSummary, failCount: 0 });
+      chrome.runtime.sendMessage({ action: "saveActivityLog", entry: { module: "Faktur Pajak Retur (Keluaran & Masukan)", total: totalDownloaded, success: totalDownloaded, failed: 0, skipped: 0, timestamp: Date.now(), url: window.location.href } });
+    } catch (e) { /* non-critical */ }
     // Tidak auto-download lagi; user klik tombol CSV di modal
   }
 
