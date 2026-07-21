@@ -1,9 +1,11 @@
 {
   "manifest_version": 3,
   "name": "Tukangkunting",
-  "version": "1.5",
+  "version": "1.5.5",
   "description": "Tukang ajah",
-  "icons": { "48": "icon.png" },
+  "icons": {
+    "48": "icon.png"
+  },
   "permissions": [
     "activeTab",
     "scripting",
@@ -21,21 +23,21 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["icon.png"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "icon.png",
+        "shared/*.js",
+        "modules/*.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background/service-worker.js"
   },
   "action": {
     "default_icon": "icon.png",
     "default_title": "Suruh Tukang"
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
-    }
-  ]
+  }
 }

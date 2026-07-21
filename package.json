@@ -7,6 +7,7 @@
     "obfuscate": "node scripts/obfuscate.js"
   },
   "devDependencies": {
-    "terser": "^5.47.1"
+    "terser": "^5.47.1",
+    "xlsx": "^0.18.5"
   }
 }

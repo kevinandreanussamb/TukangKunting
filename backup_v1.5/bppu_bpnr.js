@@ -85,6 +85,11 @@
 
   const successfulDownloads = [];
 
+  // Data CSV all columns, dipakai oleh mode download dan export-only
+  const capturedRows = [];
+  let capturedHeaders = [];
+  let isExportOnlyMode = false;
+
   function getDelay(key, defaultValue = 0) {
     return new Promise(resolve => {
       if (!chrome?.storage?.local) return resolve(defaultValue);
@@ -105,6 +110,227 @@
   const MAX_WAIT_AFTER_CLICK = Math.max(GLOBAL_DELAY * 16, 8000);
   const BASE_POLL = Math.max(GLOBAL_DELAY, 300);
   const EXT_ICON = chrome.runtime.getURL("icon.png");
+
+
+const capturedRows = [];
+let capturedHeaders = [];
+let isExportOnlyMode = false;
+
+const META_HEADERS = ["Page", "ExportedAt", "DownloadedAt"];
+
+function cleanText(text) {
+  return (text || "")
+    .toString()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function normalizeHeaderText(text) {
+  return cleanText(text)
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function isBadHeader(header) {
+  if (!header) return true;
+
+  return (
+    /^pilih\b/i.test(header) ||
+    /^filter\b/i.test(header) ||
+    /^search\b/i.test(header) ||
+    /^aksi$/i.test(header) ||
+    /^action$/i.test(header) ||
+    /^download$/i.test(header) ||
+    /^lihat$/i.test(header) ||
+    /^detail$/i.test(header) ||
+    /^[<>«»]+$/.test(header)
+  );
+}
+
+function getTableHeaders() {
+  const table = document.querySelector("table");
+  if (!table) return [];
+
+  // Ambil row header pertama yang punya kolom paling relevan.
+  const headerRows = Array.from(table.querySelectorAll("thead tr"));
+
+  let bestHeaders = [];
+
+  for (const tr of headerRows) {
+    const headers = Array.from(tr.querySelectorAll("th"))
+      .map(th => {
+        // Clone supaya bisa buang input/dropdown/filter di dalam th
+        const clone = th.cloneNode(true);
+
+        clone
+          .querySelectorAll("input, select, button, .p-column-filter, .p-dropdown, .p-calendar")
+          .forEach(el => el.remove());
+
+        return normalizeHeaderText(clone.textContent);
+      })
+      .filter(h => !isBadHeader(h));
+
+    if (headers.length > bestHeaders.length) {
+      bestHeaders = headers;
+    }
+  }
+
+  // Fallback manual kalau header tabel tidak kebaca bersih
+  if (!bestHeaders.length) {
+    bestHeaders = [
+      "Masa Pajak",
+      "Nomor Pemotongan",
+      "Status",
+      "Status Tanda Tangan Elektronik",
+      "NITKU/Nomor Identitas Sub Unit Organisasi",
+      "Jenis Pajak",
+      "Kode Objek Pajak",
+      "Nomor Identitas WP",
+      "Nama",
+      "Dasar Pengenaan Pajak (Rp)",
+      "Pajak Penghasilan (Rp)",
+      "Fasilitas Pajak",
+      "Dilaporkan Dalam SPT",
+      "Dalam Proses Keberatan",
+      "Selesai Proses Keberatan",
+      "Keberatan tidak memenuhi persyaratan (Tolak Formal)",
+      "Dalam Proses Reviu Pencabutan Permohonan Keberatan",
+      "Pencabutan Keberatan Diterima",
+      "SPT Telah/Sedang Diperiksa",
+      "SPT Dalam Penanganan Hukum",
+      "Sedang Dalam Proses Pengembalian"
+    ];
+  }
+
+  return bestHeaders;
+}
+
+function captureTableHeadersIfNeeded() {
+  const headers = getTableHeaders();
+
+  if (headers.length) {
+    capturedHeaders = headers;
+  }
+
+  return capturedHeaders;
+}
+
+function cleanCellValueByHeader(rawValue, header) {
+  let value = cleanText(rawValue);
+  const h = cleanText(header);
+
+  if (!value || !h) return value;
+
+  // Hapus prefix label responsive: "Nomor Pemotongan 2604RKI4R" -> "2604RKI4R"
+  if (value.toLowerCase().startsWith(h.toLowerCase() + " ")) {
+    value = value.slice(h.length).trim();
+  }
+
+  // Beberapa label bisa beda tipis
+  const aliases = {
+    "Nomor Pemotongan": ["Nomor Bukti Potong", "Nomor Pemotongan"],
+    "NITKU/Nomor Identitas Sub Unit Organisasi": [
+      "NITKU/Nomor Identitas Sub Unit Organisasi",
+      "NITKU",
+      "Nomor Identitas Sub Unit Organisasi"
+    ],
+    "Dasar Pengenaan Pajak (Rp)": ["Dasar Pengenaan Pajak (Rp)", "Dasar Pengenaan Pajak"],
+    "Pajak Penghasilan (Rp)": ["Pajak Penghasilan (Rp)", "Pajak Penghasilan"]
+  };
+
+  const possibleLabels = aliases[h] || [h];
+
+  for (const label of possibleLabels) {
+    const l = cleanText(label);
+    if (value.toLowerCase().startsWith(l.toLowerCase() + " ")) {
+      value = value.slice(l.length).trim();
+      break;
+    }
+  }
+
+  return value;
+}
+
+function getRealDataCells(row) {
+  const tds = Array.from(row.children);
+
+  // Buang kolom kosong/action kalau jumlah td lebih banyak dari header.
+  // Tapi tetap jangan agresif; kita nanti align dari kanan/kiri sesuai jumlah header.
+  return tds.map(td => {
+    const clone = td.cloneNode(true);
+
+    // Hilangkan tombol/icon/action agar tidak masuk CSV
+    clone
+      .querySelectorAll("button, svg, i, .pi, .p-button, .p-checkbox")
+      .forEach(el => el.remove());
+
+    return cleanText(clone.textContent);
+  });
+}
+
+function extractRowAllColumns(row) {
+  const headers = captureTableHeadersIfNeeded();
+  let cells = getRealDataCells(row);
+
+  // Buang leading cell kosong / action cell jika tabel punya kolom ekstra di depan
+  while (cells.length > headers.length && !cells[0]) {
+    cells.shift();
+  }
+
+  // Kalau masih lebih banyak, ambil sebanyak jumlah header dari belakang/posisi data utama.
+  // Dari CSV Anda, 2 kolom awal kosong lalu data mulai di kolom "Masa Pajak". Jadi ini penting.
+  if (cells.length > headers.length) {
+    const firstMeaningfulIdx = cells.findIndex(v =>
+      /^Masa Pajak\b/i.test(v) ||
+      /^Nomor Pemotongan\b/i.test(v)
+    );
+
+    if (firstMeaningfulIdx >= 0) {
+      cells = cells.slice(firstMeaningfulIdx, firstMeaningfulIdx + headers.length);
+    } else {
+      cells = cells.slice(0, headers.length);
+    }
+  }
+
+  const obj = {};
+
+  headers.forEach((header, i) => {
+    obj[header] = cleanCellValueByHeader(cells[i] || "", header);
+  });
+
+  return obj;
+}
+
+function getNomorFromRow(row) {
+  const data = extractRowAllColumns(row);
+
+  return (
+    data["Nomor Pemotongan"] ||
+    data["Nomor Bukti Potong"] ||
+    ""
+  );
+}
+
+function makeRowKey(row) {
+  const data = extractRowAllColumns(row);
+  return data["Nomor Pemotongan"] || data["Nomor Bukti Potong"] || JSON.stringify(data);
+}
+
+function pushCapturedRow(row, extra = {}) {
+  const data = extractRowAllColumns(row);
+  const key = data["Nomor Pemotongan"] || data["Nomor Bukti Potong"] || JSON.stringify(data);
+
+  if (downloaded.has(key)) return false;
+
+  downloaded.add(key);
+
+  capturedRows.push({
+    ...data,
+    ...extra
+  });
+
+  return true;
+}
 
   /**********************
    * MODAL
@@ -423,7 +649,36 @@
       <div class="bppu-footer">
         <span class="bppu-footer-icon">⚠️</span>
         <span class="bppu-footer-text">Jangan klik apa-apa sampai selesai.</span>
-        <button id="bppuDownloadCsvBtn" title="Download daftar nomor bukti potong">
+        <button id="bppuExportOnlyBtn" title="Export semua kolom tanpa download PDF" style="
+          margin-left:auto;
+          padding:4px 10px;
+          font-size:11px;
+          border-radius:999px;
+          border:1px solid rgba(34,197,94,0.6);
+          background:rgba(22,163,74,0.1);
+          color:#86efac;
+          cursor:pointer;
+          display:inline-flex;
+          align-items:center;
+          gap:4px;
+          font-family:'DM Sans', system-ui, sans-serif;
+        ">
+          📄 Export
+        </button>
+
+        <button id="bppuDownloadCsvBtn" title="Download CSV hasil proses" style="
+          padding:4px 10px;
+          font-size:11px;
+          border-radius:999px;
+          border:1px solid rgba(56,130,246,0.6);
+          background:rgba(37,99,235,0.1);
+          color:#93c5fd;
+          cursor:pointer;
+          display:inline-flex;
+          align-items:center;
+          gap:4px;
+          font-family:'DM Sans', system-ui, sans-serif;
+        ">
           ⬇ CSV
         </button>
       </div>
@@ -440,6 +695,19 @@
           downloadCSVOfSuccess();
         } catch (err) {
           console.error("Gagal membuat CSV:", err);
+        }
+      });
+    }
+
+    const exportBtn = document.getElementById("bppuExportOnlyBtn");
+
+    if (exportBtn) {
+      exportBtn.addEventListener("click", async () => {
+        try {
+          await runExportOnly();
+        } catch (err) {
+          console.error("Gagal export-only:", err);
+          updateStatus("ERROR ❌ Cek console.");
         }
       });
     }
@@ -555,8 +823,14 @@
 
   async function processPage() {
     updatePage();
+
     const page = getPage();
-    updateStatus(`Page ${page} scanning...`);
+
+    updateStatus(
+      isExportOnlyMode
+        ? `Page ${page} exporting...`
+        : `Page ${page} scanning...`
+    );
 
     await waitSpinner();
 
@@ -567,16 +841,35 @@
       let found = false;
 
       for (const row of rows) {
-        const nomor = row.children[3]?.textContent?.trim();
+        const nomor = getNomorFromRow(row);
         if (!nomor) continue;
+
+        // Kalau sudah pernah diproses, skip
         if (downloaded.has(nomor)) continue;
 
         found = true;
-        downloaded.add(nomor);
 
+        if (isExportOnlyMode) {
+          // Mode export saja: tidak klik download
+          const pushed = pushCapturedRow(row, {
+            Page: getPage() || "",
+            ExportedAt: new Date().toISOString()
+          });
+
+          if (pushed) {
+            totalDownloaded++;
+            updateCounter();
+          }
+
+          await sleep(Math.max(GLOBAL_DELAY / 2, 150));
+          continue;
+        }
+
+        // Mode download normal
         updateStatus("Downloading...");
 
         let ok = false;
+
         for (let i = 0; i < DOWNLOAD_RETRY; i++) {
           ok = await clickDownload(row, nomor);
           if (ok) break;
@@ -584,8 +877,16 @@
         }
 
         if (ok) {
-          totalDownloaded++;
-          updateCounter();
+          const pushed = pushCapturedRow(row, {
+            Page: getPage() || "",
+            DownloadedAt: new Date().toISOString()
+          });
+
+          if (pushed) {
+            totalDownloaded++;
+            updateCounter();
+          }
+
           successfulDownloads.push({
             nomor_bukti_potong: nomor,
             page: getPage() || "",
@@ -598,6 +899,71 @@
       }
 
       if (!found) break;
+
+      // Di mode export-only, semua rows di page bisa langsung diproses dalam 1 loop.
+      // Karena for-loop pakai continue, dia akan lanjut sampai row terakhir.
+      if (isExportOnlyMode) break;
+    }
+  }
+
+  async function runExportOnly() {
+    isExportOnlyMode = true;
+
+    downloaded.clear();
+    capturedRows.length = 0;
+    successfulDownloads.length = 0;
+    capturedHeaders = [];
+    totalDownloaded = 0;
+
+    updateCounter();
+    updateStatus("Starting export...");
+
+    let tries = 0;
+
+    while (tries < 40) {
+      if (getRows().length > 0 && document.querySelector(".p-paginator-bottom")) break;
+      await sleep(BASE_POLL);
+      tries++;
+    }
+
+    updatePage();
+    captureTableHeadersIfNeeded();
+
+    while (true) {
+      await processPage();
+
+      const moved = await nextPage();
+      if (!moved) break;
+    }
+
+    updateStatus("DONE");
+
+    console.log("📄 DONE EXPORT BPPU. Total:", totalDownloaded);
+
+    downloadCSVOfSuccess();
+
+    try {
+      chrome.runtime.sendMessage({
+        action: "batchComplete",
+        module: "BPPU & BPNR Export",
+        summary: `${totalDownloaded} data berhasil diexport`,
+        failCount: 0
+      });
+
+      chrome.runtime.sendMessage({
+        action: "saveActivityLog",
+        entry: {
+          module: "BPPU & BPNR Export",
+          total: totalDownloaded,
+          success: totalDownloaded,
+          failed: 0,
+          skipped: 0,
+          timestamp: Date.now(),
+          url: window.location.href
+        }
+      });
+    } catch (e) {
+      // non-critical
     }
   }
 
@@ -621,6 +987,12 @@
   }
 
   async function run() {
+    isExportOnlyMode = false;
+    downloaded.clear();
+    capturedRows.length = 0;
+    successfulDownloads.length = 0;
+    capturedHeaders = [];
+    totalDownloaded = 0;
     updateStatus("Starting...");
 
     let tries = 0;
@@ -647,55 +1019,69 @@
     } catch (e) { /* non-critical */ }
   }
 
-  function downloadCSVOfSuccess() {
-    if (!successfulDownloads.length) {
-      alert("Tidak ada data.");
-      return;
+function downloadCSVOfSuccess() {
+  const rows = capturedRows;
+
+  if (!rows.length) {
+    alert("Tidak ada data.");
+    return;
+  }
+
+  let headers = capturedHeaders.length
+    ? [...capturedHeaders]
+    : Object.keys(rows[0]).filter(h => !isBadHeader(h));
+
+  // Tambahkan metadata hanya kalau memang ada
+  for (const meta of META_HEADERS) {
+    if (rows.some(r => r[meta] !== undefined) && !headers.includes(meta)) {
+      headers.push(meta);
+    }
+  }
+
+  const escapeCSV = (value) => {
+    if (value == null) return "";
+
+    let str = String(value).trim();
+
+    // Biar NPWP/NITKU/nomor panjang tidak berubah jadi scientific notation di Excel
+    if (/^\d{10,}$/.test(str)) {
+      str = `'${str}`;
     }
 
-    const headers = ["Nomor Bukti Potong", "Page", "Downloaded At"];
-    const rows = successfulDownloads.map(i => {
-      let nomorBersih = i.nomor_bukti_potong || "";
-      nomorBersih = nomorBersih
-        .toString()
-        .trim()
-        .replace(/^\s*Nomor\s+Pemotongan\s*/i, "");
-      return [
-        `'${nomorBersih}`,
-        i.page,
-        i.downloaded_at
-      ];
-    });
+    if (/[",\n;]/.test(str)) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
 
-    const escapeCSV = (value) => {
-      if (value == null) return "";
-      const str = String(value);
-      if (/[",\n;]/.test(str)) {
-        return `"${str.replace(/"/g, '""')}"`;
-      }
-      return str;
-    };
+    return str;
+  };
 
-    const csv = [headers, ...rows]
-      .map(r => r.map(escapeCSV).join(","))
-      .join("\r\n");
+  const csv = [
+    headers,
+    ...rows.map(row => headers.map(header => row[header] ?? ""))
+  ]
+    .map(cols => cols.map(escapeCSV).join(","))
+    .join("\r\n");
 
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
+  const blob = new Blob(["\uFEFF" + csv], {
+    type: "text/csv;charset=utf-8;"
+  });
 
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const filename = `bppu_downloaded_${timestamp}.csv`;
+  const url = URL.createObjectURL(blob);
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const mode = isExportOnlyMode ? "export_only" : "downloaded";
+  const filename = `bppu_${mode}_${timestamp}.csv`;
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 
-    console.log("📁 CSV downloaded:", filename);
-  }
+  URL.revokeObjectURL(url);
+
+  console.log("📁 CSV downloaded:", filename);
+}
 
   try {
     await run();

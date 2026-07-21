@@ -1,0 +1,60 @@
+(function () {
+  const TK = (window.TK = window.TK || {});
+
+  TK.Constants = {
+    APP_NAME: "Tukangkunting",
+    BRAND_TITLE: "Tukang Kunting",
+    BRAND_SUBTITLE: "Sedia Tukang Sebelum Hujan.",
+
+    STATUS: {
+      READY: "READY",
+      STARTING: "STARTING",
+      RUNNING: "RUNNING",
+      SCANNING: "SCANNING",
+      DOWNLOADING: "DOWNLOADING",
+      EXPORTING: "EXPORTING",
+      PAUSED: "PAUSED",
+      CANCELLED: "CANCELLED",
+      DONE: "DONE",
+      ERROR: "ERROR",
+    },
+
+    COLORS: {
+      bg: "#0f1117",
+      surface: "rgba(255,255,255,.03)",
+      surfaceStrong: "#1a1d27",
+      border: "rgba(255,255,255,.08)",
+      borderStrong: "rgba(255,255,255,.12)",
+      text: "#e2e8f0",
+      textStrong: "#f8fafc",
+      muted: "#64748b",
+      muted2: "#94a3b8",
+      blue: "#3882f6",
+      blue2: "#2563eb",
+      green: "#22c55e",
+      red: "#ef4444",
+      amber: "#f59e0b",
+      purple: "#7c3aed",
+    },
+
+    DEFAULTS: {
+      delay: 500,
+      retry: 3,
+      basePoll: 300,
+      waitTimeout: 8000,
+      maxPageLoop: 1000,
+    },
+
+    SELECTORS: {
+      tableRows: "table tbody tr",
+      paginator: ".p-paginator, .p-paginator-bottom",
+      nextButton: ".p-paginator-next",
+      pageHighlight:
+        ".p-paginator-bottom .p-paginator-page.p-highlight, .p-paginator .p-paginator-page.p-highlight, .p-paginator-bottom .p-highlight, .p-paginator .p-highlight",
+      spinner:
+        ".p-datatable-loading-overlay, ui-progress-spinner .p-progress-spinner, p-progressspinner .p-progress-spinner, .p-progress-spinner, ui-progress-spinner .modal",
+    },
+
+    META_HEADERS: ["Page", "DownloadedAt", "ExportedAt", "ProcessedAt", "Status", "Keterangan"],
+  };
+})();

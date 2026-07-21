@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TukangKunting Commerce Edition",
-  "version": "1.5.932.281",
+  "version": "1.5.932.121",
   "description": "Tukang ajah",
   "icons": {
     "48": "icon.png"
@@ -24,9 +24,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "icon.png",
-        "shared/*.js",
-        "modules/*.js"
+        "icon.png"
       ],
       "matches": [
         "<all_urls>"
@@ -34,11 +32,21 @@
     }
   ],
   "background": {
-    "service_worker": "background/service-worker.js"
+    "service_worker": "background.js"
   },
   "action": {
     "default_icon": "icon.png",
     "default_title": "Suruh Tukang"
   },
-  "version_name": "1.5.5"
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "version_name": "1.5"
 }
