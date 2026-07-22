@@ -1,1 +1,1 @@
-importScripts("constants.js","inject.js","license-service.js","activity-service.js","router.js");console.log("[Tukangkunting] Background service worker loaded.");
+importScripts("constants.js","inject.js","license-service.js","activity-service.js","auth-service.js","router.js");console.log("[Tukangkunting] Background service worker loaded.");

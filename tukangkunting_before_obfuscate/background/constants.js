@@ -8,29 +8,32 @@
 
   const SHARED_SECRET = "GANTI_DENGAN_SECRET_AMAN_MINIMAL_32_CHAR!!";
 
-  const SHARED_CONTENT_FILES = [
-    "libs/jquery-3.7.0.min.js",
-    "libs/xlsx.full.min.js",
-
-    "shared/constants.js",
-    "shared/storage.js",
-    "shared/license.js",
-    "shared/dom.js",
-    "shared/pagination.js",
-    "shared/table.js",
-    "shared/csv.js",
-    "shared/activity.js",
-    "shared/ui.js",
-    "shared/batch.js",
-    "shared/download-engine.js",
-  ];
+    const SHARED_CONTENT_FILES = [
+        "libs/jquery-3.7.0.min.js",
+        "libs/xlsx.full.min.js",
+        "shared/constants.js",
+        "shared/storage.js",
+        "shared/license.js",
+        "shared/dom.js",
+        "shared/session.js",
+        "shared/pagination.js",
+        "shared/table.js",
+        "shared/csv.js",
+        "shared/activity.js",
+        "shared/ui.js",
+        "shared/batch.js",
+        "shared/download-engine.js",
+    ];
 
     const CHANGELOG_ITEMS = [
-    "Export data sekarang menggunakan XLSX",
-    "Nomor panjang seperti NPWP, nomor faktur, dan NITKU lebih aman saat dibuka di Excel",
-    "BPPU & BPNR punya mode Export XLSX tanpa download PDF",
-    "Hasil export BPPU mengambil semua kolom tabel",
-    "Progress panel, activity log, dan timeout download dibuat lebih konsisten",
+        "Export data sekarang menggunakan XLSX",
+        "Nomor panjang seperti NPWP, nomor faktur, dan NITKU lebih aman saat dibuka di Excel",
+        "BPPU & BPNR punya mode Export XLSX tanpa download PDF",
+        "Hasil export BPPU mengambil semua kolom tabel",
+        "Progress panel, activity log, dan timeout download dibuat lebih konsisten",
+        "Session Guard Coretax: proses kini bisa mendeteksi sesi Coretax yang berakhir saat automation berjalan",
+        "Auto Pause saat sesi expired: proses tidak langsung dianggap gagal ketika user perlu login ulang",
+        "Login popup Coretax: extension dapat membuka window login agar user bisa login ulang tanpa kehilangan konteks pekerjaan",
     ];
 
   const MODULES = {

@@ -1,10 +1,17 @@
 (function () {
   const TK = (window.TK = window.TK || {});
 
-  async function waitForTableReady(basePoll = 300, maxTries = 120) {
-    for (let i = 0; i < maxTries; i++) {
-      const rows = TK.Table.getRows();
+  async function ensureSession(ui) {
+    if (TK.Session?.ensureActive) {
+      await TK.Session.ensureActive(ui);
+    }
+  }
 
+  async function waitForTableReady(basePoll = 300, maxTries = 120, ui = null) {
+    for (let i = 0; i < maxTries; i++) {
+      await ensureSession(ui);
+
+      const rows = TK.Table.getRows();
       const paginator =
         document.querySelector(".p-paginator-bottom") ||
         document.querySelector(".p-paginator") ||
@@ -76,7 +83,9 @@
     );
   }
 
-  async function tryDownloadRow({ row, mapped, key, config, waitTimeout, basePoll }) {
+  async function tryDownloadRow({ row, mapped, key, config, waitTimeout, basePoll, ui }) {
+    await ensureSession(ui);
+
     if (!row || !document.body.contains(row)) {
       return {
         ok: false,
@@ -107,6 +116,8 @@
 
     const beforeBodyText = document.body.innerText || "";
 
+    await ensureSession(ui);
+
     TK.DOM.humanClick(button);
 
     const actionResult = await TK.DOM.waitForAction(
@@ -114,6 +125,8 @@
       waitTimeout,
       basePoll
     );
+
+    await ensureSession(ui);
 
     if (!actionResult.ok) {
       return {
@@ -132,8 +145,12 @@
 
     await TK.DOM.sleep(Math.min(Math.max(basePoll * 2, 600), 1500));
 
+    await ensureSession(ui);
+
     if (TK.DOM.hasSpinner()) {
       const gone = await TK.DOM.waitSpinnerGone(waitTimeout, basePoll);
+
+      await ensureSession(ui);
 
       if (!gone) {
         return {
@@ -197,7 +214,6 @@
       }
 
       const headers = buildHeaders(state.rows, state.headers);
-
       const filename = `${config.csvPrefix || "tukang_export"}_${TK.CSV.timestamp()}.xlsx`;
 
       TK.CSV.download({
@@ -230,212 +246,258 @@
     ui.log(`Delay: ${delay}ms`);
     ui.log(`Timeout: ${waitTimeout}ms`);
 
-    const ready = await waitForTableReady(basePoll);
+    try {
+      await ensureSession(ui);
 
-    if (!ready) {
-      ui.error("Table not ready");
-      ui.log("Tabel/paginator tidak ditemukan. Pastikan halaman data sudah terbuka.");
-      return state;
-    }
+      const ready = await waitForTableReady(basePoll, 120, ui);
 
-    ui.log("Table ready.");
+      if (!ready) {
+        ui.error("Table not ready");
+        ui.log("Tabel/paginator tidak ditemukan. Pastikan halaman data sudah terbuka.");
+        return state;
+      }
 
-    await TK.DOM.waitSpinnerGone(waitTimeout, basePoll);
-    await TK.Pagination.waitForPaginatorReady(waitTimeout, basePoll);
+      ui.log("Table ready.");
 
-    state.headers = config.getHeaders?.() || TK.Table.getHeaders(config.fallbackHeaders || []);
-
-    let safetyPageLoop = 0;
-
-    while (!ui.state.cancelled && safetyPageLoop < (config.maxPageLoop || 1000)) {
+      await ensureSession(ui);
       await TK.DOM.waitSpinnerGone(waitTimeout, basePoll);
+      await ensureSession(ui);
+      await TK.Pagination.waitForPaginatorReady(waitTimeout, basePoll);
 
-      const currentPage = TK.Pagination.getCurrentPageNumber() || "—";
+      state.headers = config.getHeaders?.() || TK.Table.getHeaders(config.fallbackHeaders || []);
 
-      ui.setStatus(`Page ${currentPage} scanning...`);
-      ui.setMetrics({
-        page: currentPage,
-        success: state.success,
-        failed: state.failed,
-      });
+      let safetyPageLoop = 0;
 
-      let pageScanLoop = 0;
-
-      while (!ui.state.cancelled && pageScanLoop < (config.maxRowLoopPerPage || 1000)) {
-        while (ui.state.paused && !ui.state.cancelled) {
-          await TK.DOM.sleep(400);
-        }
-
-        if (ui.state.cancelled) break;
+      while (!ui.state.cancelled && safetyPageLoop < (config.maxPageLoop || 1000)) {
+        await ensureSession(ui);
 
         await TK.DOM.waitSpinnerGone(waitTimeout, basePoll);
 
-        const freshRows = TK.Table.getRows();
+        await ensureSession(ui);
 
-        if (!freshRows.length) {
-          ui.log(`Page ${currentPage}: tidak ada row.`);
-          break;
-        }
+        const currentPage = TK.Pagination.getCurrentPageNumber() || "—";
 
-        let target = null;
-        let targetMapped = null;
-        let targetKey = "";
+        ui.setStatus(`Page ${currentPage} scanning...`);
+        ui.setMetrics({
+          page: currentPage,
+          success: state.success,
+          failed: state.failed,
+        });
 
-        for (const freshRow of freshRows) {
-          if (config.shouldProcessRow && !config.shouldProcessRow(freshRow)) {
+        let pageScanLoop = 0;
+
+        while (!ui.state.cancelled && pageScanLoop < (config.maxRowLoopPerPage || 1000)) {
+          while (ui.state.paused && !ui.state.cancelled) {
+            await TK.DOM.sleep(400);
+          }
+
+          if (ui.state.cancelled) break;
+
+          await ensureSession(ui);
+
+          await TK.DOM.waitSpinnerGone(waitTimeout, basePoll);
+
+          await ensureSession(ui);
+
+          const freshRows = TK.Table.getRows();
+
+          if (!freshRows.length) {
+            ui.log(`Page ${currentPage}: tidak ada row.`);
+            break;
+          }
+
+          let target = null;
+          let targetMapped = null;
+          let targetKey = "";
+
+          for (const freshRow of freshRows) {
+            if (config.shouldProcessRow && !config.shouldProcessRow(freshRow)) {
+              continue;
+            }
+
+            const mapped = config.mapRow
+              ? config.mapRow(freshRow, state.headers)
+              : TK.Table.rowToObject(freshRow, state.headers);
+
+            const key = config.getKey
+              ? config.getKey(freshRow, mapped, state.headers)
+              : JSON.stringify(mapped);
+
+            if (!key || state.processedKeys.has(key)) {
+              continue;
+            }
+
+            target = freshRow;
+            targetMapped = mapped;
+            targetKey = key;
+            break;
+          }
+
+          if (!target || !targetKey) {
+            ui.log(`Page ${currentPage}: semua row selesai diproses.`);
+            break;
+          }
+
+          await ensureSession(ui);
+
+          if (config.mode === "export") {
+            state.processedKeys.add(targetKey);
+            state.success += 1;
+
+            state.rows.push({
+              ...targetMapped,
+              Page: TK.Pagination.getCurrentPageNumber() || "",
+              ExportedAt: new Date().toISOString(),
+              Status: "BERHASIL",
+              Keterangan: "",
+            });
+
+            ui.setStatus("Exporting...");
+            ui.setMetrics({
+              page: TK.Pagination.getCurrentPageNumber() || "",
+              success: state.success,
+              failed: state.failed,
+            });
+
+            ui.log(`Captured ${targetKey}`);
+            pageScanLoop += 1;
+            await TK.DOM.sleep(Math.max(delay / 2, 150));
             continue;
           }
 
-          const mapped = config.mapRow
-            ? config.mapRow(freshRow, state.headers)
-            : TK.Table.rowToObject(freshRow, state.headers);
+          ui.setStatus("Downloading...");
+          ui.log(`Downloading ${targetKey}`);
 
-          const key = config.getKey
-            ? config.getKey(freshRow, mapped, state.headers)
-            : JSON.stringify(mapped);
+          let ok = false;
+          let failReason = "";
 
-          if (!key || state.processedKeys.has(key)) {
-            continue;
+          for (let attemptIndex = 0; attemptIndex < retry; attemptIndex++) {
+            try {
+              await ensureSession(ui);
+
+              if (!target || !document.body.contains(target)) {
+                failReason = "stale_row_before_attempt";
+                ui.log(`Attempt ${attemptIndex + 1}/${retry} failed ${targetKey}: ${failReason}`);
+                break;
+              }
+
+              const attempt = await tryDownloadRow({
+                row: target,
+                mapped: targetMapped,
+                key: targetKey,
+                config,
+                waitTimeout,
+                basePoll,
+                ui,
+              });
+
+              if (attempt.ok) {
+                ok = true;
+                failReason = "";
+                ui.log(`Attempt ${attemptIndex + 1}/${retry} success ${targetKey}: ${attempt.reason}`);
+                break;
+              }
+
+              failReason = attempt.reason || "unknown_error";
+              ui.log(`Attempt ${attemptIndex + 1}/${retry} failed ${targetKey}: ${failReason}`);
+
+              if (attempt.retriable === false) {
+                break;
+              }
+
+              if (attemptIndex < retry - 1) {
+                await TK.DOM.sleep(delay);
+              }
+            } catch (err) {
+              if (TK.Session?.isSessionError?.(err)) {
+                ui.log(`Session expired saat memproses ${targetKey}. Menunggu login ulang...`);
+                await TK.Session.handleExpired(ui);
+
+                // ulangi attempt yang sama setelah login
+                attemptIndex -= 1;
+                continue;
+              }
+
+              throw err;
+            }
           }
 
-          target = freshRow;
-          targetMapped = mapped;
-          targetKey = key;
-          break;
-        }
+          state.processedKeys.add(targetKey);
 
-        if (!target || !targetKey) {
-          ui.log(`Page ${currentPage}: semua row selesai diproses.`);
-          break;
-        }
+          if (ok) {
+            state.success += 1;
 
-        state.processedKeys.add(targetKey);
+            state.rows.push({
+              ...targetMapped,
+              Page: TK.Pagination.getCurrentPageNumber() || "",
+              DownloadedAt: new Date().toISOString(),
+              Status: "BERHASIL",
+              Keterangan: "",
+            });
 
-        if (config.mode === "export") {
-          state.success += 1;
+            ui.log(`Downloaded ${targetKey}`);
+          } else {
+            state.failed += 1;
 
-          state.rows.push({
-            ...targetMapped,
-            Page: TK.Pagination.getCurrentPageNumber() || "",
-            ExportedAt: new Date().toISOString(),
-            Status: "BERHASIL",
-            Keterangan: "",
-          });
+            state.rows.push({
+              ...targetMapped,
+              Page: TK.Pagination.getCurrentPageNumber() || "",
+              DownloadedAt: "",
+              Status: "GAGAL",
+              Keterangan: failReason || "download_failed",
+            });
 
-          ui.setStatus("Exporting...");
+            ui.log(`Failed ${targetKey}: ${failReason || "download_failed"}`);
+          }
+
           ui.setMetrics({
             page: TK.Pagination.getCurrentPageNumber() || "",
             success: state.success,
             failed: state.failed,
           });
 
-          ui.log(`Captured ${targetKey}`);
-
           pageScanLoop += 1;
 
-          await TK.DOM.sleep(Math.max(delay / 2, 150));
-
-          continue;
+          await TK.DOM.sleep(delay);
         }
 
-        ui.setStatus("Downloading...");
-        ui.log(`Downloading ${targetKey}`);
+        if (ui.state.cancelled) break;
 
-        let ok = false;
-        let failReason = "";
+        await ensureSession(ui);
 
-        for (let attemptIndex = 0; attemptIndex < retry; attemptIndex++) {
-          if (!target || !document.body.contains(target)) {
-            failReason = "stale_row_before_attempt";
-            ui.log(`Attempt ${attemptIndex + 1}/${retry} failed ${targetKey}: ${failReason}`);
-            break;
-          }
-
-          const attempt = await tryDownloadRow({
-            row: target,
-            mapped: targetMapped,
-            key: targetKey,
-            config,
-            waitTimeout,
-            basePoll,
-          });
-
-          if (attempt.ok) {
-            ok = true;
-            failReason = "";
-            ui.log(`Attempt ${attemptIndex + 1}/${retry} success ${targetKey}: ${attempt.reason}`);
-            break;
-          }
-
-          failReason = attempt.reason || "unknown_error";
-
-          ui.log(`Attempt ${attemptIndex + 1}/${retry} failed ${targetKey}: ${failReason}`);
-
-          if (attempt.retriable === false) {
-            break;
-          }
-
-          if (attemptIndex < retry - 1) {
-            await TK.DOM.sleep(delay);
-          }
-        }
-
-        if (ok) {
-          state.success += 1;
-
-          state.rows.push({
-            ...targetMapped,
-            Page: TK.Pagination.getCurrentPageNumber() || "",
-            DownloadedAt: new Date().toISOString(),
-            Status: "BERHASIL",
-            Keterangan: "",
-          });
-
-          ui.log(`Downloaded ${targetKey}`);
-        } else {
-          state.failed += 1;
-
-          state.rows.push({
-            ...targetMapped,
-            Page: TK.Pagination.getCurrentPageNumber() || "",
-            DownloadedAt: "",
-            Status: "GAGAL",
-            Keterangan: failReason || "download_failed",
-          });
-
-          ui.log(`Failed ${targetKey}: ${failReason || "download_failed"}`);
-        }
-
-        ui.setMetrics({
-          page: TK.Pagination.getCurrentPageNumber() || "",
-          success: state.success,
-          failed: state.failed,
+        const moved = await TK.Pagination.goToNextPage({
+          pollMs: basePoll,
+          timeoutMs: waitTimeout,
         });
 
-        pageScanLoop += 1;
+        await ensureSession(ui);
 
-        // IMPORTANT:
-        // Jangan lanjut memakai row snapshot lama.
-        // Setelah satu action, tunggu sebentar lalu rescan ulang DOM table.
-        await TK.DOM.sleep(delay);
+        if (!moved) break;
+
+        safetyPageLoop += 1;
+        await TK.DOM.sleep(Math.max(delay, 300));
       }
 
-      if (ui.state.cancelled) break;
+      if (ui.state.cancelled) {
+        ui.error("Cancelled");
 
-      const moved = await TK.Pagination.goToNextPage({
-        pollMs: basePoll,
-        timeoutMs: waitTimeout,
-      });
+        TK.Activity.finish({
+          module: moduleName,
+          total: state.success + state.failed,
+          success: state.success,
+          failed: state.failed,
+          skipped: 0,
+        });
 
-      if (!moved) break;
+        return state;
+      }
 
-      safetyPageLoop += 1;
+      ui.done("DONE");
+      ui.log(`Selesai. Success: ${state.success}, Failed: ${state.failed}`);
 
-      await TK.DOM.sleep(Math.max(delay, 300));
-    }
-
-    if (ui.state.cancelled) {
-      ui.error("Cancelled");
+      if (config.autoExportCsv) {
+        exportFile();
+      }
 
       TK.Activity.finish({
         module: moduleName,
@@ -446,24 +508,18 @@
       });
 
       return state;
+    } catch (err) {
+      if (TK.Session?.isSessionError?.(err)) {
+        ui.error("Session interrupted");
+        ui.log("Proses berhenti karena halaman perlu reload setelah login ulang. Jalankan module lagi bila tab diarahkan ulang.");
+        return state;
+      }
+
+      ui.error("ERROR");
+      ui.log(err.message || String(err));
+      console.error("[TK.DownloadEngine] fatal error:", err);
+      return state;
     }
-
-    ui.done("DONE");
-    ui.log(`Selesai. Success: ${state.success}, Failed: ${state.failed}`);
-
-    if (config.autoExportCsv) {
-      exportFile();
-    }
-
-    TK.Activity.finish({
-      module: moduleName,
-      total: state.success + state.failed,
-      success: state.success,
-      failed: state.failed,
-      skipped: 0,
-    });
-
-    return state;
   }
 
   TK.DownloadEngine = {

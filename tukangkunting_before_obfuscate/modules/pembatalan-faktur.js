@@ -30,6 +30,29 @@
 
   const state = TK.Batch.createBatchState();
 
+  async function ensureSession() {
+    if (TK.Session?.ensureActive) {
+      await TK.Session.ensureActive(ui);
+    }
+  }
+
+  async function handleSessionError(err) {
+    if (!TK.Session?.isSessionError?.(err)) {
+      return false;
+    }
+
+    ui.log("Sesi Coretax berakhir. Menunggu login ulang...");
+
+    if (
+      err?.message !== "SESSION_RELOAD_REQUIRED" &&
+      err?.message !== "SESSION_LOGIN_TIMEOUT"
+    ) {
+      await TK.Session.handleExpired(ui);
+    }
+
+    return true;
+  }
+
   ui.onCancel(() => {
     state.cancelled = true;
   });
@@ -54,7 +77,12 @@
         const dialog = document.querySelector(".p-confirm-dialog");
         const acceptBtn = dialog?.querySelector(".p-confirm-dialog-accept");
 
-        if (dialog && TK.DOM.isVisible(dialog) && acceptBtn && TK.DOM.isVisible(acceptBtn)) {
+        if (
+          dialog &&
+          TK.DOM.isVisible(dialog) &&
+          acceptBtn &&
+          TK.DOM.isVisible(acceptBtn)
+        ) {
           clearInterval(timer);
           resolve(acceptBtn);
           return;
@@ -78,7 +106,10 @@
 
         if (passwordInput && closeBtn) {
           clearInterval(timer);
-          resolve({ passwordInput, closeBtn });
+          resolve({
+            passwordInput,
+            closeBtn,
+          });
           return;
         }
 
@@ -94,6 +125,8 @@
     const start = Date.now();
 
     while (Date.now() - start < timeoutMs) {
+      await ensureSession();
+
       const dropdown = document.querySelector("#select-SignerProvider .p-dropdown");
 
       if (dropdown && !dropdown.classList.contains("p-disabled")) {
@@ -111,7 +144,9 @@
 
         if (items.length > 0) {
           items[0].click();
+
           await TK.DOM.sleep(300);
+
           return true;
         }
       }
@@ -127,8 +162,13 @@
     let appeared = false;
 
     while (Date.now() - start < timeoutMs) {
+      await ensureSession();
+
       const toastItems = document.querySelectorAll("p-toast p-toastitem");
-      const visibleToast = Array.from(toastItems).some((item) => TK.DOM.isVisible(item));
+
+      const visibleToast = Array.from(toastItems).some((item) =>
+        TK.DOM.isVisible(item)
+      );
 
       if (visibleToast) appeared = true;
 
@@ -174,15 +214,14 @@
     const rows = buildRekapRows();
 
     TK.CSV.download({
-        filename: `rekap_pembatalan_faktur_${TK.CSV.timestamp()}.xlsx`,
-        headers: TK.CSV.inferHeaders(rows),
-        rows,
-        sheetName: "Rekap Pembatalan",
+      filename: `rekap_pembatalan_faktur_${TK.CSV.timestamp()}.xlsx`,
+      headers: TK.CSV.inferHeaders(rows),
+      rows,
+      sheetName: "Rekap Pembatalan",
     });
   }
 
   ui.onExport(downloadRekapCSV);
-
   ui.setStatus("Starting...");
 
   const invoiceInput = document.querySelector("#filterTaxInvoiceNumber input");
@@ -196,6 +235,7 @@
     if (state.cancelled) break;
 
     await TK.Batch.waitIfPaused(state, ui);
+    await ensureSession();
 
     let nomorFaktur = String(list[i].nomorFaktur || "")
       .replace(/^'+/, "")
@@ -206,6 +246,7 @@
     const pct = Math.round(((i + 1) / list.length) * 100);
 
     ui.setStatus(`Processing ${nomorFaktur || "(kosong)"}`);
+
     ui.setMetrics({
       progress: pct,
       success: state.success,
@@ -224,14 +265,20 @@
     }
 
     try {
+      await ensureSession();
+
       const onGrid = await waitForGridPage(5000);
+
       if (!onGrid) throw new Error("Tidak berada di halaman grid");
 
       await TK.DOM.waitSpinnerGone();
+      await ensureSession();
 
       invoiceInput.focus();
       setAngularInputValue(invoiceInput, nomorFaktur);
       invoiceInput.blur();
+
+      await ensureSession();
 
       const refreshBtn = document.querySelector('button[ptooltip="Refresh"]');
 
@@ -242,7 +289,10 @@
       refreshBtn.click();
 
       await TK.DOM.waitForAction(2000, 30000);
+      await ensureSession();
+
       await TK.DOM.sleep(delay);
+      await ensureSession();
 
       const cancelBtn = document.getElementById("CancelButton");
 
@@ -250,26 +300,37 @@
         throw new Error("Tombol Cancel tidak ditemukan atau tidak terlihat");
       }
 
+      await ensureSession();
+
       cancelBtn.click();
 
       const confirmAcceptBtn = await waitForConfirmDialog(15000);
+
       if (!confirmAcceptBtn) {
         throw new Error("Dialog konfirmasi pembatalan tidak muncul");
       }
 
+      await ensureSession();
+
       confirmAcceptBtn.click();
 
       await TK.DOM.waitForAction(2000, 30000);
+      await ensureSession();
 
       const signingModal = await waitForSigningModal(30000);
+
       if (!signingModal) {
         throw new Error("Modal Tanda Tangan Dokumen tidak muncul");
       }
 
+      await ensureSession();
+
       const { passwordInput, closeBtn } = signingModal;
 
       await selectSignerProvider(10000);
+
       await TK.DOM.sleep(500);
+      await ensureSession();
 
       passwordInput.focus();
       setAngularInputValue(passwordInput, passphrase);
@@ -284,11 +345,15 @@
       simpanBtn.removeAttribute("disabled");
 
       await TK.DOM.sleep(300);
+      await ensureSession();
 
       simpanBtn.click();
 
       await TK.DOM.waitForAction(2000, 30000);
+      await ensureSession();
+
       await TK.DOM.sleep(delay);
+      await ensureSession();
 
       const confirmSignBtn = document.getElementById("button-close");
 
@@ -297,11 +362,17 @@
       }
 
       await TK.DOM.waitForAction(2000, 30000);
+      await ensureSession();
+
       await waitForSigningModalClose(15000);
+      await ensureSession();
+
       await waitForToastAppearAndDisappear(15000);
+      await ensureSession();
 
       await waitForGridPage(10000);
       await TK.DOM.waitSpinnerGone(10000);
+      await ensureSession();
 
       TK.Batch.pushResult(state, {
         nomorFaktur,
@@ -312,6 +383,11 @@
 
       ui.log(`✓ ${nomorFaktur}`);
     } catch (err) {
+      if (await handleSessionError(err)) {
+        i -= 1;
+        continue;
+      }
+
       TK.Batch.pushResult(state, {
         nomorFaktur,
         status: "GAGAL",
@@ -323,11 +399,13 @@
 
       try {
         const rejectBtn = document.querySelector(".p-confirm-dialog-reject");
+
         if (rejectBtn && TK.DOM.isVisible(rejectBtn)) rejectBtn.click();
       } catch {}
 
       try {
         const dialogClose = document.querySelector(".p-dialog-header-close");
+
         if (dialogClose && TK.DOM.isVisible(dialogClose)) dialogClose.click();
       } catch {}
 
@@ -349,7 +427,10 @@
   const total = state.success + state.failed + state.skipped;
 
   ui.done("DONE");
-  ui.log(`Selesai: ${state.success} berhasil, ${state.failed} gagal, ${state.skipped} dilewati`);
+
+  ui.log(
+    `Selesai: ${state.success} berhasil, ${state.failed} gagal, ${state.skipped} dilewati`
+  );
 
   TK.Activity.finish({
     module: MODULE_NAME,

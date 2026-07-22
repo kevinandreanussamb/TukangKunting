@@ -3,6 +3,7 @@ importScripts(
   "inject.js",
   "license-service.js",
   "activity-service.js",
+  "auth-service.js",
   "router.js"
 );
 

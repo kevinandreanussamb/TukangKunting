@@ -38,6 +38,29 @@
 
   const state = TK.Batch.createBatchState();
 
+  async function ensureSession() {
+    if (TK.Session?.ensureActive) {
+      await TK.Session.ensureActive(ui);
+    }
+  }
+
+  async function handleSessionError(err, index) {
+    if (!TK.Session?.isSessionError?.(err)) {
+      return false;
+    }
+
+    ui.log("Sesi Coretax berakhir. Menunggu login ulang...");
+
+    if (
+      err?.message !== "SESSION_RELOAD_REQUIRED" &&
+      err?.message !== "SESSION_LOGIN_TIMEOUT"
+    ) {
+      await TK.Session.handleExpired(ui);
+    }
+
+    return true;
+  }
+
   ui.onCancel(() => {
     state.cancelled = true;
   });
@@ -143,14 +166,19 @@
   }
 
   async function selectPrimeNGDropdown(dropdownContainer, optionText, timeoutMs = 5000) {
-    dropdownContainer.click();
+    await ensureSession();
 
+    dropdownContainer.click();
     await TK.DOM.sleep(250);
 
     const start = Date.now();
 
     while (Date.now() - start < timeoutMs) {
-      const items = Array.from(document.querySelectorAll(".p-dropdown-items .p-dropdown-item"));
+      await ensureSession();
+
+      const items = Array.from(
+        document.querySelectorAll(".p-dropdown-items .p-dropdown-item")
+      );
 
       const target = items.find((item) => item.textContent.trim() === optionText);
 
@@ -166,17 +194,22 @@
   }
 
   async function selectMasaPajakFilter(bulanName) {
+    await ensureSession();
+
     const multiSelects = document.querySelectorAll("p-columnfilter p-multiselect");
     const multiSelect = multiSelects[0];
 
     if (!multiSelect) return false;
 
     const trigger = multiSelect.querySelector(".p-multiselect-trigger") || multiSelect;
+
     trigger.click();
 
     let panel = null;
 
     for (let i = 0; i < 20; i++) {
+      await ensureSession();
+
       panel = document.querySelector(".p-multiselect-panel");
 
       if (panel && TK.DOM.isVisible(panel)) break;
@@ -194,6 +227,7 @@
     }
 
     const items = Array.from(panel.querySelectorAll("p-multiselectitem li"));
+
     const target = items.find((item) => {
       const label = item.getAttribute("aria-label") || item.textContent.trim();
       return label === bulanName;
@@ -202,6 +236,7 @@
     if (target) target.click();
 
     const closeBtn = panel.querySelector(".p-multiselect-close");
+
     if (closeBtn) closeBtn.click();
     else trigger.click();
 
@@ -228,6 +263,7 @@
     }
 
     const buttons = Array.from(document.querySelectorAll("button"));
+
     const byIcon = buttons.find((btn) => {
       return btn.querySelector(".pi-refresh, .pi-search") && TK.DOM.isVisible(btn);
     });
@@ -242,30 +278,40 @@
 
   function clearAllFilters() {
     const nfInput = getFilterNomorFaktur();
+
     if (nfInput) setAngularInputValue(nfInput, "");
 
     const yearInput = getFilterTahun();
+
     if (yearInput) setAngularInputValue(yearInput, "");
   }
 
   async function applyGridFilters(masaPajak, tahun, nomorFaktur) {
+    await ensureSession();
+
     const bulanName = BULAN_NAMES[masaPajak] || "";
 
     if (bulanName) {
       await selectMasaPajakFilter(bulanName);
     }
 
+    await ensureSession();
+
     const yearInput = getFilterTahun();
+
     if (yearInput && tahun) {
       yearInput.focus();
       setAngularInputValue(yearInput, tahun);
     }
 
     const nfInput = getFilterNomorFaktur();
+
     if (nfInput && nomorFaktur) {
       nfInput.focus();
       setAngularInputValue(nfInput, nomorFaktur);
     }
+
+    await ensureSession();
 
     const refreshed = clickRefreshButton();
 
@@ -281,6 +327,7 @@
     }
 
     await TK.DOM.waitForAction(1500, 30000);
+    await ensureSession();
   }
 
   async function waitForToastAppearAndDisappear(timeoutMs = 30000) {
@@ -288,8 +335,13 @@
     let appeared = false;
 
     while (Date.now() - start < timeoutMs) {
+      await ensureSession();
+
       const toastItems = document.querySelectorAll("p-toast p-toastitem");
-      const visibleToast = Array.from(toastItems).some((item) => TK.DOM.isVisible(item));
+
+      const visibleToast = Array.from(toastItems).some((item) =>
+        TK.DOM.isVisible(item)
+      );
 
       if (visibleToast) appeared = true;
 
@@ -306,7 +358,8 @@
       "Nomor Faktur": item.nomorFaktur,
       "Masa Pajak Faktur": BULAN_NAMES[item.masaPajakFaktur] || item.masaPajakFaktur,
       "Tahun Pajak Faktur": item.tahunPajakFaktur,
-      "Masa Pajak Pengkreditan": BULAN_NAMES[item.masaPajakPengkreditan] || item.masaPajakPengkreditan,
+      "Masa Pajak Pengkreditan":
+        BULAN_NAMES[item.masaPajakPengkreditan] || item.masaPajakPengkreditan,
       "Tahun Pajak Pengkreditan": item.tahunPajakPengkreditan,
       Status: item.status,
       Keterangan: item.keterangan,
@@ -319,29 +372,31 @@
 
     TK.CSV.download({
       filename: `rekap_pengkreditan_faktur_${TK.CSV.timestamp()}.xlsx`,
-        sheetName: "Rekap Pengkreditan",
+      sheetName: "Rekap Pengkreditan",
       headers: TK.CSV.inferHeaders(rows),
       rows,
     });
   }
 
   ui.onExport(downloadRekapCSV);
-
   ui.setStatus("Starting...");
 
   for (let i = 0; i < list.length; i++) {
     if (state.cancelled) break;
 
     await TK.Batch.waitIfPaused(state, ui);
+    await ensureSession();
 
     const item = list[i];
 
-    const noFaktur = String(item.nomorFaktur || "").replace(/^'+/, "").trim();
+    const noFaktur = String(item.nomorFaktur || "")
+      .replace(/^'+/, "")
+      .trim();
+
     const masaPajakFaktur = Number(item.masaPajakFaktur);
     const tahunPajakFaktur = String(item.tahunPajakFaktur || "").trim();
     const masaPajakPengkreditan = Number(item.masaPajakPengkreditan);
     const tahunPajakPengkreditan = String(item.tahunPajakPengkreditan || "").trim();
-
     const waktuProses = new Date().toLocaleString("id-ID");
 
     progress(i, `Processing ${noFaktur || "(kosong)"}`);
@@ -362,37 +417,53 @@
     }
 
     try {
+      await ensureSession();
+
       const onGrid = await waitForGridPage(8000);
+
       if (!onGrid) throw new Error("Tidak berada di halaman grid");
 
       await TK.DOM.waitSpinnerGone();
+      await ensureSession();
 
       await applyGridFilters(masaPajakFaktur, tahunPajakFaktur, noFaktur);
 
       const rows = await waitForFilteredRows(noFaktur, 20000);
+
       if (!rows) throw new Error("Data tidak ditemukan setelah filter");
 
+      await ensureSession();
+
       const targetRow = rows.find((row) => row.textContent.includes(noFaktur));
+
       if (!targetRow) throw new Error("Nomor faktur tidak ditemukan di tabel");
 
       const editBtn = targetRow.querySelector("#EditButton");
+
       if (!editBtn) throw new Error("Tombol Edit tidak ditemukan");
+
+      await ensureSession();
 
       editBtn.click();
 
       await TK.DOM.waitForAction(1500, 30000);
+      await ensureSession();
 
       const editPage = await waitForEditPage(20000);
+
       if (!editPage) throw new Error("Halaman edit gagal dimuat");
 
       await TK.DOM.waitSpinnerGone(10000);
+      await ensureSession();
 
       const formItems = document.querySelectorAll("einv-doc-form-item");
+
       let periodCreditDropdown = null;
       let yearCreditInput = null;
 
       for (const formItem of formItems) {
         const label = formItem.querySelector("label");
+
         if (!label) continue;
 
         const labelText = label.textContent.trim();
@@ -406,37 +477,64 @@
         }
       }
 
-      if (!periodCreditDropdown) throw new Error("Dropdown Masa Pajak Dikreditkan tidak ditemukan");
+      if (!periodCreditDropdown) {
+        throw new Error("Dropdown Masa Pajak Dikreditkan tidak ditemukan");
+      }
+
       if (periodCreditDropdown.classList.contains("p-disabled")) {
         throw new Error("Dropdown Masa Pajak Dikreditkan disabled");
       }
 
       const bulanKreditName = BULAN_NAMES[masaPajakPengkreditan] || "";
+
+      await ensureSession();
+
       const monthOk = await selectPrimeNGDropdown(periodCreditDropdown, bulanKreditName);
 
-      if (!monthOk) throw new Error(`Gagal memilih bulan '${bulanKreditName}'`);
+      if (!monthOk) {
+        throw new Error(`Gagal memilih bulan '${bulanKreditName}'`);
+      }
 
-      if (!yearCreditInput) throw new Error("Input Tahun Pajak Dikreditkan tidak ditemukan");
-      if (yearCreditInput.disabled) throw new Error("Input Tahun Pajak Dikreditkan disabled");
+      if (!yearCreditInput) {
+        throw new Error("Input Tahun Pajak Dikreditkan tidak ditemukan");
+      }
+
+      if (yearCreditInput.disabled) {
+        throw new Error("Input Tahun Pajak Dikreditkan disabled");
+      }
 
       yearCreditInput.focus();
       setAngularInputValue(yearCreditInput, tahunPajakPengkreditan);
 
+      await ensureSession();
+
       let kreditBtn = await waitForButton("Credit", 8000);
+
       if (!kreditBtn) kreditBtn = await waitForButton("Kredit", 3000);
+
       if (!kreditBtn) throw new Error("Tombol Kredit tidak ditemukan");
+
+      await ensureSession();
 
       kreditBtn.click();
 
       await TK.DOM.waitForAction(1500, 30000);
+      await ensureSession();
 
       const confirmBtn = document.querySelector(".p-confirm-dialog-accept");
+
       if (confirmBtn && TK.DOM.isVisible(confirmBtn)) {
+        await ensureSession();
+
         confirmBtn.click();
+
         await TK.DOM.waitForAction(1500, 30000);
+        await ensureSession();
       }
 
       await waitForToastAppearAndDisappear(15000);
+
+      await ensureSession();
 
       if (document.getElementById("TaxInvoiceNumber")) {
         window.history.back();
@@ -444,6 +542,7 @@
 
       await waitForGridPage(15000);
       await TK.DOM.waitSpinnerGone(10000);
+      await ensureSession();
 
       TK.Batch.pushResult(state, {
         nomorFaktur: noFaktur,
@@ -458,6 +557,11 @@
 
       ui.log(`✓ ${noFaktur}`);
     } catch (err) {
+      if (await handleSessionError(err, i)) {
+        i -= 1;
+        continue;
+      }
+
       TK.Batch.pushResult(state, {
         nomorFaktur: noFaktur,
         masaPajakFaktur,
@@ -473,12 +577,14 @@
 
       if (!document.getElementById("filterTaxInvoiceNumber")) {
         window.history.back();
+
         await waitForGridPage(15000);
         await TK.DOM.waitSpinnerGone(10000);
       }
     }
 
     try {
+      await ensureSession();
       clearAllFilters();
     } catch {}
 
@@ -494,7 +600,10 @@
   const total = state.success + state.failed + state.skipped;
 
   ui.done("DONE");
-  ui.log(`Selesai: ${state.success} berhasil, ${state.failed} gagal, ${state.skipped} dilewati`);
+
+  ui.log(
+    `Selesai: ${state.success} berhasil, ${state.failed} gagal, ${state.skipped} dilewati`
+  );
 
   TK.Activity.finish({
     module: MODULE_NAME,
