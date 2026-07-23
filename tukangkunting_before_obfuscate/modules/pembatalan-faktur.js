@@ -28,6 +28,8 @@
     total: list.length,
   });
 
+  await TK.Power?.start?.("display", ui);
+
   const state = TK.Batch.createBatchState();
 
   async function ensureSession() {

@@ -199,6 +199,8 @@
       total: config.total || 0,
     });
 
+    await TK.Power?.start?.("display", ui);
+
     const state = {
       processedKeys: new Set(),
       rows: [],

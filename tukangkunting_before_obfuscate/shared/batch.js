@@ -1,5 +1,5 @@
 (function () {
-  const TK = window;
+  const TK = (window.TK = window.TK || {});
 
   function createBatchState() {
     return {
@@ -25,9 +25,13 @@
       waktuProses: result.waktuProses || new Date().toLocaleString("id-ID"),
     });
 
-    if (result.status === "BERHASIL") state.success += 1;
-    else if (result.status === "GAGAL") state.failed += 1;
-    else if (result.status === "SKIP") state.skipped += 1;
+    if (result.status === "BERHASIL") {
+      state.success += 1;
+    } else if (result.status === "GAGAL") {
+      state.failed += 1;
+    } else if (result.status === "SKIP") {
+      state.skipped += 1;
+    }
   }
 
   function getFailedItems(state, mapper) {
@@ -51,4 +55,7 @@
     getFailedItems,
     exportRekapCsv,
   };
+
+  // Backward compatibility kalau ada script lama yang sempat akses window.Batch.
+  window.Batch = TK.Batch;
 })();

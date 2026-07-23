@@ -659,59 +659,328 @@
     const results = await executeScript(tab.id, {
       func: () => {
         return new Promise((resolve) => {
-          const input = document.createElement("input");
-          input.type = "file";
-          input.accept = ".csv,.txt";
+          if (document.getElementById("tk-pengkreditan-csv-overlay")) {
+            resolve(null);
+            return;
+          }
 
-          input.onchange = () => {
-            const file = input.files?.[0];
-            if (!file) {
-              resolve(null);
-              return;
-            }
+          const styleId = "tk-pengkreditan-csv-style";
 
-            const reader = new FileReader();
+          if (!document.getElementById(styleId)) {
+            const style = document.createElement("style");
+            style.id = styleId;
+            style.textContent = `
+              #tk-pengkreditan-csv-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(8,10,18,.72);
+                backdrop-filter: blur(6px);
+                -webkit-backdrop-filter: blur(6px);
+                z-index: 10080;
+              }
 
-            reader.onload = () => {
-              const text = reader.result || "";
-              const rows = parseCsv(text);
+              #tk-pengkreditan-csv-modal {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: min(460px, calc(100vw - 24px));
+                background: #0f1117;
+                border: 1px solid rgba(255,255,255,.08);
+                border-radius: 18px;
+                box-shadow: 0 24px 64px rgba(0,0,0,.6);
+                z-index: 10081;
+                font-family: 'DM Sans', system-ui, sans-serif;
+                color: #e2e8f0;
+                overflow: hidden;
+              }
 
-              const output = rows.map((row) => ({
-                nomorFaktur: row.nomor_faktur || row["nomor faktur"] || row.NomorFaktur || "",
-                masaPajakFaktur: normalizeMonth(row.masa_pajak_faktur || row["masa pajak faktur"]),
-                tahunPajakFaktur: row.tahun_pajak_faktur || row["tahun pajak faktur"] || "",
-                masaPajakPengkreditan: normalizeMonth(row.masa_pajak_pengkreditan || row["masa pajak pengkreditan"]),
-                tahunPajakPengkreditan: row.tahun_pajak_pengkreditan || row["tahun pajak pengkreditan"] || "",
-              })).filter((item) => item.nomorFaktur);
+              .tk-pk-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 18px 20px 14px;
+                border-bottom: 1px solid rgba(255,255,255,.06);
+              }
 
-              resolve(output);
-            };
+              .tk-pk-title {
+                font-size: 14px;
+                font-weight: 700;
+                color: #f8fafc;
+              }
 
-            reader.onerror = () => resolve(null);
-            reader.readAsText(file);
-          };
+              .tk-pk-subtitle {
+                font-size: 11px;
+                color: #64748b;
+                margin-top: 2px;
+              }
 
-          input.click();
+              .tk-pk-close {
+                width: 30px;
+                height: 30px;
+                border: none;
+                border-radius: 8px;
+                background: transparent;
+                color: #64748b;
+                cursor: pointer;
+                font-size: 14px;
+              }
 
-          function parseCsv(text) {
-            const lines = text.split(/\r?\n/).filter((line) => line.trim());
-            if (lines.length < 2) return [];
+              .tk-pk-close:hover {
+                background: rgba(239,68,68,.12);
+                color: #f87171;
+              }
 
-            const sep = lines[0].includes(";") ? ";" : ",";
-            const headers = lines[0]
-              .split(sep)
-              .map((h) => h.trim().toLowerCase().replace(/\s+/g, "_").replace(/['"]/g, ""));
+              .tk-pk-body {
+                padding: 18px 20px 20px;
+              }
 
-            return lines.slice(1).map((line) => {
-              const values = line.split(sep).map((v) => v.trim().replace(/^["']|["']$/g, ""));
-              const row = {};
+              .tk-pk-desc {
+                font-size: 12px;
+                line-height: 1.6;
+                color: #94a3b8;
+                margin-bottom: 14px;
+              }
 
-              headers.forEach((h, index) => {
-                row[h] = values[index] || "";
-              });
+              .tk-pk-template-box {
+                background: rgba(56,130,246,.08);
+                border: 1px solid rgba(56,130,246,.2);
+                border-radius: 12px;
+                padding: 12px 14px;
+                margin-bottom: 14px;
+              }
 
-              return row;
+              .tk-pk-template-title {
+                font-size: 12px;
+                font-weight: 700;
+                color: #93c5fd;
+                margin-bottom: 6px;
+              }
+
+              .tk-pk-template-text {
+                font-size: 11px;
+                line-height: 1.55;
+                color: #94a3b8;
+              }
+
+              .tk-pk-file-box {
+                border: 1px dashed rgba(255,255,255,.18);
+                border-radius: 12px;
+                padding: 16px;
+                text-align: center;
+                background: rgba(255,255,255,.03);
+                margin-bottom: 14px;
+              }
+
+              .tk-pk-file-name {
+                margin-top: 8px;
+                font-family: 'DM Mono', monospace;
+                font-size: 11px;
+                color: #7dd3fc;
+                word-break: break-all;
+                display: none;
+              }
+
+              .tk-pk-error {
+                display: none;
+                margin-top: 10px;
+                font-size: 12px;
+                color: #f87171;
+                line-height: 1.5;
+              }
+
+              .tk-pk-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 8px;
+                margin-top: 16px;
+              }
+
+              .tk-pk-btn {
+                padding: 9px 14px;
+                border-radius: 9px;
+                border: 1px solid rgba(255,255,255,.09);
+                background: rgba(255,255,255,.05);
+                color: #cbd5e1;
+                font-family: 'DM Sans', system-ui, sans-serif;
+                font-size: 12.5px;
+                font-weight: 700;
+                cursor: pointer;
+              }
+
+              .tk-pk-btn:hover {
+                background: rgba(255,255,255,.08);
+              }
+
+              .tk-pk-btn.primary {
+                border: none;
+                background: linear-gradient(135deg,#3882f6,#2563eb);
+                color: white;
+              }
+
+              .tk-pk-btn.primary:disabled {
+                opacity: .5;
+                cursor: not-allowed;
+              }
+
+              .tk-pk-btn.green {
+                border-color: rgba(34,197,94,.28);
+                background: rgba(34,197,94,.08);
+                color: #4ade80;
+              }
+            `;
+            document.head.appendChild(style);
+          }
+
+          const overlay = document.createElement("div");
+          overlay.id = "tk-pengkreditan-csv-overlay";
+
+          const modal = document.createElement("div");
+          modal.id = "tk-pengkreditan-csv-modal";
+
+          const header = document.createElement("div");
+          header.className = "tk-pk-header";
+
+          const titleWrap = document.createElement("div");
+
+          const title = document.createElement("div");
+          title.className = "tk-pk-title";
+          title.textContent = "Upload Template Pengkreditan Faktur";
+
+          const subtitle = document.createElement("div");
+          subtitle.className = "tk-pk-subtitle";
+          subtitle.textContent = "CSV / TXT batch pengkreditan";
+
+          titleWrap.append(title, subtitle);
+
+          const closeBtn = document.createElement("button");
+          closeBtn.className = "tk-pk-close";
+          closeBtn.textContent = "✕";
+
+          header.append(titleWrap, closeBtn);
+
+          const body = document.createElement("div");
+          body.className = "tk-pk-body";
+
+          const desc = document.createElement("div");
+          desc.className = "tk-pk-desc";
+          desc.textContent =
+            "Download template terlebih dahulu, isi data faktur, lalu upload kembali file CSV/TXT untuk diproses.";
+
+          const templateBox = document.createElement("div");
+          templateBox.className = "tk-pk-template-box";
+
+          const templateTitle = document.createElement("div");
+          templateTitle.className = "tk-pk-template-title";
+          templateTitle.textContent = "Format kolom template";
+
+          const templateText = document.createElement("div");
+          templateText.className = "tk-pk-template-text";
+          templateText.textContent =
+            "nomor_faktur, masa_pajak_faktur, tahun_pajak_faktur, masa_pajak_pengkreditan, tahun_pajak_pengkreditan";
+
+          templateBox.append(templateTitle, templateText);
+
+          const fileBox = document.createElement("div");
+          fileBox.className = "tk-pk-file-box";
+
+          const fileInput = document.createElement("input");
+          fileInput.type = "file";
+          fileInput.accept = ".csv,.txt";
+          fileInput.style.display = "none";
+
+          const chooseBtn = document.createElement("button");
+          chooseBtn.className = "tk-pk-btn";
+          chooseBtn.textContent = "Pilih File CSV/TXT";
+
+          const fileName = document.createElement("div");
+          fileName.className = "tk-pk-file-name";
+
+          fileBox.append(chooseBtn, fileName, fileInput);
+
+          const errorText = document.createElement("div");
+          errorText.className = "tk-pk-error";
+
+          const actions = document.createElement("div");
+          actions.className = "tk-pk-actions";
+
+          const templateBtn = document.createElement("button");
+          templateBtn.className = "tk-pk-btn green";
+          templateBtn.textContent = "Download Template";
+
+          const cancelBtn = document.createElement("button");
+          cancelBtn.className = "tk-pk-btn";
+          cancelBtn.textContent = "Batal";
+
+          const processBtn = document.createElement("button");
+          processBtn.className = "tk-pk-btn primary";
+          processBtn.textContent = "Jalankan";
+          processBtn.disabled = true;
+
+          actions.append(templateBtn, cancelBtn, processBtn);
+
+          body.append(desc, templateBox, fileBox, errorText, actions);
+          modal.append(header, body);
+
+          document.body.append(overlay, modal);
+
+          let selectedFile = null;
+
+          function cleanup() {
+            overlay.remove();
+            modal.remove();
+          }
+
+          function showError(message) {
+            errorText.textContent = message;
+            errorText.style.display = "block";
+          }
+
+          function downloadTemplate() {
+            const headers = [
+              "nomor_faktur",
+              "masa_pajak_faktur",
+              "tahun_pajak_faktur",
+              "masa_pajak_pengkreditan",
+              "tahun_pajak_pengkreditan",
+            ];
+
+            const sampleRows = [
+              [
+                "0100012500000001",
+                "1",
+                "2025",
+                "2",
+                "2025",
+              ],
+              [
+                "0100012500000002",
+                "Januari",
+                "2025",
+                "Februari",
+                "2025",
+              ],
+            ];
+
+            const csv = [
+              headers.join(";"),
+              ...sampleRows.map((row) => row.join(";")),
+            ].join("\r\n");
+
+            const blob = new Blob([csv], {
+              type: "text/csv;charset=utf-8;",
             });
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+
+            a.href = url;
+            a.download = "template_pengkreditan_faktur.csv";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
           }
 
           function normalizeMonth(value) {
@@ -738,9 +1007,147 @@
               return n >= 1 && n <= 12 ? n : null;
             }
 
-            const idx = months.findIndex((m) => m === v || (v.length >= 3 && m.startsWith(v)));
+            const idx = months.findIndex((m) => {
+              return m === v || (v.length >= 3 && m.startsWith(v));
+            });
+
             return idx > 0 ? idx : null;
           }
+
+          function parseCsv(text) {
+            const lines = String(text || "")
+              .split(/\r?\n/)
+              .filter((line) => line.trim());
+
+            if (lines.length < 2) return [];
+
+            const sep = lines[0].includes(";") ? ";" : ",";
+
+            const headers = lines[0]
+              .split(sep)
+              .map((h) =>
+                h
+                  .trim()
+                  .toLowerCase()
+                  .replace(/\s+/g, "_")
+                  .replace(/['"]/g, "")
+              );
+
+            return lines.slice(1).map((line) => {
+              const values = line
+                .split(sep)
+                .map((v) => v.trim().replace(/^["']|["']$/g, ""));
+
+              const row = {};
+
+              headers.forEach((h, index) => {
+                row[h] = values[index] || "";
+              });
+
+              return row;
+            });
+          }
+
+          function mapRows(rows) {
+            return rows
+              .map((row) => ({
+                nomorFaktur:
+                  row.nomor_faktur ||
+                  row["nomor faktur"] ||
+                  row.NomorFaktur ||
+                  "",
+                masaPajakFaktur: normalizeMonth(
+                  row.masa_pajak_faktur || row["masa pajak faktur"]
+                ),
+                tahunPajakFaktur:
+                  row.tahun_pajak_faktur || row["tahun pajak faktur"] || "",
+                masaPajakPengkreditan: normalizeMonth(
+                  row.masa_pajak_pengkreditan ||
+                    row["masa pajak pengkreditan"]
+                ),
+                tahunPajakPengkreditan:
+                  row.tahun_pajak_pengkreditan ||
+                  row["tahun pajak pengkreditan"] ||
+                  "",
+              }))
+              .filter((item) => item.nomorFaktur);
+          }
+
+          chooseBtn.onclick = () => {
+            errorText.style.display = "none";
+            fileInput.click();
+          };
+
+          fileInput.onchange = () => {
+            selectedFile = fileInput.files?.[0] || null;
+
+            if (!selectedFile) {
+              processBtn.disabled = true;
+              fileName.style.display = "none";
+              return;
+            }
+
+            fileName.textContent = selectedFile.name;
+            fileName.style.display = "block";
+            processBtn.disabled = false;
+            errorText.style.display = "none";
+          };
+
+          templateBtn.onclick = downloadTemplate;
+
+          closeBtn.onclick = () => {
+            cleanup();
+            resolve(null);
+          };
+
+          cancelBtn.onclick = () => {
+            cleanup();
+            resolve(null);
+          };
+
+          processBtn.onclick = () => {
+            if (!selectedFile) {
+              showError("Pilih file CSV/TXT terlebih dahulu.");
+              return;
+            }
+
+            processBtn.disabled = true;
+            processBtn.textContent = "Membaca file...";
+
+            const reader = new FileReader();
+
+            reader.onload = () => {
+              try {
+                const text = reader.result || "";
+                const rows = parseCsv(text);
+                const output = mapRows(rows);
+
+                if (!output.length) {
+                  processBtn.disabled = false;
+                  processBtn.textContent = "Jalankan";
+                  showError(
+                    "Data tidak valid atau kolom nomor_faktur tidak ditemukan."
+                  );
+                  return;
+                }
+
+                cleanup();
+                resolve(output);
+              } catch (err) {
+                processBtn.disabled = false;
+                processBtn.textContent = "Jalankan";
+                showError(err.message || "Gagal membaca file.");
+              }
+            };
+
+            reader.onerror = () => {
+              processBtn.disabled = false;
+              processBtn.textContent = "Jalankan";
+              showError("Gagal membaca file.");
+            };
+
+            reader.readAsText(selectedFile);
+          };
         });
       },
     });

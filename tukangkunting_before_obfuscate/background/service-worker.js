@@ -4,6 +4,7 @@ importScripts(
   "license-service.js",
   "activity-service.js",
   "auth-service.js",
+  "power-service.js",
   "router.js"
 );
 

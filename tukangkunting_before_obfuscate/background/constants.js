@@ -16,6 +16,7 @@
         "shared/license.js",
         "shared/dom.js",
         "shared/session.js",
+        "shared/power.js",
         "shared/pagination.js",
         "shared/table.js",
         "shared/csv.js",
